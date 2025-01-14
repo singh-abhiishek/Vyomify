@@ -1,0 +1,15 @@
+{
+  "name": "backendlearning",
+  "version": "1.0.0",
+  "description": "backend learning with the help of projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "backend",
+    "learning"
+  ],
+  "author": "Abhishek Singh",
+  "license": "ISC"
+}
