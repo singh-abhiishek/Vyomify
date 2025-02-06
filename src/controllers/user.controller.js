@@ -1,7 +1,7 @@
 import {asyncHandler} from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.service.js"
+import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.service.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
@@ -268,7 +268,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
     .status(200)
-    .json(200, req.user, "current user fetched Successfully")
+    .json(new ApiResponse(200, req.user, "current user fetched Successfully"))
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -278,7 +278,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
@@ -287,7 +287,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
             }
         },
         { new: true } // update hone k baad jo information h wo return ho
-    ).select("password")
+    ).select("-password")
 
     return res
     .status(200)
@@ -295,35 +295,52 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 })
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-    const avatarLocalPath = req.file?.path
+    const newAvatarLocalPath = req.file?.path
 
-    if(!avatarLocalPath){
+    if(!newAvatarLocalPath){
         throw new ApiError(400, "Avatar file is missing")
     }
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    const newAvatar = await uploadOnCloudinary(newAvatarLocalPath)
 
-    if(!avatar.url){
+    if(!newAvatar.url){
         throw new ApiError(400, "Error while updating user avatar")
     }
 
-    const user = await User.findByIdAndUpdate(
-        req.user?.id,
-        {
-            $set: {
-                avatar: avatar.url
-            }
-        },
-        {new: true}
-    )
+    // const user = await User.findByIdAndUpdate(
+    //     req.user?.id,
+    //     {
+    //         $set: {
+    //             avatar: newAvatar.url
+    //         }
+    //     },
+    //     {new: true}
+    // )
+
+    // DEBUG: might be a potential error
+    // Delete old avatar Image from cloudinary
+    const user = await User.findById(req.user?._id)
+    if(!user){
+        throw new ApiError(400, "User not found")
+    }
+
+    const oldAvatarUrl = user.avatar; // store old url
+    if(!oldAvatarUrl){
+        throw new ApiError(400, "oldAvatarUrl not found")
+    }
+    await deleteFromCloudinary(oldAvatarUrl) // delete old Avatar from cloudinary
+
+    user.avatar = newAvatar.url // update old url with new one
+    const updatedUser = await user.save({validateBeforeSave: false})
 
     return res
     .status(200)
     .json(
-        new ApiResponse(200, user, "avatar Image updated Successfully")
+        new ApiResponse(200, updatedUser, "avatar Image updated Successfully")
     )
 })
 
+// TODO: delete old user coverImage from cloudinary 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
     const coverImageLocalPath = req.file?.path
 
@@ -354,6 +371,79 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     )
 })
 
+// TODO: console log channnel name
+
+const getUserChannelProfile = asyncHandler(async (req, res) => {
+    const { username } = req.params
+    if( !username ){
+        throw new ApiError(400, "username is missing")
+    }
+
+    const channel = await User.aggregate([
+        {
+            $match: {
+                username: username?.toLowerCase() 
+            }
+        },
+        {
+            $lookup: { // to find subscribers (use channel)
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers"
+            }
+        },
+        {
+            $lookup: { // to find channel(use subscribers), which user is subscribedto
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "subscriber",
+                as: "subscribedTo"
+            }
+        },
+        {
+            $addFields: {
+                subscribersCount: {
+                    $size: "$subscribers"
+                },
+                channelSubscribedToCount: {
+                    $size: "subscribedTo"
+                },
+                isSubscribed: {
+                    $cond: {
+                        if: {$in: [req.user?._id, "$subscribers.subscriber"]},
+                        then: true,
+                        else: false 
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                fullName: 1,
+                username: 1,
+                subscribersCount: 1,
+                channelSubscribedToCount: 1, 
+                isSubscribed: 1,
+                avatar: 1,
+                coverImage: 1,
+                email: 1
+            }
+        }
+    ])
+
+    if (!channel?.length) {
+        throw new ApiError(400, "channel does not exist")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, channel[0], "User channel fetched Successfully                   ")
+    )
+})
+
+
 export {
     registerUser,
     loginUser,
@@ -363,5 +453,6 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    getUserChannelProfile
 }

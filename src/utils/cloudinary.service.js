@@ -1,5 +1,6 @@
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs";
+import { ApiError } from "./ApiError";
 
 // Configuration
 cloudinary.config({ 
@@ -32,4 +33,20 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
-export {uploadOnCloudinary}
+const deleteFromCloudinary = async(oldAvatarUrl) => {
+    try {
+        if(!oldAvatarUrl){
+            throw new Error("oldAvatarUrl is not found");
+        }
+        const response = await cloudinary.uploader.destroy(oldAvatarUrl, { invalidate: true });
+        return response;
+        
+    } catch (error) {
+        throw new ApiError(500, error?.message || "Error while deleting file from cloudinary")
+    }
+}
+
+export {
+    uploadOnCloudinary,
+    deleteFromCloudinary
+}
