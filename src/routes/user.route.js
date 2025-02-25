@@ -18,21 +18,20 @@ import { verifyJWT } from "../middlewares/auth.middleware.js"
 const router = Router()
 
 router.route("/register").post(
-    upload.fields([
+    upload.fields([   // file handling, multer middleware se hoke jana
         {
-            name: "avatar",
+            name: "avatar",  //NOTE: frontend & backend m ye name(avatar) same hona jaruri hai
             maxCount: 1
         },
         {
-            name: "coverImage",
+            name: "coverImage", //NOTE: frontend & backend m ye name(coverImage) same hona jaruri hai
             maxCount: 1
         }
     ]),
     registerUser)
-
 router.route("/login").post(loginUser)
 
-// secured routes
+// secured routes (using verifyJWT middleware)
 router.route("/logout").post(verifyJWT, logoutUser)
 router.route("/refresh-token").post(refreshAccessToken)
 router.route("/change-password").post(verifyJWT, changeCurrentPassword)

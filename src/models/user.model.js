@@ -10,7 +10,7 @@ const userSchema = new Schema(
             unique: true,
             lowercase: true,
             trim: true, //Removes any leading or trailing whitespace from the value before storing it.
-            index: true
+            index: true // searching field enable krne ke liye, mongodb m jis chij ko hm jyada search krne wale hai usko index: true kr do(taki thora optimise way m search hone lge), it is expensive use it properly
         },
         email: {
             type: String,
@@ -40,7 +40,7 @@ const userSchema = new Schema(
         ],
         password: {
             type: String,
-            required: [true, 'password is required']
+            required: [true, 'password is required'] // custom error message
         },
         refreshToken: {
             type: String
@@ -51,9 +51,13 @@ const userSchema = new Schema(
     }                   
 )
 
-//  password encryption using bcrypt
-userSchema.pre("save", async function (next) {
-    if(!this.isModified("password")) return next();
+// password encryption using bcrypt, 
+// there may be problem if we write call back function after save because in call back we have no reference of this. so that we use normal function
+
+// pre hook, save hone se just pehle function k andr wala kaam kr do    
+userSchema.pre("save", async function (next) { 
+    if(!this.isModified("password")) return next(); // agr password field modified ho tbhi usko hash kro 
+    // bina if condition ke user me kuch bhi uupdate hone pe baar baar password ko hash kr ke change krega
     
     this.password = await bcrypt.hash(this.password, 10)
     next();
@@ -66,10 +70,12 @@ userSchema.methods.isPasswordCorrect = async function(password){
 
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
-        {
-            _id: this._id,
+        {   // ye sari information mongodb se milegi, iske paas uska access hai
+            // key-> payload ka naam hai
+            // value-> database se aarhi hai
+            _id: this._id, 
             email: this.email,
-            username: this.username,
+            username: this.username, 
             fullName: this.fullName 
         },
         process.env.ACCESS_TOKEN_SECRET,

@@ -41,5 +41,5 @@ const videoSchema = new Schema(
     }
 )
 
-videoSchema.plugin(mongooseAggregatePaginate);
+videoSchema.plugin(mongooseAggregatePaginate); // to write aggregration queries
 export const Video = mongoose.model("Video", videoSchema);

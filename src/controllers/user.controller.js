@@ -12,17 +12,19 @@ const options = {
     secure: true
 }
 
-const generateAccessAndRefreshToken = async (userId) => {
+const generateAccessAndRefreshToken = async (userId, isRefresh) => {
     try {
         const user = await User.findById(userId)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
-        // add refreshToken in user
-        user.refreshToken = refreshToken
-
-        // save user
-        await user.save({ validateBeforeSave: false })
+        if (isRefresh) {
+            // add refreshToken in user
+            user.refreshToken = refreshToken
+    
+            // save user
+            await user.save({ validateBeforeSave: false })
+        }
         return { accessToken, refreshToken }
     } catch (error) {
         console.log("console:", error);
@@ -36,6 +38,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
     //********** get users detail from frontend *********//
     const { username, email, fullName, password } = req.body // req.body is an object
+    // console.log( req.body ) :- 
+    // [Object: null prototype] {
+    //   fullName: 'abhishek',
+    //   username: 'abhis',
+    //   email: 'abhi@gmail.com',
+    //   password: '12345678'
+    // }
 
     // ********* validation - isEmpty? *********//
 
@@ -65,14 +74,27 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     //********** take coverImage and avatar local path from multer & check for avatar(required) **********//
+    // NOTE:-console.log("avatar:-", req.files) req.files-> given by multer
+    // avatar:- [Object: null prototype] {
+    //     avatar: [
+    //       {
+    //         fieldname: 'avatar',
+    //         originalname: '1704207796923 (1)-01.jpeg.jpg',
+    //         encoding: '7bit',
+    //         mimetype: 'image/jpeg',
+    //         destination: './public/temp',
+    //         filename: '1704207796923 (1)-01.jpeg.jpg',
+    //         path: 'public\\temp\\1704207796923 (1)-01.jpeg.jpg',
+    //         size: 1230590
+    //       }
+    //     ]
+    //   }
     const avatarLocalPath = req.files?.avatar[0]?.path;
     // const coverImageLocalPath = req.files?.coverImage[0]?.path;
-
     let coverImageLocalPath;
     if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
         coverImageLocalPath = req.files.coverImage[0].path
     }
-
     if (!avatarLocalPath) {
         throw new ApiError(400, "avatar file is required")
     }
@@ -83,7 +105,6 @@ const registerUser = asyncHandler(async (req, res) => {
     if (coverImageLocalPath) {
         coverImage = await uploadOnCloudinary(coverImageLocalPath)
     }
-
     if (!avatar) { // required field, compulsory to check
         throw new ApiError(400, "avatar file not uploaded")
     }
@@ -141,19 +162,18 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     // access and refresh token
-    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id)
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id, true)
 
     const loggedInUser = await User.findById(user._id).
         select("-password -refreshToken")
 
     // send cookie
-    // const options = {
-    //     httpOnly: true,
+    // const options = {  
+    //     httpOnly: true,  // true krne se cookie ab sirf server se modify ho skta hai 
     //     secure: true
     // }
 
     // "refreshToken": This is the name of the cookie. It's the key used to store the refresh token in the user's browser.
-
     // refreshToken: This is the value of the cookie, which is the actual refresh token string.
     return res
         .status(200)
@@ -164,7 +184,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 200,
                 {   // when we set token in cookies,
                     // what is the need of sending it in json format??
-                    // may be user want to save it in locatstorage (not good practice)
+                    // may be user want to save it in localstorage (not good practice)
                     // may be use in native mobile apps (as we can't set cookies in native mobile apps) 
                     user: loggedInUser,
                     accessToken,
@@ -177,9 +197,11 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findOneAndUpdate(
-        req.user._id,
+        req.user._id,  //NOTE:- req m user._id kaha se aaya??? verifyJWT middleware k through
         {
-            refreshToken: undefined
+            $unset: {
+                refreshToken: 1 // this removes the field from document
+            }
         },
         {
             // The new option tells Mongoose to return the updated document instead of the old one 
@@ -194,7 +216,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .clearCookie("accessToken", options)
+        .clearCookie("accessToken", options)  // cookie-parser k through cookie set aur clear ho rha hai
         .clearCookie("refreshToken", options)
         .json(
             new ApiResponse(
@@ -216,7 +238,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
 
-        const user = await User.findById(decodedRefreshToken?._id)
+        const user = await User.findById(decodedRefreshToken?._id) // NOTE: from userSchema.methods.generateRefreshToken
 
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
@@ -226,20 +248,19 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             throw new ApiError(401, "refresh token is expired or used")
         }
 
-        const { newAccessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
-
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id, false)
         return res
             .status(200)
-            .cookie("accessToken", newAccessToken, options)
-            .cookie("refreshToken", newRefreshToken, options)
+            .cookie("accessToken", accessToken, options)
             .json(
                 new ApiResponse(
                     200,
                     {
-                        accessToken: newAccessToken,
-                        refreshToken: newRefreshToken
+                        accessToken: accessToken,
+                        // refreshToken: refreshToken
                     },
-                    "access and refresh token refreshed"
+                    "access token refreshed"
+                    // "access and refresh token refreshed"
                 )
             )
     } catch (error) {
@@ -262,7 +283,6 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(new ApiResponse(200, {}, "Passoword Changed Successfully"))
-
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
@@ -302,7 +322,6 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     }
 
     const newAvatar = await uploadOnCloudinary(newAvatarLocalPath)
-
     if (!newAvatar.url) {
         throw new ApiError(400, "Error while updating user avatar")
     }
@@ -317,18 +336,18 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     //     {new: true}
     // )
 
-    // DEBUG: might be a potential error
     // Delete old avatar Image from cloudinary
-    const user = await User.findById(req.user?._id)
+    const user = req.user // NOTE: (middleware)verifyJWT append user to req 
     if (!user) {
-        throw new ApiError(400, "User not found")
+        throw new ApiError(400, "user not found from request while updating avatar image")
     }
 
-    const oldAvatarUrl = user.avatar; // store old url
+    const oldAvatarUrl = user?.avatar; // store old url
     if (!oldAvatarUrl) {
         throw new ApiError(400, "oldAvatarUrl not found")
     }
-    await deleteFromCloudinary(oldAvatarUrl) // delete old Avatar from cloudinary
+    const oldAvatarPublicId = oldAvatarUrl?.split('/upload/')[1].split('/')[1].split('.')[0];
+    await deleteFromCloudinary(oldAvatarPublicId) // delete old Avatar from cloudinary
 
     user.avatar = newAvatar.url // update old url with new one
     const updatedUser = await user.save({ validateBeforeSave: false })
@@ -340,7 +359,6 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         )
 })
 
-// TODO: delete old user coverImage from cloudinary 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
     const coverImageLocalPath = req.file?.path
 
@@ -348,30 +366,42 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(400, "CoverImage is missing")
     }
 
-    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+    const newCoverImage = await uploadOnCloudinary(coverImageLocalPath)
 
-    if (!coverImage.url) {
-        throw new application(400, "Error while updating user CoverImage")
+    if (!newCoverImage.url) {
+        throw new ApiError(400, "Error while updating user CoverImage")
     }
 
-    const user = await User.findByIdAndUpdate(
-        req.user?._id,
-        {
-            $set: {
-                coverImage: coverImage.url
-            }
-        },
-        { new: true }
-    )
+    // const user = await User.findByIdAndUpdate(
+    //     req.user?._id,
+    //     {
+    //         $set: {
+    //             coverImage: coverImage.url
+    //         }
+    //     },
+    //     { new: true }
+    // )
+
+    // Delete old cover Image from cloudinary
+    const user = req.user // NOTE: (middleware)verifyJWT append user to req 
+    if (!user) {
+        throw new ApiError(400, "user not found from request while updating avatar image")
+    }
+    
+    const oldCoverImageUrl = user?.coverImage; // store old url
+    if(oldCoverImageUrl){
+        const oldCoverImagePublicId = oldCoverImageUrl?.split('/upload/')[1].split('/')[1].split('.')[0];
+        await deleteFromCloudinary(oldCoverImagePublicId) // delete old Avatar from cloudinary
+    }
+    user.coverImage = newCoverImage.url // update old url with new one
+    const updatedUser = await user.save({ validateBeforeSave: false })
 
     return res
         .status(200)
         .json(
-            new ApiResponse(200, user, "CoverImage updated Successfully")
+            new ApiResponse(200, updatedUser, "CoverImage updated Successfully")
         )
 })
-
-// TODO: console log channnel name
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
     const { username } = req.params
@@ -407,7 +437,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
                     $size: "$subscribers"
                 },
                 channelSubscribedToCount: {
-                    $size: "subscribedTo"
+                    $size: "$subscribedTo"
                 },
                 isSubscribed: {
                     $cond: {
@@ -435,7 +465,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     if (!channel?.length) {
         throw new ApiError(400, "channel does not exist")
     }
-
+    
     return res
         .status(200)
         .json(

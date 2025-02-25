@@ -1,6 +1,6 @@
 import {v2 as cloudinary} from "cloudinary"
-import fs from "fs";
-import { ApiError } from "./ApiError";
+import fs from "fs";  // file system (nodejs k saath default aata hai)
+import { ApiError } from "./ApiError.js";
 
 // Configuration
 cloudinary.config({ 
@@ -21,7 +21,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         })
         
         //file has been uploaded successfully
-        //console.log("file is uploaded on cloudinary", response.url)
+        console.log("file is uploaded on cloudinary", response.url)
 
         fs.unlinkSync(localFilePath)
         return response;
@@ -33,12 +33,12 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
-const deleteFromCloudinary = async(oldAvatarUrl) => {
+const deleteFromCloudinary = async(oldAvatarPublicId) => {
     try {
-        if(!oldAvatarUrl){
-            throw new Error("oldAvatarUrl is not found");
+        if(!oldAvatarPublicId){
+            throw new ApiError("oldAvatarPublicId is not found");
         }
-        const response = await cloudinary.uploader.destroy(oldAvatarUrl, { invalidate: true });
+        const response = await cloudinary.uploader.destroy(oldAvatarPublicId, { invalidate: true });
         return response;
         
     } catch (error) {
