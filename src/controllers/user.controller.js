@@ -104,6 +104,9 @@ const registerUser = asyncHandler(async (req, res) => {
     let coverImage;
     if (coverImageLocalPath) {
         coverImage = await uploadOnCloudinary(coverImageLocalPath)
+        if (!coverImage) { // required field, compulsory to check
+            throw new ApiError(400, "coverImage file not uploaded")
+        }
     }
     if (!avatar) { // required field, compulsory to check
         throw new ApiError(400, "avatar file not uploaded")
@@ -477,7 +480,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
             $match: {
-                _id: new mongoose.Types.ObjectId(req.user._id) // // NOTE: pass manually id as objectId
+                _id: new mongoose.Types.ObjectId(req.user._id) // // NOTE: manually pass id as objectId
             }
         },
         {
