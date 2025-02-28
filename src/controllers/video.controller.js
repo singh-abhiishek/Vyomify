@@ -8,8 +8,8 @@ import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.se
 
 // DEBUG: may be bug in this route
 const getAllVideos = asyncHandler(async (req, res) => {
+    //get all videos based on query, sort, pagination
     const { page = 1, limit = 10, query, sortBy, sortType, userId, ownerUsername } = req.query
-    //TODO: get all videos based on query, sort, pagination
 
     // Pagination ke liye page aur limit convert karo
     const pageNumber = parseInt(page);
