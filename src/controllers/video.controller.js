@@ -6,11 +6,63 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.service.js"
 
-
+// DEBUG: may be bug in this route
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
+    const { page = 1, limit = 10, query, sortBy, sortType, userId, ownerUsername } = req.query
     //TODO: get all videos based on query, sort, pagination
 
+    // Pagination ke liye page aur limit convert karo
+    const pageNumber = parseInt(page);
+    const pageSize = parseInt(limit);
+    const skip = (pageNumber-1) * pageSize;
+
+    const filters = {};
+    if(query){
+        filters.$or = [
+            {
+                title: {
+                    $regex: query,
+                    $options: 'i' // case insensitive
+                }
+            },
+            {
+                description: {
+                    $regex: query,
+                    $options: 'i' // case insensitive
+                }
+            },
+            // { tags: { $regex: query, $options: 'i' } }
+        ]
+    }
+
+    if (userId) {
+        filters.owner = userId;
+    }
+    if (ownerUsername) {
+        filters.ownerUsername = ownerUsername;
+    }
+
+    
+    // Sorting setup
+    const sortOptions = {};
+    if (sortBy) {
+        sortOptions[sortBy] = sortType === 'desc' ? -1 : 1;
+    } else {
+        sortOptions.createdAt = -1; // Default: Latest videos
+    }
+
+    // ✅ Fetch paginated and sorted posts
+    const video = await Video.find(filters)
+    .sort(sortOptions)
+    .skip(skip)
+    .limit(pageSize);
+
+    const total = await Video.countDocuments(filters);
+    return res
+    .status(200)
+    .json(
+        new ApiResponse( 200, { total, video }, "all videos fetched successfully")
+    )
 })
 
 const publishAVideo = asyncHandler(async (req, res) => {
@@ -49,6 +101,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
     // get user from req.user (verifyJWT middleware append it)
     const userId = req.user?._id
+    const owner_username = req.user?.username
 
     // create video model
     const video = await Video.create(
@@ -58,7 +111,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
             title,
             description,
             duration: videoFile.duration,
-            owner: userId
+            owner: userId,
+            ownerUsername: owner_username
         }
     )
 
@@ -72,12 +126,25 @@ const publishAVideo = asyncHandler(async (req, res) => {
     )
 })
 
+//TODO: kya user ki watchHistory m yahi se add krna hoga? (user ki watchHistory Schema alg bnane pe yha bhi change kro)
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "videoId is not found while getting videoByid")
     }
+
+    const userId = req.user?._id
+    await User.findByIdAndUpdate(
+        userId,
+        {
+            $push: {
+                watchHistory: videoId
+            }
+        },
+        { new: true },
+        {validateBeforeSave: false}
+    )
 
     const video = await Video.aggregate([
         {
@@ -94,6 +161,7 @@ const getVideoById = asyncHandler(async (req, res) => {
                 pipeline: [
                     {
                         $project: {
+                            // username: 1,
                             fullName: 1,
                             avatar: 1,
                             coverImage: 1
