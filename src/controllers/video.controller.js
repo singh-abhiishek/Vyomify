@@ -51,7 +51,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         sortOptions.createdAt = -1; // Default: Latest videos
     }
 
-    // ✅ Fetch paginated and sorted posts
+    // Fetch paginated and sorted posts
     const video = await Video.find(filters)
     .sort(sortOptions)
     .skip(skip)
@@ -110,6 +110,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
             thumbnail: thumbnail.url, // cloudinary
             title,
             description,
+            views: 0,
             duration: videoFile.duration,
             owner: userId,
             ownerUsername: owner_username
@@ -133,7 +134,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "videoId is not found while getting videoByid")
     }
-
+    
     const userId = req.user?._id
     await User.findByIdAndUpdate(
         userId,
@@ -144,6 +145,11 @@ const getVideoById = asyncHandler(async (req, res) => {
         },
         { new: true },
         {validateBeforeSave: false}
+    )
+
+    await Video.updateOne( // update views on video
+        { _id: new mongoose.Types.ObjectId(videoId)},
+        { $inc: { views: 1} }
     )
 
     const video = await Video.aggregate([

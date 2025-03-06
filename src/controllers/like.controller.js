@@ -3,9 +3,10 @@ import {Like} from "../models/like.model.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
+import { Video } from "../models/video.model.js"
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
-    const {videoId} = req.params
+    const { videoId } = req.params
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid videoId - toggleVideoLike")
     }
@@ -30,9 +31,15 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             new ApiResponse(200, "video unliked Successfully")
         )
     }else{
+        const video = await Video.findById(videoId)
+        if (!video) {
+            throw new ApiError(500, "something went wrong while finding video - toggleVideoLike")
+        }
+
         const likedVideo = await Like.create({
             video: videoId,
-            likedBy
+            likedBy,
+            postOwner: video.owner
         })
 
         if (!likedVideo) {
