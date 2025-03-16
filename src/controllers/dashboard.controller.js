@@ -51,7 +51,7 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     if(!userId) {
         throw new ApiError(400, "userId is not found - getChannelVideos")
     }
-    
+
     const allVideos = await Video.find(
         { owner: userId}
     ).select("-_id -owner -createdAt -updatedAt")
@@ -66,4 +66,4 @@ const getChannelVideos = asyncHandler(async (req, res) => {
 export {
     getChannelStats, 
     getChannelVideos
-    }
+}

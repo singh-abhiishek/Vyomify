@@ -27,7 +27,7 @@ const userSchema = new Schema(
         }, 
         avatar: {
             type: String, //cloudanry URL
-            required: true
+            // required: true
         },
         coverImage: {
             type: String, //cloudanry URL
@@ -58,8 +58,8 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) { 
     if(!this.isModified("password")) return next(); // agr password field modified ho tbhi usko hash kro 
     // bina if condition ke user me kuch bhi uupdate hone pe baar baar password ko hash kr ke change krega
-    
-    this.password = await bcrypt.hash(this.password, 10)
+    const isBcryptHash = /^\$2[aby]\$\d{2}\$.{53}$/.test(this.password);
+    if(!isBcryptHash) this.password = await bcrypt.hash(this.password, 10)
     next();
 })
 

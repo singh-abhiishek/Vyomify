@@ -10,14 +10,33 @@ import {
     updateUserAvatar, 
     updateUserCoverImage, 
     getUserChannelProfile, 
-    getWatchHistory 
+    getWatchHistory,
+    SignUp,
+    verifyEmail,
+    uploadProfileImages
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
-router.route("/register").post(
+// router.route("/register").post(
+    // upload.fields([   // file handling, multer middleware se hoke jana
+    //     {
+    //         name: "avatar",  //NOTE: frontend & backend m ye name(avatar) same hona jaruri hai
+    //         maxCount: 1
+    //     },
+    //     {
+    //         name: "coverImage", //NOTE: frontend & backend m ye name(coverImage) same hona jaruri hai
+    //         maxCount: 1
+    //     }
+    // ]),
+//     registerUser)
+
+router.route("/Sign-Up").post(SignUp)
+router.route("/verify-Email").post(verifyEmail)
+router.route("/upload-profile-images").patch(
+    verifyJWT,
     upload.fields([   // file handling, multer middleware se hoke jana
         {
             name: "avatar",  //NOTE: frontend & backend m ye name(avatar) same hona jaruri hai
@@ -28,7 +47,8 @@ router.route("/register").post(
             maxCount: 1
         }
     ]),
-    registerUser)
+    uploadProfileImages)
+
 router.route("/login").post(loginUser)
 
 // secured routes (using verifyJWT middleware)

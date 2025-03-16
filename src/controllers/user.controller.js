@@ -1,11 +1,13 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
+import { TempUser } from "../models/tempUser.modal.js"
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.service.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
-import { application } from "express"
+import Randomstring from "randomstring"
+import { sendOtpToUserEmail } from "../utils/sendotpEmail.service.js"
 
 const options = {
     httpOnly: true,
@@ -33,6 +35,181 @@ const generateAccessAndRefreshToken = async (userId, isRefresh) => {
         throw new ApiError(500, "something went wrong while generating refresh and access token")
     }
 }
+
+const generateTemporaryToken = async (tempUserId) => {
+    try {
+        const tempUser = await TempUser.findById(tempUserId)
+        if(!tempUser){
+            throw new ApiError(401, "temp user is not found - generateTemporaryToken")
+        }
+        const tempToken = tempUser.generateTemporaryToken()
+        tempUser.tempToken = tempToken
+        await tempUser.save({ validateBeforeSave: false })
+        return tempToken;
+    } catch (error) {
+        console.log("console:", error);
+
+        // throw new ApiError(500, error.message)
+        throw new ApiError(500, "something went wrong while generating temporary token")
+    }
+}
+
+const SignUp = asyncHandler(async (req, res) => {
+    const { username, email, fullName, password, confirmPassword } = req.body   
+    
+    if (
+        [fullName, email, username, password, confirmPassword].some((field) =>
+            field?.trim() === "")
+    ) {
+        throw new ApiError(409, "All fields are required")
+    }
+
+    const isUserExisted = await User.findOne({
+        $or: [{ username }, { email }]
+    })
+    if (isUserExisted) {
+        throw new ApiError(409, "user with email or username already existed")
+    }
+
+    if (password !== confirmPassword) {
+        throw new ApiError(409, "password do not match")
+    }
+
+    // generate otp
+    const otp = Randomstring.generate({ length: 6, charset: "numeric"})
+    const text = `Subject: OTP for Account Verification
+                Dear ${username},
+                Your One-Time Password (OTP) for account verification is: ${otp}.
+                This OTP is valid for 2 minutes. Please do not share it with anyone for security reasons.
+                If you did not request this OTP, please ignore this email.
+                Best regards,
+                ${process.env.ADMIN_EMAIL}`
+
+    const response = await sendOtpToUserEmail(
+        email,
+        "OTP for Email verification",
+        text
+    )
+    if (!response) {
+        throw new ApiError(409, "otp not send to email - error")
+    }
+    const tempUser = await TempUser.create({
+        username,
+        email,
+        fullName,
+        password,
+        otp
+    })
+
+    const tempToken  = await generateTemporaryToken(tempUser?._id);
+    if(!tempToken){
+        await TempUser.findByIdAndDelete(tempUser?._id)
+        throw new ApiError(401, "error while generating temp token")
+    }
+
+    return res
+    .status(200)
+    .cookie("tempToken", tempToken, options)
+    .json(new ApiResponse(200, "signup process done, email verification left"))
+})
+
+const verifyEmail = asyncHandler(async (req, res) => {
+    const { otpFilledByUser } = req.body
+    const incomingTempToken = req.cookies.tempToken || req.body.tempToken
+    if (!incomingTempToken) {
+        throw new ApiError(401, "Unauthorizes request")
+    }
+    const decodedTempToken = jwt.verify(
+        incomingTempToken,
+        process.env.ACCESS_TOKEN_SECRET
+    )
+    
+    if (!decodedTempToken) {
+        await TempUser.findByIdAndDelete(decodedTempToken._id)
+        throw new ApiError(401, "error occur - verifyEmail")
+    }
+
+    const tempUser = await TempUser.findById(decodedTempToken._id)
+    const decodedOtpThroughToken = tempUser.otp
+    if(Number(decodedOtpThroughToken) !== Number(otpFilledByUser)){
+        await TempUser.findByIdAndDelete(decodedTempToken._id)
+        throw new ApiError(401, "otp not matched")
+    }
+
+    const text = `Subject: Your Account Has Been Successfully Verified
+                  Dear ${tempUser.username},
+                  Congratulations! Your account has been successfully verified. You can now log in and enjoy our services.
+                  If you have any questions or need assistance, feel free to contact our support team.
+                  Login Here: [Your Website Login URL]
+                  Thank you for joining!!
+                  Best regards,
+                  ${process.env.ADMIN_EMAIL}
+                  +91 9080706050`
+    
+    const user = await User.create({
+        username: tempUser.username,
+        email: tempUser.email,
+        fullName: tempUser.fullName,
+        password: tempUser.password
+    })
+
+    await sendOtpToUserEmail(
+        tempUser.email,
+        "Account Has Been Successfully Verified",
+        text
+    )
+
+    await TempUser.findByIdAndDelete(decodedTempToken._id)
+    return res
+    .status(200)
+    .clearCookie("tempToken", options)
+    .json(new ApiResponse(201, user, "email verified successfully"))
+})
+
+const uploadProfileImages = asyncHandler(async (req, res) => {
+    const user = req.user
+    if (!user) {
+        throw new ApiError(401, "Unauthorizes request - uploadProfileImages")
+    }
+
+    let avatarLocalPath;
+    if (req.files && Array.isArray(req.files.avatar) && req.files.avatar.length > 0){
+        avatarLocalPath = req.files?.avatar[0]?.path;
+    }
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+    //********** upload them to cloudinary **********//
+    let avatar;
+    if (avatarLocalPath) {
+        avatar = await uploadOnCloudinary(avatarLocalPath)
+        if (!avatar) { // required field, compulsory to check
+            throw new ApiError(400, "avatar file not uploaded")
+        }
+    }
+
+    let coverImage;
+    if (coverImageLocalPath) {
+        coverImage = await uploadOnCloudinary(coverImageLocalPath)
+        if (!coverImage) { // required field, compulsory to check
+            throw new ApiError(400, "coverImage file not uploaded")
+        }
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { 
+          avatar: avatar?.url || "", 
+          coverImage: coverImage?.url || "" 
+        },
+        { new: true } // Returns the updated document
+      ).select("-password -refreshToken");
+
+    return res.status(201).json(
+        new ApiResponse(200, updatedUser, "profile Images updated Successfully")
+    )
+})
 
 const registerUser = asyncHandler(async (req, res) => {
 
@@ -157,8 +334,6 @@ const loginUser = asyncHandler(async (req, res) => {
     
     // password check
     const isPasswordValid = await user.isPasswordCorrect(password)
-    // console.log(isPasswordValid)
-    
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid user Credentials");
     }
@@ -540,5 +715,8 @@ export {
     updateUserAvatar,
     updateUserCoverImage,
     getUserChannelProfile,
-    getWatchHistory
+    getWatchHistory,
+    SignUp,
+    verifyEmail,
+    uploadProfileImages
 }
