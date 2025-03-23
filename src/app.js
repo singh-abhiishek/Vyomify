@@ -6,7 +6,11 @@ const app = express()
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
-    credentials: true
+    credentials: true,
+    maxAge: 1000 * 60 * 10 
+
+    // If maxAge is not set, the cookie will expire when the browser session ends (i.e., when the user closes the tab or browser).
+    // This ensures that the user remains authenticated for at least 10 minutes without needing to log in again.
 
     // NOTE: credentials: true in CORS?????:-
     // Allows the server to accept cookies, HTTP authentication headers, or SSL certificates from the frontend.

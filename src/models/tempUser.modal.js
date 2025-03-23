@@ -6,7 +6,6 @@ const tempUserSchema = new Schema(
     {
         username: {
             type: String,
-            required: true,
             unique: true,
             lowercase: true,
             trim: true, 
@@ -20,13 +19,11 @@ const tempUserSchema = new Schema(
         },
         fullName: {
             type: String,
-            required: true,
             trim: true,
             index: true
         },
         password: {
             type: String,
-            required: [true, 'password is required'] 
         },
         otp: {
             type: Number,

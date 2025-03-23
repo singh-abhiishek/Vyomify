@@ -5,7 +5,7 @@ import { TempUser } from "../models/tempUser.modal.js"
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.service.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Randomstring from "randomstring"
 import { sendOtpToUserEmail } from "../utils/sendotpEmail.service.js"
 
@@ -68,7 +68,11 @@ const SignUp = asyncHandler(async (req, res) => {
         $or: [{ username }, { email }]
     })
     if (isUserExisted) {
-        throw new ApiError(409, "user with email or username already existed")
+        if(isUserExisted.username === username){
+            throw new ApiError(409, "Username exists! Time to get creative! ")
+        }else{
+            throw new ApiError(409, "Email already in use!")
+        }
     }
 
     if (password !== confirmPassword) {
@@ -76,7 +80,9 @@ const SignUp = asyncHandler(async (req, res) => {
     }
 
     // generate otp
-    const otp = Randomstring.generate({ length: 6, charset: "numeric"})
+    // const otp = Randomstring.generate({ length: 6, charset: "numeric"})
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
     const text = `Subject: OTP for Account Verification
                 Dear ${username},
                 Your One-Time Password (OTP) for account verification is: ${otp}.
@@ -91,16 +97,33 @@ const SignUp = asyncHandler(async (req, res) => {
         text
     )
     if (!response) {
-        throw new ApiError(409, "otp not send to email - error")
+        throw new ApiError(401, "otp not send to email - error")
     }
-    const tempUser = await TempUser.create({
-        username,
-        email,
-        fullName,
-        password,
-        otp
+
+    let tempUser = await TempUser.findOne({
+        $or: [{ username }, { email }]
     })
 
+    if(tempUser){
+        tempUser.username = username;
+        tempUser.otp = otp;
+        tempUser.email = email;
+        tempUser.fullName = fullName;
+        tempUser.password = password;
+        await tempUser.save();
+    }else{
+        tempUser = await TempUser.create({
+            username,
+            email,
+            fullName,
+            password,
+            otp
+        })
+    }
+
+    if(!tempUser){
+        throw new ApiError(409, "error while creating tempUser - SignUp")
+    }
     const tempToken  = await generateTemporaryToken(tempUser?._id);
     if(!tempToken){
         await TempUser.findByIdAndDelete(tempUser?._id)
@@ -117,7 +140,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
     const { otpFilledByUser } = req.body
     const incomingTempToken = req.cookies.tempToken || req.body.tempToken
     if (!incomingTempToken) {
-        throw new ApiError(401, "Unauthorizes request")
+        throw new ApiError(409, "Unauthorized request, try to resend code")
     }
     const decodedTempToken = jwt.verify(
         incomingTempToken,
@@ -128,8 +151,21 @@ const verifyEmail = asyncHandler(async (req, res) => {
         await TempUser.findByIdAndDelete(decodedTempToken._id)
         throw new ApiError(401, "error occur - verifyEmail")
     }
+    const tempUser = await TempUser.findById(new mongoose.Types.ObjectId(decodedTempToken._id))
+    const tempuserEmail = tempUser.email
+    const tempuserUsername= tempUser.username
+    const isUserExisted = await User.findOne({
+        $or: [{ tempuserUsername }, { tempuserEmail }]
+    })
 
-    const tempUser = await TempUser.findById(decodedTempToken._id)
+    if (isUserExisted) {
+        if(isUserExisted.username === username){
+            throw new ApiError(409, "Username exists! Time to get creative! ")
+        }else{
+            throw new ApiError(409, "Email already in use!")
+        }
+    }
+
     const decodedOtpThroughToken = tempUser.otp
     if(Number(decodedOtpThroughToken) !== Number(otpFilledByUser)){
         await TempUser.findByIdAndDelete(decodedTempToken._id)
@@ -153,17 +189,34 @@ const verifyEmail = asyncHandler(async (req, res) => {
         password: tempUser.password
     })
 
-    await sendOtpToUserEmail(
+    await sendOtpToUserEmail( // not otp but verification mail
         tempUser.email,
         "Account Has Been Successfully Verified",
         text
     )
 
     await TempUser.findByIdAndDelete(decodedTempToken._id)
+
+    // access and refresh token
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id, true)
+    
+    const loggedInUser = await User.findById(user._id).
+    select("-password -refreshToken")
+
     return res
     .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .clearCookie("tempToken", options)
-    .json(new ApiResponse(201, user, "email verified successfully"))
+    .json(new ApiResponse(
+        200,
+        {
+            user: loggedInUser,
+            accessToken,
+            refreshToken
+        },
+        "email verified successfully"
+    ))
 })
 
 const uploadProfileImages = asyncHandler(async (req, res) => {
@@ -317,19 +370,19 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
 
     // take data from req bodys
-    const { email, username, password } = req.body;
-    // username or email
-    if (!username && !email) {
-        throw new ApiError(400, "username or email is required");
+    const { email, password } = req.body;
+    if (!email) {
+        throw new ApiError(400, "email is required");
     }
     
     // find the user
     const user = await User.findOne({
-        $or: [{ username }, { email }]
+        email 
     })
     
     if (!user) {
-        throw new ApiError(404, "User does not exist");
+        // throw new ApiError(404, "User does not exist, please Signup!!");
+        throw new ApiError(404, "Can’t find you here... Time to join in!");
     }
     
     // password check
@@ -442,6 +495,77 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             )
     } catch (error) {
         throw new ApiError(401, error?.message || "Invalid Refresh Token")
+    }
+})
+
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email, otp = "", newPassword = "", confirmNewPassword = "" } = req.body
+    if(!email){
+        throw new ApiError(409, "Email is required")
+    }
+
+    const user = await User.findOne({email})
+    if(!user){
+        throw new ApiError(409, "user does not registered")
+    }
+
+    if(email && (!otp && !newPassword && !confirmNewPassword)){
+        const otpForPasswordReset = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const text = `Subject: OTP for Account Verification
+                Dear ${user.username},
+                Your One-Time Password (OTP) for password reset is: ${otpForPasswordReset}.
+                This OTP is valid for 2 minutes. Please do not share it with anyone for security reasons.
+                If you did not request this OTP, please ignore this email.
+                Best regards,
+                ${process.env.ADMIN_EMAIL}`
+
+        const tempUser = await TempUser.create({
+            email,
+            otp: otpForPasswordReset
+        })
+
+        if(!tempUser){
+            throw new ApiError(409, "error while creating tempUser - forgotPassword")
+        }
+
+        const response = await sendOtpToUserEmail(
+            email,
+            "OTP to reset password",
+            text
+        )
+        if (!response) {
+            await tempUser.findByIdAndDelete(tempUser._id)
+            throw new ApiError(401, "otp not send to email - error")
+        }
+
+        return res.status(200).json(new ApiResponse(200, "Otp send to user registered email - "))
+    }else{
+        if(!email || !otp || !newPassword || !confirmNewPassword){
+            throw new ApiError(409, "All field are required")
+        }
+
+        const tempUser = await TempUser.findOne({email});
+        if(!tempUser){
+            throw new ApiError(409, "tempUser does not exist")
+        }
+
+        if(Number(tempUser.otp !== Number(otp))){
+            throw new ApiError(409, "otp doesn't matched")
+        }
+
+        const userAfterPasswordUpdate = await User.findByIdAndUpdate(
+            user._id,
+            {
+                password: newPassword
+            },
+            { new: true }
+        )
+        if(!userAfterPasswordUpdate){
+            throw new ApiError(409, "password does not update - error")
+        }
+
+        return res.status(200).json(new ApiResponse(200, "Password updated successfully"))
     }
 })
 
@@ -710,6 +834,7 @@ export {
     logoutUser,
     refreshAccessToken,
     changeCurrentPassword,
+    forgotPassword,
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,

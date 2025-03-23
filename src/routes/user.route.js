@@ -13,7 +13,8 @@ import {
     getWatchHistory,
     SignUp,
     verifyEmail,
-    uploadProfileImages
+    uploadProfileImages,
+    forgotPassword
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
@@ -50,6 +51,7 @@ router.route("/upload-profile-images").patch(
     uploadProfileImages)
 
 router.route("/login").post(loginUser)
+router.route("/reset-password").post(forgotPassword)
 
 // secured routes (using verifyJWT middleware)
 router.route("/logout").post(verifyJWT, logoutUser)
