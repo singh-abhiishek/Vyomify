@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  } */
+
+
+  
+  .toastBody {
+    font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
+    color: #10171D; /* #10171D */
+    font-size: 1.7rem ;
+  }
+
+  /* Adjust width of the toast when screen is smaller */
+  @media (max-width: 600px) {
+    .toast-container .Toastify__toast {
+      width: 250px ;
+    }
+  }
+
+  
