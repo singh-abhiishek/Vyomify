@@ -1,13 +1,15 @@
 import {Input} from './index.js'
-import React  from 'react'
+import React, { use, useEffect }  from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from 'axios'
 import { showToastMessage } from '../utils/showToaster.jsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { showVerifyEmailPage as storeShowVerifyEmailPage } from '../store/slice/authSlice.js'
 
 const Signup = () => {
-
+    
     const { register, handleSubmit, watch, formState: { errors } } = useForm()
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -17,12 +19,15 @@ const Signup = () => {
 
     const password = watch("password")
     const navigate = useNavigate()
+    const dispatch = useDispatch();
     const create = async(data) => {
         try {
             showToastMessage("checking your data", "info");
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/users/Sign-Up`, data,  { withCredentials: true })
             if(response.status === 200){
                 showToastMessage("OTP send Successfully", "success");
+                dispatch(storeShowVerifyEmailPage(true))
+                
                 navigate('/verify-Email')
             }
         } catch (error) {
@@ -285,10 +290,10 @@ const Signup = () => {
         </form>
         <div class="text-gray-600 text-center mt-6">
             Already have an account?
-            <a class="text-red-600 hover:text-red-700 font-semibold  transition duration-150 ease-in-out"
-            href="/login">
+            <Link class="text-red-600 hover:text-red-700 font-semibold  transition duration-150 ease-in-out"
+            to="/login">
                 Sign in
-            </a>
+            </Link>
         </div>
     </div>
     </div>

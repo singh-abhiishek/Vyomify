@@ -1,11 +1,22 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { set, useForm } from 'react-hook-form'
 import {Input} from '../components/index.js'
 import { showToastMessage } from '../utils/showToaster'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import { login as storeLogin } from "../store/slice/authSlice.js"
+import { useDispatch, useSelector } from 'react-redux';
+import { showUploadProfileImagePage as storeShowUploadProfileImagePage } from '../store/slice/authSlice.js'
 
 const UploadProfileImages = () => {
+
+  const verifyUploadProfileImageVisibStatus = useSelector(state => state.auth.isUploadProfileImagePageVisible)
+  useEffect(() => {
+    if (!verifyUploadProfileImageVisibStatus) {
+      navigate("/"); // Agar showImageUploadPage false hai to home pe bhejo
+    }
+  }, [verifyUploadProfileImageVisibStatus]);
+
   const { register, handleSubmit, setValue, formState: { errors } } = useForm()
 
   const [avatarPreview, setAvatarPreview] = useState(null);
@@ -32,8 +43,26 @@ const UploadProfileImages = () => {
     }
   };
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const onSubmit = async(data) => {
     console.log(data)
+    try {
+      const userData = await axios.post(`${import.meta.env.VITE_BACKEND_API}/users/upload-profile-images`, data)
+      if(userData.status === 200){
+        dispatch(storeLogin(userData.user))
+        dispatch(storeShowUploadProfileImagePage(false))
+        showToastMessage("Profile Image uploaded", "success")
+        //TODO: navigate to content page navigate('/')
+      }
+    } catch (error) {
+      if(error.status === 409){
+          showToastMessage(error.response?.data?.message || "Request failed!", "error");
+      }else{
+          showToastMessage("Try again after sometime", "error")
+          navigate('/')
+      }
+    }
   }
 
   return (
@@ -207,7 +236,9 @@ const UploadProfileImages = () => {
                 <div className="w-full px-3">
                     <div className="flex justify-between ">
                         <Link className="text-sm text-red-600 hover:text-red-700 font-semibold  transition duration-150 ease-in-out ml-auto hover:underline"
-                            to="/">
+                            to="/explore-page"
+                            onClick={() => dispatch(storeShowUploadProfileImagePage(false))}
+                            >
                             skip for now?
                         </Link>
                     </div>

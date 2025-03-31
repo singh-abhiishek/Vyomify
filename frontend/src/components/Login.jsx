@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Input from './Input'
 import { showToastMessage } from '../utils/showToaster'
-import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import Input from './Input'
+import { useDispatch } from 'react-redux'
+import { login as storeLogin } from '../store/slice/authSlice.js'
 
 const Login = () => {
 
@@ -12,22 +14,31 @@ const Login = () => {
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const loggedIn = async (data) => {
         try {
             showToastMessage("Let me find you... Stay cool. 😎", "info")
-            const response = await axios.post(
+            const userData = await axios.post(
                 `${import.meta.env.VITE_BACKEND_API}/users/login`, 
                 {
                     email : data.email,
                     password: data.password
-                }
+                },
+                { withCredentials: true }
             )
-            if(response.status === 200){
+            if(userData.status === 200){
+                dispatch(storeLogin(userData.data.data))
                 showToastMessage("Login successful! Welcome back.", "success")
-                navigate('/explore-Page')
+                setTimeout(() => { // because dispatch take sometime to update the authStatus in store, explore-page required authentication that's why some delay
+                    navigate('/explore-Page')
+                }, 100);
             }
         } catch (error) {
-            showToastMessage(error.response?.data?.message || "Request failed!", "error");
+            console.log(error)
+            if(error.status === 410){
+                showToastMessage(error.response?.data?.message, "error");
+            }
+            else showToastMessage("Request failed!", "error");
         }
     }
     
@@ -176,10 +187,10 @@ const Login = () => {
                 </form>
                 <div class="text-gray-600 text-center mt-6">
                     Don’t you have an account?
-                    <a class="text-red-600 hover:text-red-700 font-semibold  transition duration-150 ease-in-out"
-                        href="/signup">
+                    <Link class="text-red-600 hover:text-red-700 font-semibold  transition duration-150 ease-in-out"
+                        to="/signup">
                         Sign up
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

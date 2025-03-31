@@ -64,7 +64,7 @@ const OtpInput = ({length = 6, onSubmit}) => {
             }
         </div>
         <button 
-            type="submit" 
+            // type="submit" 
             className="text-md rounded-lg relative inline-flex items-center justify-center px-3.5 py-2 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white w-full mt-8"
         >
             Sign Up

@@ -1,26 +1,51 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import OtpInput from '../components/OtpInput.jsx'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { showToastMessage } from '../utils/showToaster.jsx';
 import { useNavigate } from 'react-router-dom';
+import { login as storeLogin } from "../store/slice/authSlice.js"
+import { useDispatch, useSelector } from 'react-redux';
+import { showVerifyEmailPage as storeShowVerifyEmailPage } from '../store/slice/authSlice.js'
+import { showUploadProfileImagePage as storeShowUploadProfileImagePage } from '../store/slice/authSlice.js'
 
 
 const VerifyEmailWithOtp = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch();
+
+    const verifyEmailPageVisibStatus = useSelector(state => state.auth.isVerifyEmailPageVisible)
+    useEffect(() => {
+        if (!verifyEmailPageVisibStatus) {
+          navigate("/"); // Agar showOtpPage false hai to home pe bhejo
+        }
+    }, [verifyEmailPageVisibStatus]);
 
     const handleOtpSubmit = async (data) => {
         try {
             const otp = Number(Object.values(data.otp).join(""))
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/users/verify-Email`, {
-                otpFilledByUser: otp
-            }, { withCredentials: true })
-            showToastMessage("Account created Successfully", "success")
-            navigate('/upload-Profile-Images')
+            const userData = await axios.post(
+                `${import.meta.env.VITE_BACKEND_API}/users/verify-Email`, 
+                { otpFilledByUser: otp}, 
+                { withCredentials: true}
+            )
+
+            if(userData.status === 200){
+                showToastMessage("Account created Successfully", "success")
+                
+                dispatch(storeLogin(userData.data.data))
+                dispatch(storeShowVerifyEmailPage(false))
+                dispatch(storeShowUploadProfileImagePage(true))
+
+                setTimeout(() => {
+                    navigate("/upload-Profile-Images");
+                }, 100);
+            }
         } catch (error) {
             if(error.status === 409){
                 showToastMessage(error.response?.data?.message || "Request failed!", "error");
             }else{
+                console.log("error", error)
                 showToastMessage("Try again after sometime", "error")
                 // navigate('/')
             }
