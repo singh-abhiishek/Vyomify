@@ -56,9 +56,14 @@ const userSchema = new Schema(
 
 // pre hook, save hone se just pehle function k andr wala kaam kr do    
 userSchema.pre("save", async function (next) { 
-    if(!this.isModified("password")) return next(); // agr password field modified ho tbhi usko hash kro 
+    // console.log("🔥 Middleware triggered for:", this._id);
+    if(!this.isModified("password")){
+        console.log("❌ Password not modified. Skipping hash.");
+        return next();
+    }  // agr password field modified ho tbhi usko hash kro 
     // bina if condition ke user me kuch bhi uupdate hone pe baar baar password ko hash kr ke change krega
     const isBcryptHash = /^\$2[aby]\$\d{2}\$.{53}$/.test(this.password);
+    // console.log(isBcryptHash)
     if(!isBcryptHash) this.password = await bcrypt.hash(this.password, 10)
     next();
 })

@@ -7,7 +7,9 @@ const app = express()
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
-    maxAge: 1000 * 60 * 10 
+    maxAge: 1000 * 60 * 10 ,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 
     // If maxAge is not set, the cookie will expire when the browser session ends (i.e., when the user closes the tab or browser).
     // This ensures that the user remains authenticated for at least 10 minutes without needing to log in again.
@@ -51,8 +53,6 @@ app.use("/api/v1/dashboards", dashboardRouter)
 
 
 // http://localhost:8000/api/v1/users/register
-
-
 
 
 

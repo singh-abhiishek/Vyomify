@@ -7,11 +7,16 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 import mongoose, { Types } from "mongoose";
 import Randomstring from "randomstring"
-import { sendOtpToUserEmail } from "../utils/sendotpEmail.service.js"
+import { sendOtpToUserEmail, sendOtpToUserForResetPassword, sendSignupDoneToUserEmail } from "../utils/sendEmail.service.js"
+
+const isProduction = process.env.NODE_ENV === "production";
 
 const options = {
-    httpOnly: true,
-    secure: true
+    httpOnly: true,   // Secure, JavaScript access nahi karega
+    secure: isProduction, // Production pe true rakhein
+    sameSite: isProduction ? "None" : "Lax", // Cross-site requests allow
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
 }
 
 const generateAccessAndRefreshToken = async (userId, isRefresh) => {
@@ -82,19 +87,11 @@ const SignUp = asyncHandler(async (req, res) => {
     // generate otp
     // const otp = Randomstring.generate({ length: 6, charset: "numeric"})
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const text = `Subject: OTP for Account Verification
-                Dear ${username},
-                Your One-Time Password (OTP) for account verification is: ${otp}.
-                This OTP is valid for 2 minutes. Please do not share it with anyone for security reasons.
-                If you did not request this OTP, please ignore this email.
-                Best regards,
-                ${process.env.ADMIN_EMAIL}`
-
     const response = await sendOtpToUserEmail(
         email,
         "OTP for Email verification",
-        text
+        username,
+        otp
     )
     if (!response) {
         throw new ApiError(401, "otp not send to email - error")
@@ -140,7 +137,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
     const { otpFilledByUser } = req.body
     const incomingTempToken = req.cookies.tempToken || req.body.tempToken
     if (!incomingTempToken) {
-        throw new ApiError(409, "Unauthorized request, try to resend code")
+        throw new ApiError(410, "Unauthorized request, try to resend code")
     }
     const decodedTempToken = jwt.verify(
         incomingTempToken,
@@ -152,12 +149,15 @@ const verifyEmail = asyncHandler(async (req, res) => {
         throw new ApiError(401, "error occur - verifyEmail")
     }
     const tempUser = await TempUser.findById(new mongoose.Types.ObjectId(decodedTempToken._id))
+    if(!tempUser){
+        throw new ApiError(410, "tempUser not found through tempToken - verifyEmail")
+    }
     const tempuserEmail = tempUser.email
     const tempuserUsername= tempUser.username
     const isUserExisted = await User.findOne({
         $or: [{ tempuserUsername }, { tempuserEmail }]
     })
-
+    
     if (isUserExisted) {
         if(isUserExisted.username === username){
             throw new ApiError(409, "Username exists! Time to get creative! ")
@@ -165,22 +165,11 @@ const verifyEmail = asyncHandler(async (req, res) => {
             throw new ApiError(409, "Email already in use!")
         }
     }
-
+    
     const decodedOtpThroughToken = tempUser.otp
     if(Number(decodedOtpThroughToken) !== Number(otpFilledByUser)){
-        await TempUser.findByIdAndDelete(decodedTempToken._id)
-        throw new ApiError(401, "otp not matched")
+        throw new ApiError(409, "otp not matched")
     }
-
-    const text = `Subject: Your Account Has Been Successfully Verified
-                  Dear ${tempUser.username},
-                  Congratulations! Your account has been successfully verified. You can now log in and enjoy our services.
-                  If you have any questions or need assistance, feel free to contact our support team.
-                  Login Here: [Your Website Login URL]
-                  Thank you for joining!!
-                  Best regards,
-                  ${process.env.ADMIN_EMAIL}
-                  +91 9080706050`
     
     const user = await User.create({
         username: tempUser.username,
@@ -189,10 +178,10 @@ const verifyEmail = asyncHandler(async (req, res) => {
         password: tempUser.password
     })
 
-    await sendOtpToUserEmail( // not otp but verification mail
-        tempUser.email,
+    await sendSignupDoneToUserEmail( // not otp but verification mail
+        user.email,
         "Account Has Been Successfully Verified",
-        text
+        user.username
     )
 
     await TempUser.findByIdAndDelete(decodedTempToken._id)
@@ -212,6 +201,9 @@ const verifyEmail = asyncHandler(async (req, res) => {
         200,
         {
             user: loggedInUser,
+             //NOTE:  🚀 Backend me jo naam hai (user), Redux slice me uska naam kuch bhi rakh sakte ho (currentUser, loggedInUser, etc.).
+            // 🚀 Bas dispatch ke time sahi data pass hona chahiye (data.user).
+            // 🚀 useSelector() use karte waqt bhi slice ka jo naam diya hai, wahi use karna hoga.
             accessToken,
             refreshToken
         },
@@ -219,10 +211,52 @@ const verifyEmail = asyncHandler(async (req, res) => {
     ))
 })
 
+const resendOtp = asyncHandler(async (req, res) => {
+    const incomingTempToken = req.cookies.tempToken || req.body.tempToken
+    if (!incomingTempToken) {
+        throw new ApiError(401, "Unauthorized request - resendOtp")
+    }
+    const decodedTempToken = jwt.verify(
+        incomingTempToken,
+        process.env.ACCESS_TOKEN_SECRET
+    )
+    
+    if (!decodedTempToken) {
+        await TempUser.findByIdAndDelete(decodedTempToken._id)
+        throw new ApiError(401, "error occur - verifyEmail")
+    }
+    const tempUser = await TempUser.findById(new mongoose.Types.ObjectId(decodedTempToken._id))
+    if (!tempUser) {
+        throw new ApiError(410, "Unauthorized request - resendOtp")
+    }
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const response = await sendOtpToUserEmail(
+        tempUser.email,
+        "OTP for Email verification",
+        tempUser.username,
+        otp
+    )
+    if (!response) {
+        throw new ApiError(401, "otp not send to email - resendOtp")
+    }
+
+    if(tempUser){
+        tempUser.otp = otp;
+        await tempUser.save();
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        "otp resend successfully"
+    ))
+})
+
 const uploadProfileImages = asyncHandler(async (req, res) => {
     const user = req.user
     if (!user) {
-        throw new ApiError(401, "Unauthorizes request - uploadProfileImages")
+        throw new ApiError(409, "Unauthorizes request - uploadProfileImages")
     }
 
     let avatarLocalPath;
@@ -239,7 +273,7 @@ const uploadProfileImages = asyncHandler(async (req, res) => {
     if (avatarLocalPath) {
         avatar = await uploadOnCloudinary(avatarLocalPath)
         if (!avatar) { // required field, compulsory to check
-            throw new ApiError(400, "avatar file not uploaded")
+            throw new ApiError(409, "avatar file not uploaded")
         }
     }
 
@@ -247,7 +281,7 @@ const uploadProfileImages = asyncHandler(async (req, res) => {
     if (coverImageLocalPath) {
         coverImage = await uploadOnCloudinary(coverImageLocalPath)
         if (!coverImage) { // required field, compulsory to check
-            throw new ApiError(400, "coverImage file not uploaded")
+            throw new ApiError(409, "coverImage file not uploaded")
         }
     }
     const updatedUser = await User.findByIdAndUpdate(
@@ -259,7 +293,7 @@ const uploadProfileImages = asyncHandler(async (req, res) => {
         { new: true } // Returns the updated document
       ).select("-password -refreshToken");
 
-    return res.status(201).json(
+    return res.status(200).json(
         new ApiResponse(200, updatedUser, "profile Images updated Successfully")
     )
 })
@@ -372,7 +406,7 @@ const loginUser = asyncHandler(async (req, res) => {
     // take data from req bodys
     const { email, password } = req.body;
     if (!email) {
-        throw new ApiError(400, "email is required");
+        throw new ApiError(410, "email is required");
     }
     
     // find the user
@@ -382,13 +416,13 @@ const loginUser = asyncHandler(async (req, res) => {
     
     if (!user) {
         // throw new ApiError(404, "User does not exist, please Signup!!");
-        throw new ApiError(404, "Can’t find you here... Time to join in!");
+        throw new ApiError(410, "Can't find you here... Time to join in!");
     }
     
     // password check
     const isPasswordValid = await user.isPasswordCorrect(password)
     if (!isPasswordValid) {
-        throw new ApiError(401, "Invalid user Credentials");
+        throw new ApiError(410, "Invalid user Credentials");
     }
     
     // access and refresh token
@@ -426,8 +460,11 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const logoutUser = asyncHandler(async (req, res) => {
-    await User.findOneAndUpdate(
-        req.user._id,  //NOTE:- req m user._id kaha se aaya??? verifyJWT middleware k through
+
+    const id = new mongoose.Types.ObjectId('67ead188d8db5cf386238e25')
+    const response = await User.findOneAndUpdate(
+    //   req.user._id,  //NOTE:- req m user._id kaha se aaya??? verifyJWT middleware k through
+        id,  //NOTE:- req m user._id kaha se aaya??? verifyJWT middleware k through
         {
             $unset: {
                 refreshToken: 1 // this removes the field from document
@@ -439,6 +476,9 @@ const logoutUser = asyncHandler(async (req, res) => {
         }
     )
 
+    if(!response){
+        throw new ApiError(410, "error while logout user")
+    }
     // const options = {
     //     httpOnly: true,
     //     secure: true
@@ -498,8 +538,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 })
 
+//reset password
 const forgotPassword = asyncHandler(async (req, res) => {
-    const { email, otp = "", newPassword = "", confirmNewPassword = "" } = req.body
+    const { email, otp = "", newPassword = "", confirmPassword = "" } = req.body
     if(!email){
         throw new ApiError(409, "Email is required")
     }
@@ -509,30 +550,30 @@ const forgotPassword = asyncHandler(async (req, res) => {
         throw new ApiError(409, "user does not registered")
     }
 
-    if(email && (!otp && !newPassword && !confirmNewPassword)){
+    if(email && (!otp && !newPassword && !confirmPassword)){
         const otpForPasswordReset = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const text = `Subject: OTP for Account Verification
-                Dear ${user.username},
-                Your One-Time Password (OTP) for password reset is: ${otpForPasswordReset}.
-                This OTP is valid for 2 minutes. Please do not share it with anyone for security reasons.
-                If you did not request this OTP, please ignore this email.
-                Best regards,
-                ${process.env.ADMIN_EMAIL}`
-
-        const tempUser = await TempUser.create({
-            email,
-            otp: otpForPasswordReset
-        })
+        let tempUser = await TempUser.findOne({email})
+        if(tempUser){
+            tempUser.otp = otpForPasswordReset
+            await tempUser.save();
+        }else{
+            tempUser = await TempUser.create({
+                email,
+                otp: otpForPasswordReset
+            })
+        }
+        console.log(tempUser)
 
         if(!tempUser){
             throw new ApiError(409, "error while creating tempUser - forgotPassword")
         }
 
-        const response = await sendOtpToUserEmail(
+        const response = await sendOtpToUserForResetPassword(
             email,
             "OTP to reset password",
-            text
+            user.username,
+            otpForPasswordReset
         )
         if (!response) {
             await tempUser.findByIdAndDelete(tempUser._id)
@@ -541,7 +582,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
         return res.status(200).json(new ApiResponse(200, "Otp send to user registered email - "))
     }else{
-        if(!email || !otp || !newPassword || !confirmNewPassword){
+        if(!email || !otp || !newPassword || !confirmPassword){
             throw new ApiError(409, "All field are required")
         }
 
@@ -550,22 +591,42 @@ const forgotPassword = asyncHandler(async (req, res) => {
             throw new ApiError(409, "tempUser does not exist")
         }
 
-        if(Number(tempUser.otp !== Number(otp))){
+        if(Number(tempUser.otp) !== Number(otp)){
             throw new ApiError(409, "otp doesn't matched")
         }
 
-        const userAfterPasswordUpdate = await User.findByIdAndUpdate(
-            user._id,
-            {
-                password: newPassword
-            },
-            { new: true }
-        )
-        if(!userAfterPasswordUpdate){
+        // update pasword
+        user.password = newPassword; // Assign new password
+        const response = await user.save(); 
+        // console.log("Password modified?", user.isModified("password")); 
+        if(!response){
             throw new ApiError(409, "password does not update - error")
         }
 
-        return res.status(200).json(new ApiResponse(200, "Password updated successfully"))
+        // access and refresh token
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id, true)
+        
+        const loggedInUser = await User.findById(user._id).
+        select("-password -refreshToken")
+
+        return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                {   // when we set token in cookies,
+                    // what is the need of sending it in json format??
+                    // may be user want to save it in localstorage (not good practice)
+                    // may be use in native mobile apps (as we can't set cookies in native mobile apps) 
+                    user: loggedInUser,
+                    accessToken,
+                    refreshToken
+                },
+                "Password updated successfully"
+            )
+        )
     }
 })
 
@@ -587,9 +648,17 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
-    return res
+
+    const user = req?.user;
+    console.log(user)
+    if(!user){
+        throw new ApiError(410, "", "User not found")
+    } else{
+        return res
         .status(200)
         .json(new ApiResponse(200, req.user, "current user fetched Successfully"))
+    }
+
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -842,6 +911,7 @@ export {
     getUserChannelProfile,
     getWatchHistory,
     SignUp,
+    resendOtp,
     verifyEmail,
     uploadProfileImages
 }

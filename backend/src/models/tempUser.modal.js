@@ -31,8 +31,8 @@ const tempUserSchema = new Schema(
         },
         otpExpiresAt: {
             type: Date,
-            default: Date.now(),
-            expires: 120 // two minute m expires ho jayega 
+            default: () => Date.now(), // Just store the current time
+            expires: 300 // MongoDB will delete the document 180 seconds after `otpExpiresAt`
         }
     }
 )

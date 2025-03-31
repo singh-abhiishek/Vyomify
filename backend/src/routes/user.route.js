@@ -12,6 +12,7 @@ import {
     getUserChannelProfile, 
     getWatchHistory,
     SignUp,
+    resendOtp,
     verifyEmail,
     uploadProfileImages,
     forgotPassword
@@ -35,6 +36,7 @@ const router = Router()
 //     registerUser)
 
 router.route("/Sign-Up").post(SignUp)
+router.route("/resend-otp").post(resendOtp)
 router.route("/verify-Email").post(verifyEmail)
 router.route("/upload-profile-images").patch(
     verifyJWT,
@@ -55,6 +57,7 @@ router.route("/reset-password").post(forgotPassword)
 
 // secured routes (using verifyJWT middleware)
 router.route("/logout").post(verifyJWT, logoutUser)
+// router.route("/logout").post(logoutUser)
 router.route("/refresh-token").post(refreshAccessToken)
 router.route("/change-password").post(verifyJWT, changeCurrentPassword)
 router.route("/current-user").get(verifyJWT, getCurrentUser)
