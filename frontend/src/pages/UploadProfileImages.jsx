@@ -46,21 +46,37 @@ const UploadProfileImages = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const onSubmit = async(data) => {
-    console.log(data)
+    const formData = new FormData();
+    if (data.avatar) {
+      formData.append("avatar", data.avatar); // Append only if file exists
+    }
+  
+    if (data.coverImage) {
+      formData.append("coverImage", data.coverImage); // Append only if file exists
+    }
+
     try {
-      const userData = await axios.post(`${import.meta.env.VITE_BACKEND_API}/users/upload-profile-images`, data)
+      const userData = await axios.post(
+        `${import.meta.env.VITE_BACKEND_API}/users/upload-profile-images`, 
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true
+        }
+      )
+      // console.log("userData", userData)
       if(userData.status === 200){
-        dispatch(storeLogin(userData.user))
+        dispatch(storeLogin(userData.data.data))
         dispatch(storeShowUploadProfileImagePage(false))
         showToastMessage("Profile Image uploaded", "success")
-        //TODO: navigate to content page navigate('/')
+        navigate('/explore-Page')
       }
     } catch (error) {
       if(error.status === 409){
           showToastMessage(error.response?.data?.message || "Request failed!", "error");
       }else{
           showToastMessage("Try again after sometime", "error")
-          navigate('/')
+          // navigate('/')
       }
     }
   }

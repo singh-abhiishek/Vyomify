@@ -6,6 +6,7 @@ import axios from 'axios'
 import Input from './Input'
 import { useDispatch } from 'react-redux'
 import { login as storeLogin } from '../store/slice/authSlice.js'
+import { ClipLoader, PulseLoader, SyncLoader, FadeLoader } from "react-spinners"
 
 const Login = () => {
 
@@ -13,9 +14,13 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const [loading, setLoading] = useState(false)
     const loggedIn = async (data) => {
+        setLoading(true)
         try {
             showToastMessage("Let me find you... Stay cool. 😎", "info")
             const userData = await axios.post(
@@ -39,6 +44,9 @@ const Login = () => {
                 showToastMessage(error.response?.data?.message, "error");
             }
             else showToastMessage("Request failed!", "error");
+        }
+        finally{
+            setLoading(false)
         }
     }
     
@@ -67,7 +75,6 @@ const Login = () => {
                 </div>
 
                 <form onSubmit={handleSubmit(loggedIn)}>
-
 
                     <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full relative px-3">
@@ -179,12 +186,24 @@ const Login = () => {
                     </div>
                     <div class="flex flex-wrap -mx-3 mt-6">
                         <div class="w-full px-3">
-                            <button type="submit" class="text-md rounded-lg relative inline-flex items-center justify-center px-3.5 py-2 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white w-full">
-                                Login
+                            <button 
+                            type="submit" 
+                            disabled = {loading}
+                            class="text-md rounded-lg relative inline-flex items-center justify-center px-3.5 py-2 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white w-full">
+                            {loading ? (
+                            <div className="flex items-center gap-2">
+                                <ClipLoader size={18} color="#fff" />
+                                <span>Logging in...</span>
+                            </div>
+                            ) : ( "Login" )}
+
+
+                                {/* Login */}
                             </button>
                         </div>
                     </div>
                 </form>
+
                 <div class="text-gray-600 text-center mt-6">
                     Don’t you have an account?
                     <Link class="text-red-600 hover:text-red-700 font-semibold  transition duration-150 ease-in-out"

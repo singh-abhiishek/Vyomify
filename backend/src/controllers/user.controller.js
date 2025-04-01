@@ -258,7 +258,6 @@ const uploadProfileImages = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(409, "Unauthorizes request - uploadProfileImages")
     }
-
     let avatarLocalPath;
     if (req.files && Array.isArray(req.files.avatar) && req.files.avatar.length > 0){
         avatarLocalPath = req.files?.avatar[0]?.path;
@@ -563,7 +562,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
                 otp: otpForPasswordReset
             })
         }
-        console.log(tempUser)
 
         if(!tempUser){
             throw new ApiError(409, "error while creating tempUser - forgotPassword")
@@ -650,7 +648,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
 
     const user = req?.user;
-    console.log(user)
+    // console.log(user)
     if(!user){
         throw new ApiError(410, "", "User not found")
     } else{

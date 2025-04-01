@@ -38,7 +38,7 @@ const router = Router()
 router.route("/Sign-Up").post(SignUp)
 router.route("/resend-otp").post(resendOtp)
 router.route("/verify-Email").post(verifyEmail)
-router.route("/upload-profile-images").patch(
+router.route("/upload-profile-images").post(
     verifyJWT,
     upload.fields([   // file handling, multer middleware se hoke jana
         {
