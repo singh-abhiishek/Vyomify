@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useStepForm } from "../../contextAPI/StepFormContext";
 
 const UploadPopUp = ({sendDataToUploadButton}) => {
+
+    const { toggleStepForm } = useStepForm()
 
   return (
     <div className="relative ">
@@ -14,7 +17,10 @@ const UploadPopUp = ({sendDataToUploadButton}) => {
                     {/* video upload Link */}
                     <Link
                         to="/explore/publishVideo"
-                        onClick={() => sendDataToUploadButton(false)}
+                        onClick={() => {
+                            sendDataToUploadButton(false)
+                            toggleStepForm(); // toggles the form open/close
+                        }}
                         className="font-medium flex items-center px-2 hover:bg-[#212121] hover:dark:bg-dark_40 w-full py-2 rounded-lg"
                         >
                         <svg 

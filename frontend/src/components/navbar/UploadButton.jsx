@@ -4,9 +4,8 @@ import UploadPopUp from './UploadPopUp';
 const   UploadButton = () => {
 
   const [isOpen, setIsOpen] = useState(false);
-
   
-  const handleUploadPopUpData = (data) => {
+  const handleUploadPopUpData = () => {
     setIsOpen(false)
   }
   return (
