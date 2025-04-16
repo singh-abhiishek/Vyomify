@@ -25,11 +25,20 @@ export const plalylistApiSlice = apiSlice.injectEndpoints({
                 url: `${PLAYLISTS_URL}/user/${userId}`
             }),
         }),
+
+        // get users playlists names
+        getUserPlaylistsName: builder.query({
+            query: (userId) => ({
+                url: `${PLAYLISTS_URL}/user/${userId}/playlistsName`
+            }),
+        }),
     })
 })
 
 
 export const {
     useGetUserPlaylistsQuery,
+    useGetUserPlaylistsNameQuery,
+    useLazyGetUserPlaylistsNameQuery,
     useCreatePlaylistMutation,
 } = plalylistApiSlice

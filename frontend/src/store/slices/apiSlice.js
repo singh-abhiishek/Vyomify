@@ -3,6 +3,8 @@ import {
     fetchBaseQuery
 } from "@reduxjs/toolkit/query/react";
 import { checkIfTokenNeedsRefresh } from "../../utils/tokenLifeSpan.js";
+import { login as storeLogin, logout as storeLogout } from "./authSlice.js";
+
 
 // custom basequery
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -42,16 +44,16 @@ const baseQueryWithAuthRefresh = async (args, api, extraOptions) => {
         if (refreshResult.data) {   // TODO: update user 
             console.info("Token refreshed successfully");
       
-            // const responseData = refreshResult.data;
-            // api.dispatch(setUserCredentials(responseData?.data));
+            const responseData = refreshResult.data;
+            api.dispatch(storeLogin(responseData?.data));
         } 
         else { // for Unauthorized request
             // NOTE: if refresh token expired, it will throw an error, so we logout user, so that it can reset the both token
             console.error("Token refresh failed");
-            // api.dispatch(logoutUser("Session expired, please login again")); // Log the user out
-            // window.location.href = "/login"; // Redirect to login page
-            // isRefreshing = false; // Release the lock after failure
-            // return refreshResult; // Exit with the refresh error
+            api.dispatch(storeLogout("Session expired, please login again")); // Log the user out
+            window.location.href = "/login"; // Redirect to login page
+            isRefreshing = false; // Release the lock after failure
+            return refreshResult; // Exit with the refresh error
         }
 
         isRefreshing = false; // Release the lock after the refresh request completes
@@ -59,11 +61,12 @@ const baseQueryWithAuthRefresh = async (args, api, extraOptions) => {
 
     // Original API call
     let result = await baseQuery(args, api, extraOptions);
+    console.log("from 65 apislice", result)
 
-    // Agar 401 error aaye to logout
-    if (result.error && result.error.status === 401) {
+    // Agar 405 error aaye to logout
+    if (result.error && result.error.status === 405) {
       console.error("Unauthorized! Logging out...");
-    //   api.dispatch(logoutUser("Session expired, please login again"));
+      api.dispatch(storeLogout("Session expired, please login again"));
     //   window.location.href = "/login"; // Redirect to login
     }
   
