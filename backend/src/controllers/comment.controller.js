@@ -1,106 +1,151 @@
 import mongoose, { isValidObjectId } from "mongoose"
-import {Comment} from "../models/comment.model.js"
-import {ApiError} from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiResponse.js"
-import {asyncHandler} from "../utils/asyncHandler.js"
+import { Video } from "../models/video.model.js"
+import { Comment } from "../models/comment.model.js"
+import { ApiError } from "../utils/ApiError.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
 
 const getVideoComments = asyncHandler(async (req, res) => {
-    //get all comments for a video
-    const {videoId} = req.params
+    const { videoId } = req.params
+
+    if (!videoId) {
+        throw new ApiError(400, "videoId is missing - getVideoComments")
+    }
+
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid videoId - getVideoComments")
     }
-    const {page = 1, limit = 10} = req.query
 
-    const pageNumber = parseInt(page)
-    const pageSize = parseInt(limit)
-    const skip = (pageNumber - 1) * pageSize
+    const video = await Video.findById(videoId);
+    if (!video) {
+        throw new ApiError(500, `video does not exist, id:- ${videoId} - getVideoComments`);
+    }
 
-    // const comments = await Comment.find(
-    //     {
-    //         video: new mongoose.Types.ObjectId(videoId)
-    //     }
-    // )
-    // .limit(pageSize)
-    // .skip(skip)
+    // console.log("from get video comments", video)
 
-    // const commentsCount = await Comment.countDocuments(
-    //     {
-    //         video: new mongoose.Types.ObjectId(videoId)
-    //     }
-    // )
-
-    //$facet allows you to run multiple queries in parallel within a single aggregation pipeline. Instead of making separate calls for documents and count, you can fetch both at once!
-
-    const response = await Comment.aggregate([
+    const pipeline = [
         {
             $match: {
                 video: new mongoose.Types.ObjectId(videoId)
             }
         },
         {
-            $facet: {
-                countComment: [
-                    { $count: "count"} // "count" is a variable, can be any thing 
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "userDetails",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            username: 1,
+                            fullName: 1,
+                            avatar: 1,
+                        },
+                    },
                 ],
-                comments: [
-                   { $skip: skip },
-                   { $limit: limit }
-                ]
             }
+        },
+        {
+            $addFields: {
+                userDetails: {
+                    $first: "$userDetails"
+                }
+            }
+        },
+        {
+            $sort: { createdAt: -1 }
         }
-    ])
-    const noOfComments = response[0].countComment[0]?.count
-    const totalComments = response[0].comments
+    ];
+
+    // pagination  
+    const { page = 1, limit = 10 } = req.query
+    const options = {
+        page,
+        limit,
+        pagination: true,
+    };
+
+    const response = await Comment.aggregatePaginate(pipeline, options);
+    // console.log("from  pagination getcomments", response)
+
+    if (!response) {
+        throw new ApiError(401, "Error occur in pagination response - getVideoComments")
+    }
+    // console.log("from get video comments", response)
 
     return res.status(200).json(
-        new ApiResponse(200, { noOfComments, totalComments }, "video comments fetched successfully")
+        new ApiResponse(200, response, "video comments fetched successfully")
     )
+
+    // above response will look like this
+    // { 
+    //     "docs": [ ...comments... ],
+    //     "totalDocs": 30,
+    //     "limit": 10,
+    //     "page": 1,
+    //     "totalPages": 3,
+    //     "hasNextPage": true,
+    //     "hasPrevPage": false,    
+    //     "nextPage": 2,
+    //     "prevPage": null
+    // }
+
 })
 
 const addComment = asyncHandler(async (req, res) => {
     // add a comment to a video
-    const { commentContent } = req.body
-    if(!commentContent){
-        throw new ApiError(400, "commentContent not found")
+    const { comment } = req.body
+    // console.log("from addcoment", req.body)
+    if (!comment) {
+        throw new ApiError(400, "comment not found - addComment")
     }
 
     const userId = req.user?._id;
-    if(!userId){
+    if (!userId) {
         throw new ApiError(400, "user not found - addComment")
     }
 
-    console.log(req.params)
+    // console.log(req.params)
     const { videoId } = req.params;
-    if(!isValidObjectId(videoId)){
+    if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "videoId is not found - addComment")
     }
 
-    const comment = await Comment.create({
-        content: commentContent,
+    const createdComment = await Comment.create({
+        content: comment,
         video: videoId,
-        Owner: userId
+        owner: userId
     })
 
-    if (!comment) {
+    if (!createdComment) {
         throw new ApiError(500, "something went wrong while - addComment")
     }
 
     return res.status(200).json(
-        new ApiResponse(200, comment, "comment added successfully")
-    )  
+        new ApiResponse(200, createdComment, "comment added successfully")
+    )
 })
 
 const updateComment = asyncHandler(async (req, res) => {
-    // update a comment
-    const {commentId} = req.params
-    if (!isValidObjectId(commentId)) {
-        throw new ApiError(400, "commentId is not found - updateComment")
+    const { commentId } = req.params
+    // console.log("here at back update comment", commentId)
+
+    if (!commentId) {
+        throw new ApiError(400, "commentId is missing - updateComment")
     }
 
-    const {updatedContent} = req.body
+    if (!isValidObjectId(commentId)) {
+        throw new ApiError(400, "Invalid commentId - updateComment")
+    }
+
+    const { updatedContent } = req.body
+    console.log("here at back update comment", updatedContent)
+
+
     if (!updatedContent) {
-        throw new ApiError(400, "updatedContent is not found - updateComment")
+        throw new ApiError(400, "updatedContent is missing - updateComment")
     }
 
     const updatedComment = await Comment.findByIdAndUpdate(
@@ -124,13 +169,17 @@ const updateComment = asyncHandler(async (req, res) => {
 //DEBUG: comment delete ho chuka hai, but dekh lena iska reference kahi aur use to nhi ho rha hai
 const deleteComment = asyncHandler(async (req, res) => {
     // delete a comment
-    const {commentId} = req.params
-    if (!isValidObjectId(commentId)) {
+    const { commentId } = req.params
+    // console.log("hii from backend delete comment", commentId)
+    if (!commentId) {
         throw new ApiError(400, "commentId is not found - updateComment")
+    }
+    if (!isValidObjectId(commentId)) {
+        throw new ApiError(400, "Invalid commentId- updateComment")
     }
 
     const response = await Comment.findByIdAndDelete(commentId)
-    if(!response){
+    if (!response) {
         throw new ApiError(400, "error while deleting comment")
     }
 
@@ -140,8 +189,8 @@ const deleteComment = asyncHandler(async (req, res) => {
 })
 
 export {
-    getVideoComments, 
-    addComment, 
+    getVideoComments,
+    addComment,
     updateComment,
     deleteComment
 }
