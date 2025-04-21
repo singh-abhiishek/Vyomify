@@ -1,10 +1,15 @@
 import { Router } from 'express';
 import {
+    addToWatchLater,
     addVideoToPlaylist,
     createPlaylist,
     deletePlaylist,
+    getAllWatchLaterVideos,
     getPlaylistById,
     getUserPlaylists,
+    getUserPlaylistsName,
+    isVideoAlreadyInWatchLater,
+    removeFromWatchLater,
     removeVideoFromPlaylist,
     updatePlaylist,
 } from "../controllers/playlist.controller.js"
@@ -22,9 +27,16 @@ router
     .patch(updatePlaylist)
     .delete(deletePlaylist);
 
-router.route("/add/:videoId/:playlistId").patch(addVideoToPlaylist);
+router.route("/add/:videoId/").patch(addVideoToPlaylist);
+
+router.route("/u/watchLater").get(getAllWatchLaterVideos);
+router.route("/add/watchLater/:videoId/").patch(addToWatchLater);
+router.route("/remove/watchLater/:videoId/").patch(removeFromWatchLater);
+router.route("/check/watchLater/:videoId/").get(isVideoAlreadyInWatchLater);
+
 router.route("/remove/:videoId/:playlistId").patch(removeVideoFromPlaylist);
 
 router.route("/user/:userId").get(getUserPlaylists);
+router.route("/user/:userId/playlistsName").get(getUserPlaylistsName);
 
 export default router
