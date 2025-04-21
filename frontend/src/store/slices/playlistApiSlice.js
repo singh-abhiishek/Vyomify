@@ -16,6 +16,15 @@ export const plalylistApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
+        // add video to playlist add/:videoId
+        addVideoToPlaylists: builder.mutation({
+            query: ({videoId, ...playlistIds}) => ({
+                url: `${PLAYLISTS_URL}/add/${videoId}`,
+                method: "PATCH",
+                body: playlistIds,
+            }),
+        }),
+
         // delete playlist
 
 
@@ -32,6 +41,38 @@ export const plalylistApiSlice = apiSlice.injectEndpoints({
                 url: `${PLAYLISTS_URL}/user/${userId}/playlistsName`
             }),
         }),
+
+        // add video to watchlater 
+        addVideoToWatchLater: builder.mutation({
+            query: (videoId) => ({
+                url: `${PLAYLISTS_URL}/add/watchLater/${videoId}`,
+                method: "PATCH"
+            }),
+        }),
+
+        // remove video from watchlater 
+        removeVideoFromWatchLater: builder.mutation({
+            query: (videoId) => ({
+                url: `${PLAYLISTS_URL}/remove/watchLater/${videoId}`,
+                method: "PATCH"
+            }),
+        }),
+
+        // check is video already in watch later
+        IsVideoAlreadyInWatchLater: builder.query({
+            query: (videoId) => ({
+                url: `${PLAYLISTS_URL}/check/watchLater/${videoId}`,
+                method: "GET"
+            }),
+        }),
+
+        // get all watch later videos
+        getAllWatchLaterVideos: builder.query({
+            query: () => ({
+                url: `${PLAYLISTS_URL}/u/watchLater/`,
+                method: "GET"
+            }),
+        }),
     })
 })
 
@@ -41,4 +82,9 @@ export const {
     useGetUserPlaylistsNameQuery,
     useLazyGetUserPlaylistsNameQuery,
     useCreatePlaylistMutation,
+    useAddVideoToPlaylistsMutation,
+    useAddVideoToWatchLaterMutation,
+    useRemoveVideoFromWatchLaterMutation,
+    useIsVideoAlreadyInWatchLaterQuery,
+    useGetAllWatchLaterVideosQuery,
 } = plalylistApiSlice
