@@ -1,8 +1,14 @@
 import React from 'react'
 import { Pencil, Trash2, Eye } from "lucide-react";
 import { FiEdit } from 'react-icons/fi'
+import { AiFillLike } from 'react-icons/ai'
 
 import { FormatDate } from '../../../utils/FormatDate'
+import { useToggleVideoPublishStatusMutation } from '../../../store/slices/videoApiSlice';
+import { showToastMessage } from '../../../utils/showToaster';
+import { Spinner } from '../../../utils/loadingIndicator';
+import UpdateVideoDetails from './UpdateVideoDetails';
+import UpdateVideoThumbnail from './UpdateVideoThumbnail';
 
 const DashBoardLowerItem = ({
     _id,
@@ -14,45 +20,54 @@ const DashBoardLowerItem = ({
     views,
     createdAt,
     updatedAt,
-    duration
+    duration,
+    refetchChannelVideos
 }) => {
 
     // console.log(thumbnail)
 
-  return (
-    <div className="grid grid-cols-9 gap-4 items-center px-4 py-3 border-b border-gray-700 text-sm text-gray-300 hover:bg-[#2a2a2a] transition group">
-      
-    {/* Thumbnail */}
-    <div className="relative w-fit">
-      <img
-        src={thumbnail}
-        alt="thumbnail"
-        className="w-18 h-11 object-cover rounded-md border border-gray-600"
-      />
-      <button
-        title="Edit thumbnail"
-        className="absolute bottom-0 right-0 bg-black/60 p-1 rounded-full text-blue-400 hover:text-blue-600 cursor-pointer"
-      >
-        <Pencil size={14} />
-        {/* <FiEdit size={14} /> */}
-      </button>
-    </div>
+    // toggle video publish status
+    const [toggleVideoPublishStatus, {isLoading}] = useToggleVideoPublishStatusMutation()
+    const handleTogglePublishStatus = async (videoId) => {
+        try {
+            const response = await toggleVideoPublishStatus(videoId).unwrap()
+            if(response.success){
+                console.log("status toggled successfully", "status")
+                showToastMessage("status toggled successfully", "success")
+                refetchChannelVideos()
+            }
+        } catch (error) {
+            console.log("error while toggle publish status", error)
+            showToastMessage("error while toggle publish status", "error")
+        }
+    }
 
-    {/* Title with overlay icon only */}
-    <div className="w-fit max-w-[120px] truncate">
-      <button
-        title="Edit title"
-        className=" bg-black/60 p-1 rounded-full text-blue-400 hover:text-blue-600 cursor-pointer"
-      >
-        <FiEdit size={17} />
-      </button>
-    </div>
+  return (
+    <div className="grid grid-cols-9 gap-4 items-center  px-4 py-3 border-b border-gray-700 text-sm text-gray-300 hover:bg-[#0c0c0c] transition group">
+      
+    {/*update Thumbnail */}
+    <UpdateVideoThumbnail 
+        videoId={_id}
+        currThumbnail={thumbnail}
+        refetchChannelVideos={refetchChannelVideos}
+    />
+
+    {/* update Details */}
+    <UpdateVideoDetails 
+        videoId={_id}
+        currTitle={title}
+        currDescription={description}
+        refetchChannelVideos={refetchChannelVideos}
+    />
 
     {/* Likes */}
-    <div>{countLikes}</div>
+    {/* <div>{countLikes}</div> */}
+    <div className="flex items-center gap-1 text-gray-500 group-hover:text-gray-400">
+      <AiFillLike  size={16} /> <span>{countLikes}</span>
+    </div>
 
     {/* Views */}
-    <div className="flex items-center gap-1 text-gray-400">
+    <div className="flex items-center gap-1 text-gray-500 group-hover:text-gray-400">
       <Eye size={16} /> <span>{views}</span>
     </div>
 
@@ -71,14 +86,22 @@ const DashBoardLowerItem = ({
             : "bg-red-200/10 text-red-400"
         }`}
       >
-        {isPublished ? "Published" : "Unpublished"}
+        {/* {isPublished ? "Published" : "Unpublished"} */}
+        {isPublished ? "Public" : "Private"}
       </span>
     </div>
 
     {/* Toggle Button */}
     <div>
-      <button className="px-2 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-md cursor-pointer">
-        {isPublished ? "Unpublish" : "Publish"}
+      <button 
+      onClick={() => handleTogglePublishStatus(_id)}
+      className="px-2 py-1 text-xs bg-blue-700 hover:bg-blue-800 text-white rounded-md cursor-pointer">
+        {
+            isLoading ? <Spinner size={14}/> :
+            // isPublished ? "Unpublish" : "Publish"
+            isPublished ? "Make Private" : "Make Public"
+
+        }
       </button>
     </div>
 
