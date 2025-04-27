@@ -8,24 +8,14 @@ const DashBoard = () => {
         <div className='bg-black text-white w-full'>
 
             {/* upper part  */}
-            <div className=' dark:bg-[#0F0F0F] p-2'>
-                {/* avatar, coverImage, fullName */}
-                <DashBoardUpper />
-            </div>
+            <DashBoardUpper />
 
             {/* line  */}
-            <div class="border-t border-gray-700 flex-grow  w-full mt-3">
-            </div>
-
+            {/* <div class="lg:border-t lg:border-gray-700 lg:flex-grow  lg:w-full lg:mt-3">
+            </div> */}
 
             {/* lower part  */}
-            <div className='p-2'>
-
-                <div>
-                    Video Analytics 
-                </div>
-                <DashBoardLower />
-            </div>
+            <DashBoardLower />
         </div>
     )
 }
