@@ -64,7 +64,43 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/c/${username}`,
                 method: "GET",
             })
-        })
+        }),
+
+        // get user watch history clear-history
+        getWatchHistory: builder.query({
+            query: () => ({
+                url: `${USERS_URL}/history`,
+                method: "GET",
+            }),
+            providesTags: ["WatchHistory"]
+        }),
+
+        // clear user watch history 
+        clearWatchHistory: builder.mutation({
+            query: () => ({
+                url: `${USERS_URL}/clear-history`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["WatchHistory"], // this tells RTK to refetch the query
+        }),
+
+        // update user avatar
+        updateUserAvatar: builder.mutation({
+            query: (formData) => ({
+                url: `${USERS_URL}/update-avatar`,
+                method: "PATCH",
+                body: formData
+            })
+        }),
+
+        // update user coverImage
+        updateUserCoverImage: builder.mutation({
+            query: (formData) => ({
+                url: `${USERS_URL}/update-coverImage`,
+                method: "PATCH",
+                body: formData
+            })
+        }),
     })
 })
 
@@ -77,4 +113,8 @@ export const {
     useResendOTPMutation,
     useResetPasswordMutation,
     useGetUserChannelProfileQuery,
+    useGetWatchHistoryQuery,
+    useClearWatchHistoryMutation,
+    useUpdateUserAvatarMutation,
+    useUpdateUserCoverImageMutation,
 } = userApiSlice
