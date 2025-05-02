@@ -7,11 +7,105 @@ export const videoApiSlice = apiSlice.injectEndpoints({
 
         // publish video
         publishVideo: builder.mutation({
-            query: (formData) => ({
-                url: VIDEOS_URL,
-                method: "POST",
-                body: formData,
-            }),
+            query: ({ formData, onProgress }) => {
+                // url: VIDEOS_URL,
+                // method: "POST",
+                // body: formData,
+
+                return {
+                    url: VIDEOS_URL,
+                    method: "POST",
+                    body: formData,
+                    headers: { "Content-Type": "multipart/form-data" },
+                    useProgress: true, // Activate progress tracking
+                    onProgress, // Pass the progress callback
+                }
+            },
+        }),
+
+        // get all videos published by login user // publlic video
+        getAllPublishedVideos: builder.query({
+            query: ({ userId, sortBy }) => ({
+                url: `${VIDEOS_URL}/published-Video/${userId}?sortBy=${sortBy}`,
+                method: "GET"
+            })
+        }),
+
+        // get video by id
+        getVideoById: builder.query({
+            query: (userId) => ({
+                url: `${VIDEOS_URL}/${userId}`,
+                method: "GET",
+            })
+        }),
+
+        // get all videos published on the vyomify
+        getAllVideos: builder.query({
+            query: ({ limit = 10, page = 1 }) => ({
+                url: `${VIDEOS_URL}?page=${page}&limit=${limit}&sortBy=createdAt&sortType=-1`,
+                method: "GET",
+            })
+        }),
+
+        getInfiniteAllVideos: builder.infiniteQuery({
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                // Optionally limit the number of cached pages
+                maxPages: 3,
+                // Must provide a `getNextPageParam` function
+                getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
+                    lastPageParam + 1,
+                // Optionally provide a `getPreviousPageParam` function
+                getPreviousPageParam: (
+                    firstPage,
+                    allPages,
+                    firstPageParam,
+                    allPageParams,
+                ) => {
+                    return firstPageParam > 0 ? firstPageParam - 1 : undefined
+                },
+            },
+
+            query: ({ limit = 10, page = 1 }) => ({
+                url: `${VIDEOS_URL}?page=${page}&limit=${limit}&sortBy=createdAt&sortType=-1`,
+                method: "GET",
+            })
+        }),
+
+        // get all videos based on search query
+        getAllSearchedVideos: builder.query({
+            query: (query) => {
+                return {
+                    url: `${VIDEOS_URL}/search-video?query=${query}`,
+                    method: "GET",
+                }
+            }
+        }),
+
+        // toggle video publish status 
+        toggleVideoPublishStatus: builder.mutation({
+            query: (videoId) => ({
+                url: `${VIDEOS_URL}/toggle/publish/${videoId}`,
+                method: "PATCH"
+            })
+        }),
+
+        // update video details (title, description)
+        updateVideoDetails: builder.mutation({
+            query: ({ videoId, ...details }) => ({
+                url: `${VIDEOS_URL}/${videoId}`,
+                method: "PATCH",
+                body: details
+            })
+        }),
+
+        // update video thumbnail 
+        updateVideoThumbail: builder.mutation({
+            query: ({ videoId, formData }) => ({
+                url: `${VIDEOS_URL}/update-thumbnail/${videoId}`,
+                method: "PATCH",
+                body: formData
+            })
         }),
     }),
 })
@@ -19,4 +113,12 @@ export const videoApiSlice = apiSlice.injectEndpoints({
 
 export const {
     usePublishVideoMutation,
+    useGetAllPublishedVideosQuery,
+    useGetVideoByIdQuery,
+    useGetAllVideosQuery,
+    useGetAllSearchedVideosQuery,
+    useToggleVideoPublishStatusMutation,
+    useUpdateVideoDetailsMutation,
+    useUpdateVideoThumbailMutation,
+    useGetInfiniteAllVideosInfiniteQuery,
 } = videoApiSlice;
