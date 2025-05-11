@@ -82,7 +82,7 @@ const DashBoardUpper = () => {
       {/* second part  */}
       <div className="flex flex-col items-center mt-3">
         <div className="flex items-end gap-2 text-white text-2xl font-semibold">
-          <h1 className="text-red-600 font-amaranth font-bold text-3xl leading-none">Channel Analytics</h1>
+          <h1 className="text-red-600 font-amaranth font-bold text-2xl sm:text-4xl leading-none">Channel Analytics</h1>
           {/* <p className="text-zinc-300 font-medium">Curated for You</p> */}
         </div>
         <span className="block h-0.5 w-10 bg-gradient-to-r from-red-600 to-rose-500 mt-2 rounded-full" />
