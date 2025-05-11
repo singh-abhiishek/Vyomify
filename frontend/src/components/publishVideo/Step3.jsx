@@ -4,6 +4,12 @@ import { useFormContext } from "react-hook-form";
 const Step3 = () => {
     const { register, } = useFormContext();
 
+    const { getValues } = useFormContext();
+    const currentValues = getValues(); // Get all current values of stepper form
+    console.log("from Step3 form checking curr values", currentValues)
+    console.log('Thumbnail:', currentValues.title);
+    console.log('Type:', typeof currentValues.title);
+
   return (
     <div className='max-w-5xl mx-auto h-[410px] text-white rounded-3xl shadow-xl overflow-hidden my-8'>
         
