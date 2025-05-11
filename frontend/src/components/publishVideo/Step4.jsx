@@ -9,7 +9,6 @@ import useOutsideClick from '../../hooks/UseOutsideClick';
 
 
 const Step4 = () => {
-  const { register, formState: { errors } } = useFormContext();
 
   const [isOpen1, setIsOpen1] = useState(false)
   const [isOpen2, setIsOpen2] = useState(false)
