@@ -1,6 +1,6 @@
 import React from 'react'
 import {useDispatch} from 'react-redux'
-import {logout as storeLogout} from '../../store/slice/authSlice.js'
+import {logout as storeLogout} from '../../store/slices/authSlice.js'
 import axios from 'axios'
 import Button from '../ui/button.jsx'
 
