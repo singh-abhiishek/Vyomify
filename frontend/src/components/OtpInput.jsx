@@ -1,8 +1,9 @@
 import Input from './Input'
 import React, { useRef, useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import {Spinner} from '../utils/loadingIndicator.jsx'
 
-const OtpInput = ({length = 6, onSubmit}) => {
+const OtpInput = ({length = 6, onSubmit, isLoading}) => {
     length = Number(length)
     const { control, handleSubmit, setValue, getValues } = useForm()
     
@@ -23,10 +24,11 @@ const OtpInput = ({length = 6, onSubmit}) => {
     };
 
     const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !getValues(`otp.${index}`) && index > 0) {
-        inputRefs.current[index - 1]?.focus();
-    }
+        if (e.key === "Backspace" && !getValues(`otp.${index}`) && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
     };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
         <div
@@ -65,9 +67,13 @@ const OtpInput = ({length = 6, onSubmit}) => {
         </div>
         <button 
             // type="submit" 
+            disabled={isLoading}
             className="text-md rounded-lg relative inline-flex items-center justify-center px-3.5 py-2 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white w-full mt-8"
         >
-            Sign Up
+            {/* Sign Up */}
+            {
+                isLoading ? <div> <Spinner name='Signing In...' /> </div> : "Sign Up"
+            }
         </button>
     </form>
   )
