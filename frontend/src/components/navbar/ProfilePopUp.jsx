@@ -1,54 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
 import { useSelector } from "react-redux";
+import { RiDashboardHorizontalLine } from "react-icons/ri";
 
-const ProfilePopUp = ({sendDataToProfileButton}) => {
-  const {fullName} = useSelector(state => state.auth?.userData?.user)
+
+const ProfilePopUp = ({ modalRef, setIsOpen }) => {
+
+  const user = useSelector(state => state.auth?.userData?.user)
+  console.log("User changed inside popup", useSelector(state => state.auth?.userData));
 
   return (
-    <div className="relative ">
+    <div className="relative "
+    ref={modalRef}
+    >
       {/* Dropdown */}
-      <div className="origin-top-right z-8 rounded-[12px] absolute top-full min-w-48 bg-[#191919] text-white dark:bg-dark_50 dark:border-zinc-800 border border-gray-200 py-1 shadow-lg overflow-hidden mt-1 right-0 md:min-w-50 md:z-10 md:py-1.5 lg:min-w-54 lg:z-12">
-        
-        {/* Close Button */}
-        <div className="flex justify-between mt-1">
-          <div></div>
-          <svg
-            onClick={() => sendDataToProfileButton(false)}
-            className="mr-2 cursor-pointer stroke-zinc-800 dark:stroke-zinc-400 hover:stroke-white transition-colors duration-200"
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </div>
+      <div className="origin-top-right z-8 rounded-[12px] absolute top-full min-w-40 bg-[#191919] text-white dark:bg-dark_50 dark:border-zinc-800 border border-gray-200 py-1 shadow-lg overflow-hidden mt-0.5 right-0 md:min-w-48 md:z-10  lg:z-12">
 
         {/* User Avatar & Greeting */}
-        <div className="flex justify-center items-center flex-col">
-        <img
-            className="w-13 h-13 lg:w-16 lg:h-16 rounded-full object-cover"
-            src="https://media.istockphoto.com/id/2149922267/vector/user-icon.webp?a=1&b=1&s=612x612&w=0&k=20&c=eftd9nEYQYSWX_yZsHtkoo47x5l_Jp_2b-J4iD1pGPY="
+        <div className="flex justify-center items-center flex-col mt-1">
+          <img
+            className="w-13 h-13 lg:w-15 lg:h-15 rounded-full object-cover"
+            src={user?.avatar || `https://media.istockphoto.com/id/2149922267/vector/user-icon.webp?a=1&b=1&s=612x612&w=0&k=20&c=eftd9nEYQYSWX_yZsHtkoo47x5l_Jp_2b-J4iD1pGPY=`}
             width="32"
             height="32"
             alt="User"
-            />
-          <p className="mt-2 text-sm font-medium lg:text-md lg:font-bold">Hi, {fullName || "user"}</p>
+          />
+          <p className="mt-1 text-sm font-medium lg:text-md lg:font-bold">Hi, {user?.fullName || "user"}</p>
         </div>
 
         {/* Dropdown Links */}
-        <div className="flex flex-col items-start px-3 mt-2 space-y-2 mb-1.5 lg:px-4 lg:mt-3 lg:space-y-3 lg:mb-2">
+        <div className="flex flex-col items-start px-1 mt-1 space-y-0 mb-1 lg:px-4">
+
           {/* Profile Link */}
           <Link
-            to="/"
-            onClick={() => sendDataToProfileButton(false)}
+            to={`/explore/profile/${user?.username}`}
+            onClick={() => setIsOpen(false)}
             className="font-medium flex items-center px-2 hover:bg-[#212121] hover:dark:bg-dark_40 w-full py-2 rounded-lg"
           >
             <svg
@@ -68,6 +55,17 @@ const ProfilePopUp = ({sendDataToProfileButton}) => {
               ></path>
             </svg>
             <span className="text-sm ml-2">Profile</span>
+          </Link>
+
+
+          {/* dashboard */}
+          <Link
+            to={`/explore/dashboard`}
+            onClick={() => setIsOpen(false)}
+            className="font-medium flex items-center px-2 hover:bg-[#212121] hover:dark:bg-dark_40 w-full py-2 rounded-lg"
+          >
+            <RiDashboardHorizontalLine className="text-gray-400"/>
+            <span className="text-sm ml-3">DashBoard</span>
           </Link>
 
           {/* Logout button  */}
