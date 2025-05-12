@@ -22,10 +22,11 @@ const Navbar = () => {
       ]
 
   return (
-    <nav className="bg-white dark:bg-[#000000] dark py-1 dark:text-white relative  font-dmSans w-full border-zinc-200 dark:border-none ">
+    // <nav className="bg-white dark:bg-[#000000] dark py-0.5 sm:py-1 dark:text-white relative font-dmSans w-full border-zinc-200 dark:border-none  ">
+    <nav className="fixed top-0 left-0 right-0 h-13 z-50 bg-black text-white flex items-center px-4 shadow ">
 
-        <div className="flex justify-between items-center mx-auto max-w-screen-xl ">
-                <div className='absolute left-3.5'>
+        <div className="flex justify-between items-center mx-auto max-w-screen-xl w-full ">
+                <div className='absolute left-5.5'>
                     {authStatus && location.pathname.startsWith("/explore") && <HamBurger />}
                 </div>
 
@@ -33,7 +34,7 @@ const Navbar = () => {
                 <div>
                     <button 
                     onClick={() => navigate('/')}
-                    className='p-1.5 ml-0.5 md:ml-1.5 text-white '>logo</button>
+                    className='p-1.5 ml-0.5 md:ml-1 text-white text-[0px]'>logo</button>
                     {/* <Link to="/" className="flex items-center md:w-2.5">
                         <img
                             src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
@@ -84,14 +85,7 @@ const Navbar = () => {
                         </button> :
 
                         // Profile Pop up button 
-                        
                         <div> <ProfilePopUpButton /> </div>
-                        // <button 
-                        // onClick={() => navigate("/")}
-                        // type="button" 
-                        // className="w-14 h-14 rounded-full relative inline-flex items-center justify-center px-4 py-2.5 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white" >
-                        //     <span class="relative">Profile</span>
-                        // </button>
                     }
                 </div>
             </div>
