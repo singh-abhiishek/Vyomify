@@ -4,8 +4,10 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { showToastMessage } from '../utils/showToaster'
-import { login as storeLogin } from "../store/slice/authSlice.js"
+import { login as storeLogin } from "../store/slices/authSlice.js"
 import { useDispatch, useSelector } from 'react-redux';
+import { useResetPasswordMutation } from '../store/slices/userApiSlice.js'
+import {Spinner} from '../utils/loadingIndicator.jsx'
 
 
 const ResetPassword = () => {
@@ -22,14 +24,20 @@ const ResetPassword = () => {
     const [email, setEmail] = useState(null)
     const [step, setStep] = useState(1)
     const [isReadOnly, setIsReadOnly] = useState(false);
+
+    const [ resetPassword, { isLoading } ] = useResetPasswordMutation()
     
     const dispatch = useDispatch()
     const reset = async(data) => {
         if(step === 1){
             try {
                 showToastMessage("checking your email", "info")
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/users/reset-password`, data, {withCredentials: true})
-                if(response.status === 200){
+                // const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/users/reset-password`, data, {withCredentials: true})
+                const response = await resetPassword({
+                    email: data.email,
+                }).unwrap()
+
+                if(response.success){
                     setEmail(data.email)
                     setStep(2)
                     setIsReadOnly(true)
@@ -42,15 +50,21 @@ const ResetPassword = () => {
         }else if(step === 2){
             try {
                 showToastMessage("checking your data", "info")
-                const userData = await axios.post(
-                    `${import.meta.env.VITE_BACKEND_API}/users/reset-password`,
-                     data,
-                     {withCredentials: true}
-                )
-                if(userData.status === 200){
+                // const userData = await axios.post(
+                //     `${import.meta.env.VITE_BACKEND_API}/users/reset-password`,
+                //      data,
+                //      {withCredentials: true}
+                // )
+                const userData = await resetPassword({
+                    email: data.email,
+                    otp:   data.otp,
+                    newPassword: data.newPassword,
+                    confirmPassword: data.confirmPassword,
+                }).unwrap()
+                if(userData.success){
                     showToastMessage("password reset successfully", "success")
-                    dispatch(storeLogin(userData.data.data))
-                    navigate('/explore-Page')
+                    dispatch(storeLogin(userData.data))
+                    navigate('/explore')
                 }
             } catch (error) {
                 showToastMessage(error.response?.data?.message || "Request failed!", "error");
@@ -264,8 +278,11 @@ const ResetPassword = () => {
                         <div class="w-full px-3">
                             <button 
                             type='submit'
+                            disabled={isLoading}
                             class="text-md rounded-lg relative inline-flex items-center justify-center px-5 py-2.5 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white w-full">
-                                Submit
+                                {/* Submit */}
+                                {step === 1 && isLoading ? <Spinner /> : "Sumbit"}
+                                {step === 2 && isLoading ? <Spinner /> : "Reset"}
                             </button>
                         </div>
 
