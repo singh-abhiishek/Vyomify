@@ -9,7 +9,7 @@ const StepFormLayout = () => {
 
   const methods = useForm({ 
     defaultValues: {
-      isPublished: "private",
+      isPublished: "private",  
     },
     mode: "onChange" 
   });
@@ -23,7 +23,7 @@ const StepFormLayout = () => {
 
   return (
 
-    <div className='w-[60%] bg-[#282828] text-white rounded-2xl shadow-lg z-20 absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 p-7'>
+    <div className='w-[55%] bg-[#282828] text-white rounded-2xl shadow-lg z-20 absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 p-7'>
       {/* Close Button */}
       <div className='text-4xl absolute right-0.5 top-2.5'>                   
         <svg
