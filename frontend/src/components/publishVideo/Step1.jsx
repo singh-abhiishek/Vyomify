@@ -9,7 +9,7 @@ const Step1 = () => {
         <p className="text-lg font-semibold">Upload Image & Video</p>
       </div> */}
 
-      <div className="flex gap-7 p-12">
+      <div className="flex flex-col sm:flex-row gap-7 p-12">
         <FileUploadBox type="image" name="thumbnail" label="Thumbnail" accept="image/png,image/jpeg,image/jpg" />
         <FileUploadBox type="video" name="videoFile" label="Video File" accept="video/mp4,video/mov,video/webm" />
       </div>
