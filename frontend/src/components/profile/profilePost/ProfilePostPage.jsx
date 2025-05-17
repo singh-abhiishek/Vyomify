@@ -8,7 +8,7 @@ const ProfilePostPage = ({userId}) => {
   const tweets = response?.data
   console.log("response from profilePost Page", tweets)
   return (
-    <div className='p-5 flex flex-col items-start'>
+    <div className='p-5 flex flex-col items-start w-full'>
       {
         tweets?.map((tweet) => (
           <ProfilePostItem 

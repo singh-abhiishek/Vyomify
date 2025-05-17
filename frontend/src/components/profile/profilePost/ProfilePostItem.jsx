@@ -15,77 +15,108 @@ const ProfilePostItem = ({
   const navigate = useNavigate()
   return (
 
-    <div className="w-full max-w-2xl mx-auto bg-black border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl px-4 py-3 mb-4">
+    <div className="w-full px-3 sm:px-4">
+      <div className="max-w-4xl mx-auto bg-black border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl px-4 py-3 mb-4">
+        <div className="flex flex-col sm:flex-row items-start gap-3 relative w-full">
 
-      <div className="flex items-start gap-3 relative">
-        {/* Avatar */}
-        <div
-          onClick={() => navigate(`/explore/profile/${ownerDetails?.username}`)}
-          className="flex-shrink-0 cursor-pointer">
-          <img
-            src={ownerDetails?.avatar}
-            alt="User Avatar"
-            className="w-11 h-11 rounded-full object-cover"
-          />
-        </div>
-
-        {/* Post Content */}
-        <div className="flex-1 flex flex-col">
-          {/* Username and time */}
-          <div className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
-            <span className="font-semibold">{ownerDetails?.username}</span>
-            <span className="text-xs text-gray-500">{getTimeAgo(createdAt)}</span>
-          </div>
-
-          {/* Text content */}
-          <div className="mt-1 text-gray-700 dark:text-gray-300 text-sm">
-            {content}
-          </div>
-
-          {/* Optional Media */}
-          {tweetFile && (
-            <div className="mt-3">
-              <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
-                <img
-                  src={tweetFile}
-                  alt="Tweet Media"
-                  className="w-full max-h-80 object-cover"
-                />
+          {/* Top Row for Mobile: Avatar + Username + 3-Dot */}
+          <div className="flex items-center justify-between w-full sm:hidden">
+            <div className="flex items-center gap-2">
+              <img
+                src={ownerDetails?.avatar}
+                alt="User Avatar"
+                onClick={() => navigate(`/explore/profile/${ownerDetails?.username}`)}
+                className="w-9 h-9 rounded-full object-cover cursor-pointer"
+              />
+              <div className="text-sm text-gray-200">
+                <span className="font-semibold">{ownerDetails?.username}</span>
+                <span className="block text-xs text-gray-500">{getTimeAgo(createdAt)}</span>
               </div>
             </div>
-          )}
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-6 mt-4 text-gray-600 dark:text-gray-400 text-sm">
-            <button className="flex items-center gap-1 hover:text-blue-500 transition cursor-pointer">
-              <ThumbsUp size={18} />
-              <span>Like</span>
-            </button>
-            <button className="flex items-center gap-1 hover:text-red-500 transition">
-              <ThumbsDown size={18} />
-              <span>Dislike</span>
-            </button>
-            <button className="flex items-center gap-1 hover:text-green-500 transition">
-              <MessageCircle size={18} />
-              <span>Comment</span>
-            </button>
-            <button className="flex items-center gap-1 hover:text-purple-500 transition">
-              <Share2 size={18} />
-              <span>Share</span>
-            </button>
+            <EditDeletePost
+              ownerId={ownerDetails?._id}
+              content={content}
+              tweetFile={tweetFile}
+              isPublished={isPublished}
+            />
           </div>
+
+          {/* Avatar (desktop) */}
+          <div
+            onClick={() => navigate(`/explore/profile/${ownerDetails?.username}`)}
+            className="hidden sm:block flex-shrink-0 cursor-pointer"
+          >
+            <img
+              src={ownerDetails?.avatar}
+              alt="User Avatar"
+              className="w-11 h-11 rounded-full object-cover"
+            />
+          </div>
+
+          {/* Post Content */}
+          <div className="flex-1 flex flex-col w-full">
+            {/* Username and time (desktop) */}
+            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+              <span className="font-semibold">{ownerDetails?.username}</span>
+              <span className="text-xs text-gray-500">{getTimeAgo(createdAt)}</span>
+            </div>
+
+            {/* Text content */}
+            <div className="mt-1 text-gray-700 dark:text-gray-300 text-sm">
+              {content}
+            </div>
+
+            {/* Optional Media */}
+            {tweetFile && (
+              <div className="mt-3">
+                <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
+                  <img
+                    src={tweetFile}
+                    alt="Tweet Media"
+                    className="w-full max-h-100 object-cover"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 mt-4 text-gray-500 text-xs sm:text-sm">
+              <button className="flex items-center gap-1 hover:text-blue-500 transition cursor-pointer">
+                <ThumbsUp size={16} />
+                <span>Like</span>
+              </button>
+              <button className="flex items-center gap-1 hover:text-red-500 transition">
+                <ThumbsDown size={16} />
+                <span>Dislike</span>
+              </button>
+              <button className="flex items-center gap-1 hover:text-green-500 transition">
+                <MessageCircle size={16} />
+                <span>Comment</span>
+              </button>
+              <button className="flex items-center gap-1 hover:text-purple-500 transition">
+                <Share2 size={16} />
+                <span>Share</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 3-dot icon (desktop) */}
+          <div className="hidden sm:block">
+            <EditDeletePost
+              ownerId={ownerDetails?._id}
+              content={content}
+              tweetFile={tweetFile}
+              isPublished={isPublished}
+            />
+          </div>
+
         </div>
-
-        {/* 3-dot icon */}
-        <EditDeletePost
-          ownerId={ownerDetails?._id}
-          content={content}
-          tweetFile={tweetFile}
-          isPublished={isPublished}
-        />
-
       </div>
     </div>
+
+
+
   );
 };
 

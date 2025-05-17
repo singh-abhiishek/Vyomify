@@ -40,11 +40,11 @@ const ProfilePage = () => {
   const ActiveComponent = components[activeTab].component;
 
   return (
-    <div className='p-1.5 dark:bg-black text-white w-full'>
+    <div className=' dark:bg-black text-white w-full'>
       {/* <div className='p-4 bg-amber-300 text-white w-full h-auto '> */}
 
       {/* show cover image */}
-      <div className='w-full h-30 sm:h-38 md:h-44 bg-[#212121] text-white overflow-hidden rounded-sm'>
+      <div className='w-full h-17 sm:h-38 md:h-44 bg-[#212121] text-white overflow-hidden rounded-sm'>
         <img
           className='object-cover w-full h-full'
           src={userChannel?.coverImage} alt="coverImage" />
@@ -54,7 +54,7 @@ const ProfilePage = () => {
       <div className='flex mt-1 md:mt-2 gap-2 md:gap-3 items-center sm-justify-start'>
 
         {/* show avatar image  */}
-        <div className='w-26 h-26 sm:w-28 sm:h-26 md:w-40 md:h-40 bg-white rounded-[50%] overflow-hidden'>
+        <div className='w-22 h-22 sm:w-28 sm:h-26 md:w-40 md:h-40 bg-white rounded-[50%] overflow-hidden'>
           <img
             className='object-cover w-full h-full'
 
@@ -64,11 +64,13 @@ const ProfilePage = () => {
 
         {/* user basic detail  */}
         <div className='mt-1'>
-          <h1 className="font-amaranth font-bold text-lg md:text-3xl lg:text-4xl">{userChannel?.fullName}</h1>
-          <div className='text-sm text-gray-400'>
+          <h1 className="font-amaranth font-bold text-md md:text-3xl lg:text-4xl">{userChannel?.fullName}</h1>
+          <div className='text-[12px] sm:text-sm text-gray-400'>
             <p>@{userChannel?.username}</p>
-            <p>{subscribersCount} {subscribersCount > 1 ? "subscribers" : "subscriber"}</p>
-            <p>{userChannel?.noOfVideos} {userChannel?.noOfVideos > 1 ? "videos" : "video"}</p>
+            <div className='flex gap-1'>
+              <p>{subscribersCount} {subscribersCount > 1 ? "subscribers" : "subscriber"}</p>
+              <p>{userChannel?.noOfVideos} {userChannel?.noOfVideos > 1 ? "videos" : "video"}</p>
+            </div>
           </div>
 
           <div>

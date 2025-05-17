@@ -31,15 +31,15 @@ const ProfilePlaylistPage = ({ userId }) => {
   }
 
   return (
-    <div className="bg-neutral-950 text-white w-full px-6 py-4">
+    <div className="w-full px-6 py-4 flex flex-wrap gap-2 sm:gap-3">
       {/* Video Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      
         {fileredPlaylists?.map((playlist, index) => (
           (<div key={index}>
             <PlaylistGridItem {...playlist} />
           </div>)
         ))}
-      </div>
+      
     </div>
   )
 }
