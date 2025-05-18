@@ -36,7 +36,7 @@ router.route("/check/watchLater/:videoId/").get(isVideoAlreadyInWatchLater);
 
 router.route("/remove/:videoId/:playlistId").patch(removeVideoFromPlaylist);
 
-router.route("/user/:userId").get(getUserPlaylists);
+router.route("/user/:userId/playlists").get(getUserPlaylists);
 router.route("/user/:userId/playlistsName").get(getUserPlaylistsName);
 
 export default router

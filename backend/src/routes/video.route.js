@@ -2,7 +2,9 @@ import { Router } from 'express';
 import {
     deleteVideo,
     getAllVideos,
+    getAllVideosPublishedByUser,
     getVideoById,
+    getVideosAndChannelBasedOnSearch,
     publishAVideo,
     togglePublishStatus,
     updateVideoDetails,
@@ -32,6 +34,9 @@ router
         publishAVideo
     );
 
+router.route("/search-video").get(getVideosAndChannelBasedOnSearch)
+router.route("/published-Video/:userId").get(getAllVideosPublishedByUser)
+
 router
     .route("/:videoId")
     .get(getVideoById)
@@ -44,6 +49,6 @@ router
 
 router
     .route("/toggle/publish/:videoId")
-    .patch(togglePublishStatus); //TODO: ????????
+    .patch(togglePublishStatus); 
 
 export default router
