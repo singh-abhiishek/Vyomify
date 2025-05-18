@@ -8,7 +8,7 @@ app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
     maxAge: 1000 * 60 * 10 ,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
 
     // If maxAge is not set, the cookie will expire when the browser session ends (i.e., when the user closes the tab or browser).
@@ -49,7 +49,7 @@ app.use("/api/v1/tweets", tweetRouter)
 app.use("/api/v1/likes", likeRouter)
 app.use("/api/v1/playlists", playlistRouter)
 app.use("/api/v1/subscriptions", subscriptionRouter)
-app.use("/api/v1/dashboards", dashboardRouter)
+app.use("/api/v1/dashboard", dashboardRouter)
 
 
 // http://localhost:8000/api/v1/users/register
