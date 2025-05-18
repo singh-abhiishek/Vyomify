@@ -150,7 +150,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         {
             $match: {
                 likedBy: new mongoose.Types.ObjectId(userId),
-                video: { $exists: true },
+                video: { $exists: true }, 
             }
         },
         {
@@ -165,7 +165,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                             videoFile: 1,
                             thumbnail: 1,
                             title: 1,
-                            descripton: 1,
+                            description: 1,
                             duration: 1,
                             views: 1,
                             isPublished: 1,
@@ -183,36 +183,40 @@ const getLikedVideos = asyncHandler(async (req, res) => {
             }
         },
         {
+            $lookup: {
+                from: "users",
+                localField: "postOwner",
+                foreignField: "_id",
+                as: "ownerDetails",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            avatar: 1,
+                            fullName: 1,
+                            username: 1,
+                            createdAt: 1,
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $addFields: {
+                ownerDetails: {
+                    $first: "$ownerDetails"
+                }
+            }
+        },
+        {
             $project: {
+                _id: 0,
+                ownerUsername: 0,
+                owner: 0,
                 postOwner: 0,
+                // createdAt: 0
             }
         }
-        // {
-        //     $lookup: {
-        //         from: "users",
-        //         localField: "postOwner",
-        //         foreignField: "_id",
-        //         as: "postOwner",
-        //         pipeline: [
-        //             {
-        //                 $project: {
-        //                     _id: 1,
-        //                     avatar: 1,
-        //                     fullName: 1,
-        //                     username: 1,
-        //                     createdAt: 1,
-        //                 }
-        //             }
-        //         ]
-        //     }
-        // },
-        // {
-        //     $addFields: {
-        //         postOwner: {
-        //             $first: "$postOwner"
-        //         }
-        //     }
-        // }
     ])
 
     if (!likedVideos) {
