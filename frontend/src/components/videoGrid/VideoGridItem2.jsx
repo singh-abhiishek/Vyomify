@@ -1,32 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { BiVolumeMute } from "react-icons/bi";
-import { MdMoreVert } from "react-icons/md";
 import { GoUnmute } from "react-icons/go";
 import { formatDuration } from "../../utils/formatDuration";
 import { getTimeAgo } from "../../utils/getTimeAgo";
 import { Link, useNavigate } from "react-router-dom";
+import { Spinner } from "../../utils/loadingIndicator";
+import { MdMoreVert } from "react-icons/md";
 import MenuItem from "./MenuItem";
 import useOutsideClick from "../../hooks/UseOutsideClick";
-import { usePlaylistModal } from "../../contextAPI/PlaylistModalContext ";
 
 export const VIEW_FORMATTER = new Intl.NumberFormat(undefined, {
     notation: "compact",
 });
 
-//NOTE: to show on home and profile page 
-const VideoGridItem = ({
+const VideoGridItem2 = ({
     _id,
     title,
     thumbnail,
+    description,
     videoFile,
     views,
-    // owner,
     ownerDetails,
     createdAt,
     duration,
 }) => {
 
-    // console.log("onwer", ownerDetails)
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
     const [isVideoMuted, setIsVideoMuted] = useState(true);
     const [remainingDuration, setRemainingDuration] = useState(duration);
@@ -39,7 +37,7 @@ const VideoGridItem = ({
 
         const handleTimeUpdate = () => {
             const remainingTime = duration - videoElement.currentTime;
-            setRemainingDuration(Math.max(remainingTime, 0)); // if video is played on hover
+            setRemainingDuration(Math.max(remainingTime, 0));
         };
 
         const toggleVideoState = async () => {
@@ -65,25 +63,22 @@ const VideoGridItem = ({
         };
     }, [isVideoPlaying, duration]);
 
-
     const navigate = useNavigate();
     const navigateToWatchVideoPage = (e, _id) => {
-        e.preventDefault()
-        // console.log(_id)
+        // e.preventDefault();
         navigate(
             '/explore/watchVideo',
             {
-                state: _id, // "state" is the default key
+                state: _id,
             }
-        )
+        );
     }
 
     // on click open menu bar 
-    const { isPF1Open } = usePlaylistModal()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     // This hook listens for outside click, and close the pop up modal
     const modalRef = useRef()
-    useOutsideClick(modalRef, () => setIsMenuOpen(false), isMenuOpen, isPF1Open);
+    useOutsideClick(modalRef, () => setIsMenuOpen(false), isMenuOpen);
 
     const [videoId, setVideoId] = useState(null)
     const handleClickOnVertButton = (e, _id) => {
@@ -91,51 +86,51 @@ const VideoGridItem = ({
         setIsMenuOpen(prev => !prev)
         setVideoId(_id)
     }
-
     return (
         <div
-            className="flex flex-col gap-1 w-[244px] sm:w-[250px] md:w-[330px] lg:w-[300px] xl:w-[345px]"
+            className="flex flex-row items-start gap-3 p-3 w-full rounded-xl hover:bg-white/5 transition-colors duration-200"
             onMouseEnter={() => setIsVideoPlaying(true)}
             onMouseLeave={() => setIsVideoPlaying(false)}
         >
             {/* Thumbnail + Video */}
-            <div className=" w-full aspect-video overflow-hidden rounded-xl cursor-pointer">
+            <div className="relative w-[55%] h-[70px] lg:h-auto lg:w-[40%] aspect-[16/9] rounded-lg overflow-hidden group cursor-pointer shrink-0">
                 <div
                     onClick={(e) => navigateToWatchVideoPage(e, _id)}
-                    className="block w-full h-full relative">
+                    className="relative w-full h-full"
+                >
                     <img
                         src={thumbnail}
                         alt="Thumbnail"
-                        className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-200 ${isVideoPlaying ? "opacity-0" : "opacity-100"
-                            }`}
                         loading="lazy"
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoPlaying ? "opacity-0" : "opacity-100"
+                            }`}
                     />
                     <video
                         ref={videoRef}
                         muted={isVideoMuted}
                         playsInline
-                        className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-200 ${isVideoPlaying ? "opacity-100 delay-200" : "opacity-0"
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoPlaying ? "opacity-100" : "opacity-0"
                             }`}
                         src={videoFile}
                     />
-                    <div className="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white text-sm px-2 py-0.5 rounded">
+                    <div className="absolute bottom-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
                         {formatDuration(remainingDuration)}
                     </div>
                 </div>
 
-                {/* Volume Icon */}
+                {/* Volume Toggle */}
                 {isVideoPlaying && (
-                    <div>
+                    <div className="absolute top-2 right-2 z-10">
                         {isVideoMuted ? (
                             <BiVolumeMute
-                                className="absolute p-[6px] rounded-full cursor-pointer top-4 right-1 bg-black bg-opacity-70 text-white"
-                                size={28}
+                                className="p-1 bg-black/70 rounded-full text-white cursor-pointer"
+                                size={20}
                                 onClick={() => setIsVideoMuted(false)}
                             />
                         ) : (
                             <GoUnmute
-                                className="absolute p-[6px] rounded-full cursor-pointer top-4 right-1 bg-black bg-opacity-70 text-white"
-                                size={28}
+                                className="p-1 bg-black/70 rounded-full text-white cursor-pointer"
+                                size={20}
                                 onClick={() => setIsVideoMuted(true)}
                             />
                         )}
@@ -144,48 +139,40 @@ const VideoGridItem = ({
             </div>
 
             {/* Video Info */}
-            <div className="flex gap-2 mt-1 sm:mt-2 justify-between relative">
-                <div className="flex gap-1">
-                    <Link
-                        to={`/explore/profile/${ownerDetails?.username}`}
-                        className="flex-shrink-0 cursor-pointer">
-                        <img
-                            src={ownerDetails?.avatar}
-                            alt={ownerDetails?.fullName}
-                            className="w-10 h-10 object-cover rounded-full"
-                            loading="lazy"
-                        />
-                    </Link>
-
-                    <div className="flex flex-col overflow-hidden">
-                        <div
-                            onClick={(e) => navigateToWatchVideoPage(e, _id)}
-                            className="text-[13px] font-semibold sm:text-base line-clamp-2 cursor-pointer"
-                        >
-                            {title}
-                        </div>
-                        <Link
-                            to={`/explore/profile/${ownerDetails?.username}`}
-                            className="text-[12px] sm:text-sm text-gray-200 truncate"
-                        >
-                            {ownerDetails?.fullName}
-                        </Link>
-                        <div className="text-[12px] sm:text-sm text-gray-400">
-                            {VIEW_FORMATTER.format(views)} Views • {getTimeAgo(createdAt)}
-                        </div>
+            <div className="flex flex-col justify-between flex-1 overflow-hidden text-white">
+                <div className="flex justify-between items-start">
+                    <div
+                        onClick={(e) => navigateToWatchVideoPage(e, _id)}
+                        className="font-medium text-[13px] sm:text-sm cursor-pointer line-clamp-1 lg:line-clamp-2 leading-snug"
+                    >
+                        {title}
                     </div>
-                </div>
-
-                <div>
                     <MdMoreVert
                         onClick={(e) => handleClickOnVertButton(e, _id)}
-                        className="cursor-pointer"
-                        size={24} />
+                        className="cursor-pointer text-white shrink-0 ml-2"
+                        size={20}
+                    />
                 </div>
-                {isMenuOpen && <MenuItem modalRef={modalRef} videoId={videoId} />}
+
+                <Link
+                    to={`/explore/profile/${ownerDetails?.username}`}
+                    className="text-xs text-gray-300 truncate mt-0.5"
+                >
+                    @{ownerDetails?.username}
+                </Link>
+
+                <div className="text-xs text-gray-400 mt-0.5">
+                    {VIEW_FORMATTER.format(views)} views • {getTimeAgo(createdAt)}
+                </div>
+
+                {isMenuOpen && (
+                    <MenuItem videoId={videoId} modalRef={modalRef} setIsMenuOpen={setIsMenuOpen} />
+                )}
             </div>
         </div>
-    );
-};
 
-export default VideoGridItem;
+
+    )
+}
+
+export default VideoGridItem2
