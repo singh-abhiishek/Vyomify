@@ -58,7 +58,7 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) { 
     // console.log("🔥 Middleware triggered for:", this._id);
     if(!this.isModified("password")){
-        console.log("❌ Password not modified. Skipping hash.");
+        // console.log("❌ Password not modified. Skipping hash.");
         return next();
     }  // agr password field modified ho tbhi usko hash kro 
     // bina if condition ke user me kuch bhi uupdate hone pe baar baar password ko hash kr ke change krega

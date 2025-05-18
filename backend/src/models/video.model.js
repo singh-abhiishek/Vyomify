@@ -29,7 +29,7 @@ const videoSchema = new Schema(
         },
         isPublished: {
             type: Boolean,
-            default: true
+            default: false 
         },
         owner: {
             type: Schema.Types.ObjectId,
@@ -46,6 +46,6 @@ const videoSchema = new Schema(
 )
 
 // Title aur description dono pe index ban gaya — ab MongoDB words ko intelligently match karega!
-videoSchema.index({ title: "text", description: "text" });
+// videoSchema.index({ title: "text", description: "text" });
 videoSchema.plugin(mongooseAggregatePaginate); // to write aggregration queries
 export const Video = mongoose.model("Video", videoSchema);
