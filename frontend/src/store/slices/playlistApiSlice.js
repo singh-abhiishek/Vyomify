@@ -43,6 +43,7 @@ export const plalylistApiSlice = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: playlistIds,
             }),
+            invalidatesTags: ["Playlist"]
         }),
 
         // remove video from playlist
@@ -67,6 +68,7 @@ export const plalylistApiSlice = apiSlice.injectEndpoints({
                 url: `${PLAYLISTS_URL}/${playlistId}`,
                 method: "GET"
             }),
+            providesTags: ["Playlist"]
         }),
 
         // get users playlists names
@@ -74,6 +76,7 @@ export const plalylistApiSlice = apiSlice.injectEndpoints({
             query: (userId) => ({
                 url: `${PLAYLISTS_URL}/user/${userId}/playlistsName`
             }),
+            providesTags: ["Playlist"]
         }),
 
         // add video to watchlater 
