@@ -8,6 +8,7 @@ import { useGetChannelStatsQuery } from '../../../store/slices/dashboardApiSlice
 import StatCard from './StatCard';
 import UpdateAvatar from './UpdateAvatar';
 import UpdateCoverImage from './UpdateCoverImage';
+import UpperDashBoardShimmer from '../../shimmers/DashBoardShimmer/UpperDashBoardShimmer';
 
 
 const DashBoardUpper = () => {
@@ -15,9 +16,13 @@ const DashBoardUpper = () => {
   // console.log(user)
 
   // get user channel stats
-  const response = useGetChannelStatsQuery()
-  const stats = response?.data?.data
-  // console.log("user channel stats response", stats)
+  const {data: response, isLoading} = useGetChannelStatsQuery()
+  const stats = response?.data
+  console.log("user channel stats response", stats)
+
+  if(isLoading){
+    return <UpperDashBoardShimmer />
+  }
 
   return (
     <div className='flex flex-col'>
@@ -77,7 +82,6 @@ const DashBoardUpper = () => {
       {/* line  */}
       <div class="border-t border-gray-700 flex-grow  w-full mt-3">
       </div>
-
 
       {/* second part  */}
       <div className="flex flex-col items-center mt-3">

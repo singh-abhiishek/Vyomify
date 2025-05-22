@@ -7,6 +7,7 @@ import UpdatePlaylist from './UpdatePlaylist';
 import DeletePlaylist from './DeletePlaylist';
 import { useSelector } from 'react-redux';
 import { HiLockClosed } from "react-icons/hi";
+import AllPlaylistScreenShimmer from '../../../components/shimmers/Playlists/AllPlaylistScreenShimmer';
 
 const SinglePlaylistScreen = () => {
 
@@ -20,7 +21,7 @@ const SinglePlaylistScreen = () => {
   // console.log("from singleplaylistscreen location", playlistOwnerId, location) 
 
   // fetch playlist details
-  const { data: response, refetch } = useGetPlaylistByIdQuery(playlistId)
+  const { data: response, refetch, isLoading } = useGetPlaylistByIdQuery(playlistId)
   const playlist = response?.data
   const playlistVideos = playlist?.videos
   const playlistOwner = playlist?.playlistOwner
@@ -31,6 +32,10 @@ const SinglePlaylistScreen = () => {
 
   // login user
   const user = useSelector(state => state?.auth?.userData?.user)
+
+  if(isLoading){
+    return <AllPlaylistScreenShimmer />
+  }
 
   return (
     <div className="bg-black text-white w-full flex flex-col lg:flex-row gap-4 md:h-[85vh] lg:h-[90vh]">

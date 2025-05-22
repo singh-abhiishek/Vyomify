@@ -6,6 +6,7 @@ import ProfilePostPage from './profilePost/ProfilePostPage';
 import ProfilePlaylistPage from './profilePlaylist/ProfilePlaylistPage';
 import SubscribeBtn from '../watchVideo/leftPart/subscribe/SubscribeBtn';
 import { useGetChannelSubscribersQuery } from '../../store/slices/subscriptionApiSlice';
+import ProfileShimmer from '../shimmers/ProfileShimmer/ProfileShimmer';
 
 const components = [
   {
@@ -27,7 +28,7 @@ const ProfilePage = () => {
 
   const [activeTab, setActiveTab] = useState(0);
 
-  const { data: response } = useGetUserChannelProfileQuery(username)
+  const { data: response, isLoading } = useGetUserChannelProfileQuery(username)
   const userChannel = response?.data
 
   console.log("from profilepage", userChannel)
@@ -39,6 +40,10 @@ const ProfilePage = () => {
 
   const ActiveComponent = components[activeTab].component;
 
+  if(isLoading){
+    return <ProfileShimmer />
+  }
+
   return (
     <div className=' dark:bg-black text-white w-full'>
       {/* <div className='p-4 bg-amber-300 text-white w-full h-auto '> */}
@@ -46,6 +51,7 @@ const ProfilePage = () => {
       {/* show cover image */}
       <div className='w-full h-17 sm:h-38 md:h-44 bg-[#212121] text-white overflow-hidden rounded-sm'>
         <img
+          loading='lazy'
           className='object-cover w-full h-full'
           src={userChannel?.coverImage} alt="coverImage" />
       </div>
@@ -54,10 +60,10 @@ const ProfilePage = () => {
       <div className='flex mt-1 md:mt-2 gap-2 md:gap-3 items-center sm-justify-start'>
 
         {/* show avatar image  */}
-        <div className='w-22 h-22 sm:w-28 sm:h-26 md:w-40 md:h-40 bg-white rounded-[50%] overflow-hidden'>
+        <div className='w-22 h-22 sm:w-28 sm:h-26 md:w-40 md:h-40 bg-[#212121] rounded-[50%] overflow-hidden'>
           <img
+            loading='lazy'
             className='object-cover w-full h-full'
-
             src={userChannel?.avatar} alt="avatar" />
           {/* src="" alt="avatar" /> */}
         </div>

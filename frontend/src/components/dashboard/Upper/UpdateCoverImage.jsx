@@ -77,7 +77,7 @@ const UpdateCoverImage = () => {
                     <img
                         src={currCoverImage}
                         alt="Current coverImage"
-                        className="w-full h-30 sm:h-40 lg:h-44 rounded-lg object-cover border-gray-700 shadow-md"
+                        className="w-full h-30 sm:h-40 lg:h-44 rounded-sm object-cover border-gray-700 shadow-md"
                     />
 
                     {/* Hover overlay */}

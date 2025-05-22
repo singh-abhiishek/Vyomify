@@ -1,13 +1,18 @@
 import React from 'react'
 import { useGetChannelVideosQuery } from '../../../store/slices/dashboardApiSlice'
 import DashBoardLowerItem from './DashBoardLowerItem'
+import LowerDashBoardShimmer from '../../shimmers/DashBoardShimmer/LowerDashBoardShimmer'
 
 const DashBoardLower = () => {
 
   // fetch user channel videos for ananlytics
-  const { data: response, refetch: refetchChannelVideos } = useGetChannelVideosQuery()
+  const { data: response, refetch: refetchChannelVideos, isLoading } = useGetChannelVideosQuery()
   const channelVideos = response?.data
   console.log("response from DashBoardLower", channelVideos)
+
+  if(isLoading){
+    return <LowerDashBoardShimmer />
+  }
 
   return (
     <div className="w-full overflow-x-auto">
