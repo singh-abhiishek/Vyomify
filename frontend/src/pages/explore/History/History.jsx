@@ -57,7 +57,7 @@ const History = () => {
             </div>
 
             <div className='flex flex-col-reverse'>
-                <div className="flex  flex-wrap gap-0.5 mt-4">
+                <div className="flex flex-wrap mt-2">
                     {watchHistoryList?.map((video, index) => (
                         <VideoGridItem1 key={index} {...video} />
                     ))}

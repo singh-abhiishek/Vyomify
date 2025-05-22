@@ -24,12 +24,12 @@ const SearchedChannel = ({
         <div className='flex flex-col items-center justify-center w-[100%]'>
 
             {/* show channel details  */}
-            <div className='flex  w-full items-center justify-center gap-2'>
+            <div className='flex w-full items-center justify-center gap-2'>
 
                 {/* avatar */}
                 <Link
                     to={`/explore/profile/${username}`}
-                    className='w-40 h-40 bg-white rounded-[50%] overflow-hidden'>
+                    className='sm:w-40 sm:h-40 bg-white rounded-[50%] overflow-hidden'>
                     <img
                         className='object-cover w-full h-full'
                         src={avatar} alt="avatar" />
@@ -37,10 +37,10 @@ const SearchedChannel = ({
 
                 <div className=" text-white w-full max-w-md">
                     {/* Full Name */}
-                    <div className="text-xl font-semibold ">{fullName}</div>
+                    <div className="sm:text-xl text-lg font-semibold ">{fullName}</div>
 
                     {/* Username and subscriber count */}
-                    <div className="flex flex-wrap items-center text-sm text-gray-400 ">
+                    <div className="flex flex-wrap items-center text-[12px] sm:text-sm text-gray-400 ">
                         <Link
                             to={`/explore/profile/${username}`}
                             className=" hover:underline"
@@ -50,13 +50,13 @@ const SearchedChannel = ({
                     </div>
 
                     {/* Video count */}
-                    <div className="flex flex-wrap items-center gap-1 text-sm text-gray-400 ">
+                    <div className="flex flex-wrap items-center gap-1 text-[12px] sm:text-sm text-gray-400 ">
                         <p>
                             {subscriberCount}{" "}
                             {subscriberCount === 1 ? "Subscriber" : "Subscribers"}
                         </p>
                         <span>•</span>
-                        <div className="text-sm text-gray-400">
+                        <div className="text-[12px] sm:text-sm text-gray-400">
                             {videoCount} {videoCount === 1 ? "Video" : "Videos"}
                         </div>
                     </div>
@@ -73,12 +73,12 @@ const SearchedChannel = ({
 
             {/* show channel latest Videos  */}
             <div className='flex flex-wrap gap-2 mt-2 w-full'>
-                {latestVideos?.map((video, index) => (
-                    <div
-                        className=''
-                        key={index}>
-                        <VideoGridItem1 {...video} ownerDetails={ownerDetails} />
-                    </div>
+                {latestVideos?.map((video) => (
+                    <VideoGridItem1 
+                    key={video?.title}
+                    {...video} 
+                    ownerDetails={ownerDetails} 
+                    />
                 ))}
             </div>
         </div>

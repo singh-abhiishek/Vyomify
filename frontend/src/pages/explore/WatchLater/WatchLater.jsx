@@ -26,13 +26,12 @@ const WatchLater = () => {
         <span className="block h-0.5 w-10 bg-gradient-to-r from-red-600 to-rose-500 mt-2 rounded-full" />
       </div>
 
-      <div className="flex flex-wrap gap-6 mt-6">
+      <div className="flex flex-wrap gap-2 mt-4">
         {watchLaterVideosList?.map((video, index) => (
-          <div
-            className=''
-            key={index}>
-            <VideoGridItem1 {...video} />
-          </div>
+          <VideoGridItem1 
+          key={video?.createdAt}
+          {...video} 
+          />
         ))}
       </div>
     </div>

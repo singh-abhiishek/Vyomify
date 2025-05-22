@@ -41,12 +41,11 @@ const SearchedVideos = ({ searchQuery }) => {
 
     return (
         <div className='flex flex-wrap gap-2 mt-2 w-full'>
-            {searchedVideos?.map((video, index) => (
-                <div
-                    className=''
-                    key={index}>
-                    <VideoGridItem {...video} />
-                </div>
+            {searchedVideos?.map((video) => (
+                <VideoGridItem 
+                key={video?._id}
+                {...video} 
+                />
             ))}
         </div>
     )

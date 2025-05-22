@@ -1,12 +1,19 @@
-import ExplorePage from "./ExplorePage";
-import ResetPassword from "./ResetPassword";
-import UploadProfileImages from "./UploadProfileImages";
-import VerifyEmailWithOtp from "./VerifyEmailWithOtp";
-
+import ResetPassword from "./ResetPassword.jsx";
+import UploadProfileImages from "./UploadProfileImages.jsx";
+import VerifyEmailWithOtp from "./VerifyEmailWithOtp.jsx";
+import Home from "./explore/Home/Home.jsx";
+import LikedVideos from "./explore/Like/LikedVideos.jsx";
+import WatchLater from "./explore/WatchLater/WatchLater.jsx";
+import Playlists from "./explore/Playlists/Playlists.jsx";
+import SinglePlaylistScreen from "./explore/Playlists/SinglePlaylistScreen.jsx";
 
 export {
-    ExplorePage,
     ResetPassword,
     UploadProfileImages,
-    VerifyEmailWithOtp
+    VerifyEmailWithOtp,
+    Home,
+    LikedVideos,
+    WatchLater,
+    Playlists,
+    SinglePlaylistScreen,
 }
