@@ -2,41 +2,50 @@ import React from 'react'
 import AddComment from './AddComment.jsx'
 import AllComments from './AllComments.jsx'
 import { useGetAllCommentsQuery } from '../../../../store/slices/commentApiSlice.js'
+import CommentItem from './CommentItem.jsx'
+import CommentShimmer from '../../../shimmers/WatchVideoShimmer/CommentShimmer.jsx'
 
-const Comment = ({videoId}) => {
+const Comment = ({ videoId }) => {
 
-  const { data: response, error, refetch } = useGetAllCommentsQuery(videoId, { skip: !videoId })
+  const { data: response, error, refetch, isLoading } = useGetAllCommentsQuery(videoId, { skip: !videoId })
   const commentsDetails = response?.data
   const comments = commentsDetails?.docs
-  // console.log(commentsDetails)
+  const totalComment = comments?.length
+  console.log("commentsDetails", commentsDetails)
 
   const onCommentAdded = () => {
     refetch()
   }
+
+  const onCommentEdited = () => {
+    refetch()
+  }
+
   const onCommentDeleted = () => {
     refetch()
   }
 
-  return (  
+  if(isLoading){
+    return <CommentShimmer />
+  }
 
-    <div>
+  return (
 
-        {/* TODO:  add sortBy query newest, oldest*/}
-        {/* show total comments count  */}
-        <div>
-          <span>{comments?.length} Comments</span>
-        </div>
+    <div className='p-2'>
 
-        {/* input box for comment  */}
-        <div>
-            <AddComment videoId = {videoId} onCommentAdded={onCommentAdded}/>
-        </div>
+      {/* TODO:  add sortBy query newest, oldest*/}
+      {/* comments count  */}
+      <span
+        className='text-gray-300'
+      >{totalComment} {totalComment > 1 ? "Comments" : "Comment"}</span>
 
-        {/* show all comment  */}
-        <div>
-          <AllComments  comments={comments} onCommentDeleted={onCommentDeleted}/>
-        </div>
-        
+
+      {/* input box for comment  */}
+      <AddComment videoId={videoId} onCommentAdded={onCommentAdded} />
+
+
+      {/* show all comment  */}
+      <AllComments comments={comments} onCommentDeleted={onCommentDeleted} onCommentEdited ={onCommentEdited}/>
     </div>
   )
 }
