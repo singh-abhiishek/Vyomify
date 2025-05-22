@@ -3,6 +3,7 @@ import { useClearWatchHistoryMutation, useGetWatchHistoryQuery } from '../../../
 import { Spinner } from '../../../utils/loadingIndicator';
 import VideoGridItem1 from '../../../components/videoGrid/VideoGridItem1';
 import { showToastMessage } from '../../../utils/showToaster';
+import VideoGridShimmer1 from '../../../components/shimmers/VideoGridShimmer/VideoGridShimmer1';
 
 const History = () => {
 
@@ -31,11 +32,16 @@ const History = () => {
     }
 
 
+    // if (isLoading) {
+    //     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
+    //         <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
+    //     </div>
+    // }
+
     if (isLoading) {
-        return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-            <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-        </div>
+        return  <VideoGridShimmer1 isWatchHistoryBtn={true} />
     }
+
 
     if (watchHistoryList?.length === 0) return (
         <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">

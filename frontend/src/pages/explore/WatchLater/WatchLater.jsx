@@ -2,6 +2,7 @@ import React from 'react'
 import { useGetAllWatchLaterVideosQuery } from '../../../store/slices/playlistApiSlice'
 import VideoGridItem1 from '../../../components/videoGrid/VideoGridItem1'
 import { Spinner } from '../../../utils/loadingIndicator'
+import VideoGridShimmer1 from '../../../components/shimmers/VideoGridShimmer/VideoGridShimmer1'
 
 const WatchLater = () => {
 
@@ -9,10 +10,19 @@ const WatchLater = () => {
   const watchLaterVideosList = response?.data[0]?.video
   console.log("all watch later video from watch later", watchLaterVideosList)
 
+  // if (isLoading) {
+  //   return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
+  //     <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
+  //   </div>
+  // }
+
   if (isLoading) {
-    return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-      <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-    </div>
+    return (
+      <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
+        <VideoGridShimmer1 />
+        <p className="text-3xl text-gray-400 mt-4">Loading</p>
+      </div>
+    );
   }
 
   return (
@@ -28,9 +38,9 @@ const WatchLater = () => {
 
       <div className="flex flex-wrap gap-2 mt-4">
         {watchLaterVideosList?.map((video, index) => (
-          <VideoGridItem1 
-          key={video?.createdAt}
-          {...video} 
+          <VideoGridItem1
+            key={video?.createdAt}
+            {...video}
           />
         ))}
       </div>

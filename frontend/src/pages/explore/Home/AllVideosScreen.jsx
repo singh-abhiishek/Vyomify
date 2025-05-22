@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useGetAllVideosQuery, useGetInfiniteAllVideosInfiniteQuery } from '../../../store/slices/videoApiSlice'
 import VideoGridItem from '../../../components/videoGrid/VideoGridItem'
 import { Spinner } from '../../../utils/loadingIndicator'
+import VideoGridShimmer from '../../../components/shimmers/VideoGridShimmer/VideoGridShimmer'
 
 const AllVideosScreen = () => {
 
@@ -27,11 +28,16 @@ const AllVideosScreen = () => {
     console.log("a", a)
 
 
+    // if (isLoading) {
+    //     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
+    //         <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
+    //     </div>
+    // }
+
     if (isLoading) {
-        return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-            <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-        </div>
+        return <VideoGridShimmer/>
     }
+
 
     return (
         <div className='flex flex-wrap gap-4 mt-0.5'>

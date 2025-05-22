@@ -3,6 +3,7 @@ import { useGetTotalLikedVideosQuery } from '../../../store/slices/likeApiSlice'
 import VideoGridItem from '../../../components/videoGrid/VideoGridItem'
 import VideoGridItem1 from '../../../components/videoGrid/VideoGridItem1'
 import { Spinner } from '../../../utils/loadingIndicator'
+import VideoGridShimmer1 from '../../../components/shimmers/VideoGridShimmer/VideoGridShimmer1'
 
 const LikedVideos = () => {
 
@@ -10,10 +11,14 @@ const LikedVideos = () => {
   const likedVideosList = response?.data
   // console.log(likedVideosList)
 
+  // if (isLoading) {
+  //   return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
+  //     <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
+  //   </div>
+  // }
+
   if (isLoading) {
-    return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-      <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-    </div>
+    return <VideoGridShimmer1 />
   }
 
   return (
@@ -32,10 +37,10 @@ const LikedVideos = () => {
         {likedVideosList?.map((likedVideo, index) => (
           // <VideoGridItem {...likedVideo?.video} {...likedVideo} />
 
-          <VideoGridItem1 
-          key={likedVideo?._id} 
-          {...likedVideo?.video} 
-          {...likedVideo} />
+          <VideoGridItem1
+            key={likedVideo?._id}
+            {...likedVideo?.video}
+            {...likedVideo} />
         ))}
       </div>
     </div>

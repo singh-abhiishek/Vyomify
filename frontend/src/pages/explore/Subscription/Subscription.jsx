@@ -3,6 +3,7 @@ import { useGetLatestVideosOfSubscribedChannelsQuery } from '../../../store/slic
 import { useSelector } from 'react-redux'
 import VideoGridItem from '../../../components/videoGrid/VideoGridItem'
 import { Spinner } from '../../../utils/loadingIndicator'
+import VideoGridShimmer from '../../../components/shimmers/VideoGridShimmer/VideoGridShimmer'
 
 const Subscription = () => {
 
@@ -15,11 +16,16 @@ const Subscription = () => {
     console.log("latestVideosList from Subscription", response)
 
 
+    // if (isLoading) {
+    //     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
+    //         <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
+    //     </div>
+    // }
+
     if (isLoading) {
-        return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-            <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-        </div>
+        return <VideoGridShimmer isHeading={true}/>
     }
+
 
     return (
         <div className="bg-black text-white w-full px-0">
@@ -33,13 +39,13 @@ const Subscription = () => {
             </div>
 
             {/* Video Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="flex flex-wrap gap-4 mt-0.5">
                 {latestVideosList?.map((latestVideo, index) => (
-                    <div key={index}>
-                        <VideoGridItem {...latestVideo} />
-                    </div>
+                        <VideoGridItem {...latestVideo} key={latestVideo?._id}/>
+                    
                 ))}
             </div>
+
         </div>
     )
 }

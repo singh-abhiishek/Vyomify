@@ -4,6 +4,7 @@ import { Spinner } from '../../../utils/loadingIndicator'
 import PlaylistGridItem from '../../../components/videoGrid/PlaylistGridItem'
 import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import PlaylistGridShimmer from '../../../components/shimmers/PlaylistGridShimmer/PlaylistGridShimmer.jsx'
 
 const Playlists = () => {
 
@@ -18,10 +19,15 @@ const Playlists = () => {
     const playlistsList = response?.data
     // console.log("response from explore playlists", playlistsList)
 
+    // if (isLoading) {
+    //     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
+    //         <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
+    //     </div>
+    // }
+
+    const length = playlistsList?.length
     if (isLoading) {
-        return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-            <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-        </div>
+        return <PlaylistGridShimmer  length={length}/>
     }
 
     if (playlistsList?.length < 2) {
@@ -40,7 +46,7 @@ const Playlists = () => {
         <div className="bg-black text-white w-full px-6 ">
             {/* Heading */}
             {!location.pathname.includes('explore/profile') &&
-                <div className="flex flex-col items-center mb-2">
+                <div className="flex flex-col items-center mb-4">
                     <div className="flex items-end gap-2 text-white text-xl sm:text-2xl font-semibold">
                         <h1 className="text-red-600 font-amaranth font-bold text-3xl sm:text-4xl leading-none">Playlists</h1>
                         <span className="text-zinc-300 font-medium">Curated for You</span>
