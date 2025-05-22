@@ -1,0 +1,59 @@
+/* ProfileShimmer.css */
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #2d2d2d;
+  border-radius: inherit;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 1.5s infinite;
+  border-radius: inherit;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.avatar1 {
+  width: 150px !important;
+  height: 150px !important;
+  border-radius: 50% !important;
+  background-color: #2d2d2d;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .avatar1 {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}
+@media (max-width: 768px) and (min-width: 641px) {
+  .avatar1 {
+    width: 120px !important;
+    height: 120px !important;
+  }
+}
+

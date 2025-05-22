@@ -1,0 +1,42 @@
+.playlistShimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #2d2d2d;
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #2a2a2a;
+}
+
+/* shimmer highlight overlay */
+.playlistShimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: playlistShimmerAnimation 1.5s infinite;
+  pointer-events: none;
+  z-index: 20; /* must be above everything */
+}
+
+@keyframes playlistShimmerAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.playlistShimmer-inner {
+  background-color: #2d2d2d;
+  border-radius: 0.375rem;
+  position: relative;
+  z-index: 10; /* below shimmer */
+}
