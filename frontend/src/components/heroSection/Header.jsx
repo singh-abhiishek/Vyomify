@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from './Navbar'
 
 const Header = () => {
     return (
@@ -12,11 +11,11 @@ const Header = () => {
                 <p class="text-white font-bold sm:text-[18px] text-[12px] text-center capitalize mt-4">people have ALREADY signed up across the globe</p>
                 <button class="bg-red-600 rounded-lg text-white sm:px-12 sm:py-4 px-10 py-4 mt-8 cursor-pointer">Get Started Now</button>
             </div>
-            
+
             {/* ************************************************ */}
 
-    </div>
-  )
+        </div>
+    )
 }
 
 export default Header

@@ -99,7 +99,7 @@ const VideoGridItem = ({
             onMouseLeave={() => setIsVideoPlaying(false)}
         >
             {/* Thumbnail + Video */}
-            <div className=" w-full aspect-video overflow-hidden rounded-xl cursor-pointer">
+            <div className=" w-full aspect-video overflow-hidden rounded-xl cursor-pointer relative">
                 <div
                     onClick={(e) => navigateToWatchVideoPage(e, _id)}
                     className="block w-full h-full relative">
@@ -123,19 +123,18 @@ const VideoGridItem = ({
                     </div>
                 </div>
 
-                {/* Volume Icon */}
                 {isVideoPlaying && (
-                    <div>
+                    <div className="absolute top-0 right-1 z-20">
                         {isVideoMuted ? (
                             <BiVolumeMute
-                                className="absolute p-[6px] rounded-full cursor-pointer top-4 right-1 bg-black bg-opacity-70 text-white"
-                                size={28}
+                                className="p-1 bg-black/70 rounded-full text-white cursor-pointer"
+                                size={22}
                                 onClick={() => setIsVideoMuted(false)}
                             />
                         ) : (
                             <GoUnmute
-                                className="absolute p-[6px] rounded-full cursor-pointer top-4 right-1 bg-black bg-opacity-70 text-white"
-                                size={28}
+                                className="p-1 bg-black/70 rounded-full text-white cursor-pointer"
+                                size={22}
                                 onClick={() => setIsVideoMuted(true)}
                             />
                         )}

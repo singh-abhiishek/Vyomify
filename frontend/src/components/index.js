@@ -1,11 +1,16 @@
-import Header from "./Header/Header";
-import Navbar from "./Header/Navbar.jsx";
-import LogoutButton from "./Header/LogoutButton.jsx";
+import Header from "./heroSection/Header.jsx";
+import Navbar from "./navbar/Navbar.jsx";
+import LogoutButton from "./navbar/LogoutButton.jsx";
 import Signup from "./Signup.jsx"
 import Login from "./Login.jsx";
 import Input from "./Input.jsx";
 import OtpInput from "./OtpInput.jsx";
 import AuthLayout from "./AuthLayout.jsx"
+import LeftSidebar from "./sideBar/LeftSideBar.jsx";
+import SearchInput from "./navbar/SearchInput.jsx";
+import ProfilePopUp from "./navbar/ProfilePopUp.jsx";
+import ProfilePage from "./profile/ProfilePage.jsx";
+import DashBoard from "./dashboard/DashBoard.jsx";
 
 export {
     Header,
@@ -15,5 +20,10 @@ export {
     Login,
     Input,
     OtpInput,
-    AuthLayout
+    AuthLayout,
+    LeftSidebar,
+    SearchInput,
+    ProfilePopUp,
+    ProfilePage,
+    DashBoard,
 }

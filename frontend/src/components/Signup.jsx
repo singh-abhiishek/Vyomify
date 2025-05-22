@@ -54,7 +54,7 @@ const Signup = () => {
   return (
  <div className='bg-[#111111]'>
     <div className=' flex justify-center h-screen items-center'>
-        <div class="mx-auto bg-[#191919]  md:w-1/2 lg:w-2/5 dark:bg-dark_50 p-12 border border-zinc-300 dark:border-zinc-700 rounded-lg ">
+        <div class="mx-auto bg-[#191919] md:w-1/2 lg:w-2/5 dark:bg-dark_50 p-12 border border-zinc-300 dark:border-zinc-700 rounded-lg ">
             <div class=" mx-auto text-center pb-3">
                 <h1 class=" text-white font-bold text-2xl dark:text-light_10">
                     Ready to Begin Your Journey with

@@ -48,12 +48,12 @@ const Login = () => {
     return (
 
     <div className='bg-[#111111] flex justify-center items-center h-screen '>
-        <div class="mx-auto  w-full md:w-1/2 lg:w-2/5 dark:bg-dark_50 bg-[#191919]  p-12 border border-zinc-300 dark:border-zinc-700 rounded-lg">
-            <div class=" mx-auto text-center pb-4">
+        <div class="mx-auto w-[300px] md:w-1/2 lg:w-2/5 dark:bg-dark_50 bg-[#191919] p-5 sm:p-12 border border-zinc-300 dark:border-zinc-700 rounded-lg">
+            <div class="mx-auto text-center pb-1 sm:pb-4">
                 <h1 class="font-dmSans text-zinc-700 font-bold text-2xl dark:text-light_10">
                     Welcome back to
                 </h1>
-                <h1 class="text-red-600 font-amaranth font-bold text-5xl ">
+                <h1 class="text-red-600 font-amaranth font-bold text-4xl sm:text-5xl ">
                     Video-Hub
                 </h1>
             </div>

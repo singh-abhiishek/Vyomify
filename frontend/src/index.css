@@ -1,24 +1,60 @@
 @import "tailwindcss";
-
-/* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  } */
-
-
   
-  .toastBody {
-    font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
-    color: #10171D; /* #10171D */
-    font-size: 1.7rem ;
-  }
+.toastBody {
+  font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
+  color: #10171D; /* #10171D */
+  font-size: 1.7rem ;
+}
 
-  /* Adjust width of the toast when screen is smaller */
-  @media (max-width: 600px) {
-    .toast-container .Toastify__toast {
-      width: 250px ;
-    }
+/* Adjust width of the toast when screen is smaller */
+@media (max-width: 600px) {
+  .toast-container .Toastify__toast {
+    width: 250px ;
   }
+}
 
-  
+:root {
+  --primary-color: #3b82f6;
+  --secondary-color: #1e40af;
+  --font-size-sm: 0.875rem;
+
+  --bg-color-grey-shade: #212121;
+  /* text-orange-700 */
+  /* nav bar bgcolor:- dark:bg-[#000000] */
+
+
+  /* text-color :- text-gray-400 */
+
+  /* <p className='text-red-600 font-amaranth font-bold text-2xl'>
+  Organize Video
+</p> */
+}
+
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* gray-600 */
+  border-radius: 4px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 transparent;
+}
+
+/* Optional: in global CSS or Tailwind config */
+/* ::-webkit-scrollbar {
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 4px;
+} */
+

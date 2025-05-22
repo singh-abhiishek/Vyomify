@@ -8,11 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
 
   return (
-    <div>
+    <>
       <ToastContainer position="top-center" />
-      <Navbar/>
-      <Outlet /> 
-    </div>
+      <Navbar /> {/* fixed navbar */}
+
+      <div className="pt-13 h-screen overflow-hidden">
+        <Outlet />
+      </div>
+    </>
   )
 }
 

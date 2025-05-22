@@ -122,7 +122,7 @@ const VideoGridItem1 = ({
         </div>
 
         {isVideoPlaying && (
-          <div className="absolute top-2 right-2 z-10">
+          <div className="absolute top-3 right-0 z-10">
             {isVideoMuted ? (
               <BiVolumeMute
                 className="p-1 bg-black/70 rounded-full text-white cursor-pointer"
