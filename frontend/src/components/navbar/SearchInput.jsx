@@ -15,8 +15,8 @@ const SearchInput = () => {
   }
 
   return (
-    <div className="ml-0.5">
-      <div className="flex items-center w-[150px] sm:w-[400px] md:w-[460px] lg:w-[600px] sm:p-0.5 md:p-1 lg:p-1.5 max-w-xl border border-gray-700 rounded-full bg-transparent">
+    <div className="ml-9">
+      <div className="flex items-center w-[150px] sm:w-[400px] md:w-[460px] lg:w-[600px] sm:p-0.5 md:p-1 lg:p-1 max-w-xl border border-gray-700 rounded-full bg-transparent">
         {/* Search Icon */}
         {/* <span className="p-2 bg-gray-700/50 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24" viewBox="0 0 24 24">
