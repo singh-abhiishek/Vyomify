@@ -8,7 +8,7 @@ const HamBurger = () => {
   return (
     <button 
     onClick={toggleLeftbar}
-    className='cursor-pointer text-xl'>
+    className='cursor-pointer text-xl '>
         <FaBars />
     </button>
   )

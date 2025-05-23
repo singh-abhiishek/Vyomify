@@ -3,14 +3,48 @@ import { getTimeAgo } from '../../../utils/getTimeAgo';
 import { MoreVertical, ThumbsUp, ThumbsDown, MessageCircle, Share2, Link } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import EditDeletePost from './EditDeletePost';
+import { MdOutlineThumbUp, MdThumbUp } from 'react-icons/md';
+import { useIsAlreadyLikedQuery, useToggleTweetLikeStatusMutation, useTotalLikesOnTweetQuery } from '../../../store/slices/likeApiSlice';
 
 const ProfilePostItem = ({
+  _id,
   content,
   isPublished,
   tweetFile,
   createdAt,
   ownerDetails,
 }) => {
+
+  const tweetId = _id
+  // console.log("tweetId from profilePostItem", tweetId)
+
+  // is tweet already liked
+  const { data: response, refetch } = useIsAlreadyLikedQuery({
+    targetId: tweetId,
+    type: "tweet"
+  })
+  const isTweetAlreadyLiked = response?.data
+  console.log("is tweet already liked from profilePostItem", isTweetAlreadyLiked)
+
+  // total count of likes on tweet
+  const { data, refetch: refetchTweetLikesCount } = useTotalLikesOnTweetQuery(tweetId)
+  const totalLikesOnTweet = data?.data
+  console.log("total likes on tweet from profilePostItem", totalLikesOnTweet)
+
+  // toggle video like status on hitting like button
+  const [toggleTweetLikeStatus] = useToggleTweetLikeStatusMutation()
+
+  const handleTweetLikeToggle = async (e) => {
+    e.preventDefault();
+    try {
+      const reponse = await toggleTweetLikeStatus(tweetId).unwrap()
+      refetch()
+      refetchTweetLikesCount()
+      // console.log("resposne from toggleTweetlike", reponse)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const navigate = useNavigate()
   return (
@@ -82,10 +116,18 @@ const ProfilePostItem = ({
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 mt-4 text-gray-500 text-xs sm:text-sm">
-              <button className="flex items-center gap-1 hover:text-blue-500 transition cursor-pointer">
-                <ThumbsUp size={16} />
-                <span>Like</span>
+
+              <button
+                onClick={(e) => handleTweetLikeToggle(e)}
+                className="flex items-center gap-1 hover:text-blue-500 transition cursor-pointer">
+                {isTweetAlreadyLiked ?
+                  <MdThumbUp size={16} className="text-green-400 " />
+                  :
+                  <MdOutlineThumbUp size={16} className="text-gray-400"/>
+                }
+                <span>{totalLikesOnTweet}</span>
               </button>
+
               <button className="flex items-center gap-1 hover:text-red-500 transition">
                 <ThumbsDown size={16} />
                 <span>Dislike</span>

@@ -51,7 +51,7 @@ const ProfilePage = () => {
       {/* show cover image */}
       <div className='w-full h-17 sm:h-38 md:h-44 bg-[#212121] text-white overflow-hidden rounded-sm'>
         <img
-          loading='lazy'
+          // loading='lazy'
           className='object-cover w-full h-full'
           src={userChannel?.coverImage} alt="coverImage" />
       </div>
@@ -62,7 +62,7 @@ const ProfilePage = () => {
         {/* show avatar image  */}
         <div className='w-22 h-22 sm:w-28 sm:h-26 md:w-40 md:h-40 bg-[#212121] rounded-[50%] overflow-hidden'>
           <img
-            loading='lazy'
+            // loading='lazy'
             className='object-cover w-full h-full'
             src={userChannel?.avatar} alt="avatar" />
           {/* src="" alt="avatar" /> */}

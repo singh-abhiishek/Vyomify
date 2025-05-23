@@ -43,7 +43,15 @@ export const likeApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
-        // get total like on a video
+        // toggle comment like
+        toggleTweetLikeStatus: builder.mutation({
+            query: (tweetId) => ({
+                url: `${LIKES_URL}/toggle/t/${tweetId}`,
+                method: "POST",
+            }),
+        }),
+
+        // get total like on a comment
         totalLikesOnComment: builder.query({
             query: (commentId) => ({
                 url: `${LIKES_URL}/count/c/${commentId}`,
@@ -54,14 +62,32 @@ export const likeApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        // get total like on a tweet
+        totalLikesOnTweet: builder.query({
+            query: (tweetId) => ({
+                url: `${LIKES_URL}/count/t/${tweetId}`,
+                method: "GET",
+            }),
+        }),
+
+        isAlreadyLiked: builder.query({
+            query: ({targetId, type}) => ({
+                url: `${LIKES_URL}/${targetId}?type=${type}`,
+                method: "GET",
+            })
+        }),
+
     })
 })
 
 export const {
     useToggleVideoLikeStatusMutation,
+    useToggleTweetLikeStatusMutation,
     useToggleCommentLikeStatusMutation,
     useTotalLikesOnVideoQuery,
     useTotalLikesOnCommentQuery,
+    useTotalLikesOnTweetQuery,
     useGetTotalLikedVideosQuery,
+    useIsAlreadyLikedQuery,
 
 } = likeApiSlice

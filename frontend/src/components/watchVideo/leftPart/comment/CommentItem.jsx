@@ -5,22 +5,32 @@ import EditDeleteComment from './EditDeleteComment'
 import { useUpdateCommentMutation } from '../../../../store/slices/commentApiSlice'
 import { showToastMessage } from '../../../../utils/showToaster'
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import { useToggleCommentLikeStatusMutation, useTotalLikesOnCommentQuery } from '../../../../store/slices/likeApiSlice'
+import { useIsAlreadyLikedQuery, useToggleCommentLikeStatusMutation, useTotalLikesOnCommentQuery } from '../../../../store/slices/likeApiSlice'
+import { MdOutlineThumbUp, MdThumbUp } from 'react-icons/md'
 
 
 const CommentItem = ({ comment, onCommentDeleted, onCommentEdited }) => {
+
+    // is video already liked
+    const { data: response, refetch } = useIsAlreadyLikedQuery({
+        targetId: comment?._id,
+        type: "comments"
+    })
+    const isCommentAlreadyLiked = response?.data
+    // console.log("is comment already liked from CommentItem", isCommentAlreadyLiked)
 
     // handle toggle comment like on comment using id
     const [toggleCommentLike] = useToggleCommentLikeStatusMutation()
     const handleCommentLikeToggle = async (commentId) => {
         const response = await toggleCommentLike(commentId).unwrap()
-        console.log(response)
+        refetch()
+        // console.log(response)
     }
 
     // get total likes on the comment
     const { data } = useTotalLikesOnCommentQuery(comment?._id)
     const totalLikesOnComment = data?.data
-    console.log(totalLikesOnComment)
+    // console.log(totalLikesOnComment)
 
     // below are the information about the comment which will be going to update
     const [commentMsg, setCommentMsg] = useState(comment?.content)
@@ -37,7 +47,7 @@ const CommentItem = ({ comment, onCommentDeleted, onCommentEdited }) => {
     const [updateComment,] = useUpdateCommentMutation()
     const handleUpdateComment = async (e) => {
         e.preventDefault()
-        console.log(commentMsg, commentId)
+        // console.log(commentMsg, commentId)
         try {
             const resposne = await updateComment({
                 updatedContent: commentMsg,
@@ -45,11 +55,11 @@ const CommentItem = ({ comment, onCommentDeleted, onCommentEdited }) => {
             }).unwrap()
 
             onCommentEdited();
-            console.log("response after update comment", resposne)
+            // console.log("response after update comment", resposne)
             showToastMessage("comment updated", "success")
         } catch (error) {
             setCommentMsg(comment?.content)
-            console.log("error after update comment", error)
+            // console.log("error after update comment", error)
             showToastMessage("comment not updated", "error")
         }
         finally {
@@ -146,7 +156,11 @@ const CommentItem = ({ comment, onCommentDeleted, onCommentEdited }) => {
                             type='button'
                             onClick={() => handleCommentLikeToggle(comment?._id)}
                             className="cursor-pointer flex items-center gap-1 px-1.5 py-1 rounded-lg text-gray-300 text-sm font-medium">
-                            <ThumbsUp size={14} className="text-gray-400" />
+                            {isCommentAlreadyLiked ?
+                                <MdThumbUp size={14} className="text-green-400 " />
+                                :
+                                <MdOutlineThumbUp size={14} className="text-gray-400 " />
+                            }
                             <span>
                                 {totalLikesOnComment}
                             </span>

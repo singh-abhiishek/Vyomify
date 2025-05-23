@@ -7,6 +7,7 @@ import BookMark from './bookmark/BookMark.jsx'
 import { useAddVideoToWatchLaterMutation, useIsVideoAlreadyInWatchLaterQuery, useRemoveVideoFromWatchLaterMutation } from '../../../store/slices/playlistApiSlice.js'
 import { BiBookmark, BiBookmarkAlt } from 'react-icons/bi'
 import { showToastMessage } from '../../../utils/showToaster.jsx'
+import { MdBookmark } from 'react-icons/md'
 
 const ViewVideoDetail1 = ({ video }) => {
 
@@ -106,7 +107,7 @@ const ViewVideoDetail1 = ({ video }) => {
                                 type='button'
                                 onClick={(e) => handleRemoveFromWatchLater(e)}
                                 className="cursor-pointer flex items-center gap-2 px-2 py-1.5 md:px-3 md:py-1.5  rounded-2xl border border-gray-700 bg-[#1a1a1a] text-gray-300 text-sm font-medium">
-                                <BiBookmarkAlt size={15} className="text-gray-400" />
+                                <MdBookmark size={15} className="text-gray-400"/>
                             </button>)
                         }
                     </div>
