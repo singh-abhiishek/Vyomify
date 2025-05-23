@@ -12,7 +12,7 @@ function App() {
       <ToastContainer position="top-center" />
       <Navbar /> {/* fixed navbar */}
 
-      <div className="pt-13 h-screen overflow-hidden">
+      <div className="pt-13 h-screen ">
         <Outlet />
       </div>
     </>

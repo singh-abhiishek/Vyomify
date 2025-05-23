@@ -53,7 +53,7 @@ const SearchedChannel = ({
                     <div className="flex flex-wrap items-center gap-1 text-[12px] sm:text-sm text-gray-400 ">
                         <p>
                             {subscriberCount}{" "}
-                            {subscriberCount === 1 ? "Subscriber" : "Subscribers"}
+                            {subscriberCount <= 1 ? "Subscriber" : "Subscribers"}
                         </p>
                         <span>•</span>
                         <div className="text-[12px] sm:text-sm text-gray-400">

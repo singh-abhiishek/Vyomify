@@ -31,7 +31,7 @@ const ProfilePage = () => {
   const { data: response, isLoading } = useGetUserChannelProfileQuery(username)
   const userChannel = response?.data
 
-  console.log("from profilepage", userChannel)
+  // console.log("from profilepage", userChannel)
 
   const channelId = userChannel?._id
   const { data } = useGetChannelSubscribersQuery({ channelId })

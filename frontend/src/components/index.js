@@ -1,4 +1,4 @@
-import Header from "./heroSection/Header.jsx";
+import HomePage from "./HomePage/HomePage.jsx";
 import Navbar from "./navbar/Navbar.jsx";
 import LogoutButton from "./navbar/LogoutButton.jsx";
 import Signup from "./Signup.jsx"
@@ -13,7 +13,7 @@ import ProfilePage from "./profile/ProfilePage.jsx";
 import DashBoard from "./dashboard/DashBoard.jsx";
 
 export {
-    Header,
+    HomePage,
     Navbar,
     LogoutButton,
     Signup,

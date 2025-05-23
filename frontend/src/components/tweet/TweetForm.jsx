@@ -63,6 +63,9 @@ const TweetForm = () => {
       console.log("error while posting tweet", error)
       showToastMessage("Tweet not Posted", "error")
     }
+    finally{
+      toggleTweetForm(false)
+    }
 
   };
 
@@ -73,12 +76,12 @@ const TweetForm = () => {
       ref={modalRef}
       className="w-[40%] md:w-[45%] bg-[#282828] text-white rounded-2xl shadow-lg z-40 absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 p-7 space-y-2"
     >
-      <div className="flex flex-col items-center mb-5">
+      {/* <div className="flex flex-col items-center mb-5">
         <div className="flex items-end gap-2 text-white text-2xl sfont-semibold">
           <h1 className="text-red-600 font-amaranth font-bold text-3xl leading-none">Post Tweet</h1>
         </div>
         <span className="block h-0.5 w-10 bg-gradient-to-r from-red-600 to-rose-500 mt-2 rounded-full" />
-      </div>
+      </div> */}
 
       {/* Tweet Input */}
       <div>

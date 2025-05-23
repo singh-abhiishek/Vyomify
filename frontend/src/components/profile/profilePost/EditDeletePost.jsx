@@ -3,23 +3,54 @@ import React, { useState } from 'react'
 import { CiMenuKebab } from 'react-icons/ci'
 import { MdOutlineEdit } from 'react-icons/md'
 import { useSelector } from 'react-redux'
+import { useDeleteTweetMutation } from '../../../store/slices/tweetApiSlice'
+import { showToastMessage } from '../../../utils/showToaster'
+import useOutsideClick from '../../../hooks/UseOutsideClick'
+import { useRef } from 'react'
+import PostEdit from './PostEdit'
 
 const EditDeletePost = ({
     ownerId,
     content,
     tweetFile,
-    isPublished
+    isPublished,
+    tweetId
 }) => {
+
+    const user = useSelector(state => state?.auth?.userData?.user)
 
     const [isOpen, setIsOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+    const [isPostEditFormOpen, setIsPostEditFormOpen] = useState()
 
-    const user = useSelector(state => state?.auth?.userData?.user)
+    const modalRef1 = useRef()
+    const modalRef2 = useRef()
+    const modalRef3 = useRef()
+    useOutsideClick(modalRef1, () => setIsOpen(false), isOpen);
+    useOutsideClick(modalRef2, () => setIsDeleteOpen(false), isDeleteOpen);
+    useOutsideClick(modalRef3, () => setIsPostEditFormOpen(false), isPostEditFormOpen);
+
+    // handle delete tweet
+    const [deleteTweet, { isLoading }] = useDeleteTweetMutation()
+    const handleTweetDelete = async () => {
+        try {
+            const data = await deleteTweet(tweetId).unwrap(); //unwrap ensures errors are catchable
+            console.log(data)
+            showToastMessage("post deleted successfully")
+        } catch (error) {
+            showToastMessage("error post not deleted", "error")
+            console.log(error)
+        }
+        finally {
+            setIsDeleteOpen(false)
+        }
+    }
+
     return (
         <>
             <div
                 onClick={() => {
-                    if (user?._id === ownerId) { // it ensures that user can only update own comments
+                    if (user?._id === ownerId) { // it ensures that only post admin can update own post
                         setIsOpen(prev => !prev)
                     }
                 }}
@@ -30,14 +61,15 @@ const EditDeletePost = ({
 
 
             {isOpen && <div
-                // ref={modalRef1}
-                className="absolute right-5  flex flex-col items-start py-0.5 px-5 mt-3 rounded-xl mb-2 bg-[#212121] z-12">
+                ref={modalRef1}
+                className="absolute right-5 flex flex-col items-start py-1 px-1 mt-3 rounded-xl mb-2 bg-[#212121] z-12">
                 {/* Edit */}
                 <div
-                    // onClick={() => {
-                    //     setCommentId(comment?._id)
-                    //     setIsOpen(false)
-                    // }}
+                    onClick={() => {
+                        // setCommentId(comment?._id)
+                        setIsPostEditFormOpen(true)
+                        setIsOpen(false)
+                    }}
                     className="font-medium flex cursor-pointer items-center px-2 w-full py-2 rounded-lg"
                 >
                     <MdOutlineEdit size={18} />
@@ -58,10 +90,9 @@ const EditDeletePost = ({
             </div>
             }
 
-
-            {/* delete popup  */}
+            {/* delete popup */}
             {isDeleteOpen && <div
-                // ref={modalRef2} 
+                ref={modalRef2}
                 className="bg-[#212121] absolute top-0 left-1/4 z-2  p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto">
 
                 <h2 className="text-white text-lg font-semibold mb-2">Delete Post</h2>
@@ -78,14 +109,25 @@ const EditDeletePost = ({
                     </button>
 
                     <button
-                        // onClick={handleCommentDelete}
+                        onClick={handleTweetDelete}
                         className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition cursor-pointer"
                     >
-                        {/* {isLoading ? "Deleting..." : "Delete"} */}
+                        {isLoading ? "Deleting..." : "Delete"}
                     </button>
                 </div>
             </div>}
 
+            {/* edit popup  */}
+            {isPostEditFormOpen &&
+                <PostEdit
+                    modalRef3={modalRef3}
+                    tweetId={tweetId}
+                    content={content}
+                    tweetFile={tweetFile}
+                    isPublished={isPublished}
+                    setIsPostEditFormOpen={setIsPostEditFormOpen}
+                />
+            }
         </>
     )
 }

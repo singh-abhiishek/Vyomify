@@ -6,6 +6,7 @@ import ProfilePopUpButton from './ProfilePopUpButton'
 import UploadButton from './UploadButton'
 import ThemeButton from './ThemeButton'
 import HamBurger from '../sideBar/HamBurger.jsx'
+import ExploreButton from './ExploreButton.jsx'
 
 
 const Navbar = () => {
@@ -49,7 +50,7 @@ const Navbar = () => {
                 </div>
 
                 <div className='flex lg:gap-5'>
-                    <div
+                    {/* <div
                         className="md:flex lg:w-auto"
                     >
                         <ul className="mt-2.5 md:mt-4 text-sm md:font-medium md:flex-row lg:text-[16px]">
@@ -68,11 +69,11 @@ const Navbar = () => {
                                 ) : null
                             )}
                         </ul>
-                    </div>
+
+                    </div> */}
+                    {authStatus && location.pathname === "/" && <ExploreButton />}
 
                     <div className="flex items-center gap-1 md:gap-1.5 lg:gap-2.5 ">
-                        {/* <ThemeButton/> */}
-
 
                         {authStatus && location.pathname.startsWith("/explore") && <UploadButton />}
 

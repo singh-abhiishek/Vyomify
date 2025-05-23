@@ -78,7 +78,9 @@ const OpenSideBarItem = () => {
       <span className='text-sm  text-gray-400'>
         Subscriptions
       </span>
-      <SubscriptionsItemList />
+      <div className='overflow-scroll'>
+        <SubscriptionsItemList />
+      </div>
     </div>
   )
 }

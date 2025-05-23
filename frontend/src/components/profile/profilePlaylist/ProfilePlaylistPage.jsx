@@ -24,8 +24,8 @@ const ProfilePlaylistPage = ({ userId }) => {
 
   if (fileredPlaylists?.length === 0) {
     return (
-      <div className="flex items-center justify-center text-gray-500 text-lg font-medium">
-        This profile has no playlists yet.
+      <div className="flex items-center justify-center text-gray-500 text-md sm:text-lg font-medium mt-30">
+        This profile has no Playlists yet.
       </div>
     )
   }

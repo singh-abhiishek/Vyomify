@@ -157,10 +157,12 @@ export const apiSlice = createApi({
         "Comment",
         "Like",
         "Subscription",
+        "SubscriptionCheck", //for searched video and toggle subscription
         "Playlist",
         "DeletePlaylist",
         "Tweet",
         "Video",
+        "VideoToggle", // for when video status toggle
         "VideoLike",
         "CommentLike",
         "WatchHistory",

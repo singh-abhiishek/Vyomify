@@ -15,7 +15,7 @@ const SubscriptionsItemList = () => {
     // console.log("subscribed channel from SubscriptionsItemList", subscribedChannels)
 
     return (
-        <div className="flex flex-col mt-2 gap-1 ">
+        <div className="flex flex-col mt-2 gap-1 overflow-y">
             {subscribedChannels?.map((channel, index) => (
                 <Link 
                 to={`/explore/profile/${channel?.username}`}

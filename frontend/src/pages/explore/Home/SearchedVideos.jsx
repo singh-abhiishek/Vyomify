@@ -18,15 +18,15 @@ const SearchedVideos = ({ searchQuery }) => {
     // console.log("from searched videos searchedChannel", searchedChannel[0])
 
     if (isLoading) {
-        return <div className='flex justify-center items-center text-2xl text-white'>
-            <Spinner /> Loading
+        return <div className='flex justify-center items-center text-3xl text-white h-screen gap-2'>
+            <Spinner size={24}/> Loading
         </div>
     }
 
     if (searchedVideos.length === 0 && searchedChannel.length === 0) return (
-        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-            <h2 className="text-2xl font-semibold text-white">No Videos Found</h2>
-            <p className="text-sm text-gray-400">Try using more accurate or full keywords, channel name for better results.</p>
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center ">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white">No Videos Found</h2>
+            <p className="text-sm sm:text-md text-gray-400">Try using more accurate or full keywords, channel name for better results.</p>
         </div>
     )
 

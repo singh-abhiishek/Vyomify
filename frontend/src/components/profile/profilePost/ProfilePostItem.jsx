@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import EditDeletePost from './EditDeletePost';
 import { MdOutlineThumbUp, MdThumbUp } from 'react-icons/md';
 import { useIsAlreadyLikedQuery, useToggleTweetLikeStatusMutation, useTotalLikesOnTweetQuery } from '../../../store/slices/likeApiSlice';
+import { HiLockClosed } from 'react-icons/hi';
 
 const ProfilePostItem = ({
   _id,
@@ -12,11 +13,13 @@ const ProfilePostItem = ({
   isPublished,
   tweetFile,
   createdAt,
+  updatedAt,
   ownerDetails,
 }) => {
 
   const tweetId = _id
   // console.log("tweetId from profilePostItem", tweetId)
+  console.log(getTimeAgo(createdAt), getTimeAgo(updatedAt))
 
   // is tweet already liked
   const { data: response, refetch } = useIsAlreadyLikedQuery({
@@ -24,12 +27,12 @@ const ProfilePostItem = ({
     type: "tweet"
   })
   const isTweetAlreadyLiked = response?.data
-  console.log("is tweet already liked from profilePostItem", isTweetAlreadyLiked)
+  // console.log("is tweet already liked from profilePostItem", isTweetAlreadyLiked)
 
   // total count of likes on tweet
   const { data, refetch: refetchTweetLikesCount } = useTotalLikesOnTweetQuery(tweetId)
   const totalLikesOnTweet = data?.data
-  console.log("total likes on tweet from profilePostItem", totalLikesOnTweet)
+  // console.log("total likes on tweet from profilePostItem", totalLikesOnTweet)
 
   // toggle video like status on hitting like button
   const [toggleTweetLikeStatus] = useToggleTweetLikeStatusMutation()
@@ -37,7 +40,7 @@ const ProfilePostItem = ({
   const handleTweetLikeToggle = async (e) => {
     e.preventDefault();
     try {
-      const reponse = await toggleTweetLikeStatus(tweetId).unwrap()
+      const response = await toggleTweetLikeStatus(tweetId).unwrap()
       refetch()
       refetchTweetLikesCount()
       // console.log("resposne from toggleTweetlike", reponse)
@@ -65,6 +68,10 @@ const ProfilePostItem = ({
               <div className="text-sm text-gray-200">
                 <span className="font-semibold">{ownerDetails?.username}</span>
                 <span className="block text-xs text-gray-500">{getTimeAgo(createdAt)}</span>
+                <span className="text-xs text-gray-500 flex">
+                  {!isPublished && <HiLockClosed size={13} />}
+                  {getTimeAgo(createdAt) === getTimeAgo(updatedAt) ? "" : "(edited)"}
+                </span>
               </div>
             </div>
 
@@ -73,6 +80,7 @@ const ProfilePostItem = ({
               content={content}
               tweetFile={tweetFile}
               isPublished={isPublished}
+              tweetId={tweetId}
             />
           </div>
 
@@ -94,6 +102,10 @@ const ProfilePostItem = ({
             <div className="hidden sm:flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
               <span className="font-semibold">{ownerDetails?.username}</span>
               <span className="text-xs text-gray-500">{getTimeAgo(createdAt)}</span>
+              <span className="text-xs text-gray-500 flex gap-0.5">
+                {!isPublished && <HiLockClosed size={13} />}
+                {getTimeAgo(createdAt) === getTimeAgo(updatedAt) ? "" : "(edited)"}
+              </span>
             </div>
 
             {/* Text content */}
@@ -119,24 +131,24 @@ const ProfilePostItem = ({
 
               <button
                 onClick={(e) => handleTweetLikeToggle(e)}
-                className="flex items-center gap-1 hover:text-blue-500 transition cursor-pointer">
+                className="flex items-center gap-1 cursor-pointer">
                 {isTweetAlreadyLiked ?
                   <MdThumbUp size={16} className="text-green-400 " />
                   :
-                  <MdOutlineThumbUp size={16} className="text-gray-400"/>
+                  <MdOutlineThumbUp size={16} className="text-gray-400" />
                 }
                 <span>{totalLikesOnTweet}</span>
               </button>
 
-              <button className="flex items-center gap-1 hover:text-red-500 transition">
+              <button className="flex items-center gap-1">
                 <ThumbsDown size={16} />
                 <span>Dislike</span>
               </button>
-              <button className="flex items-center gap-1 hover:text-green-500 transition">
+              <button className="flex items-center gap-1">
                 <MessageCircle size={16} />
                 <span>Comment</span>
               </button>
-              <button className="flex items-center gap-1 hover:text-purple-500 transition">
+              <button className="flex items-center gap-1 ">
                 <Share2 size={16} />
                 <span>Share</span>
               </button>
@@ -150,6 +162,7 @@ const ProfilePostItem = ({
               content={content}
               tweetFile={tweetFile}
               isPublished={isPublished}
+              tweetId={tweetId}
             />
           </div>
 

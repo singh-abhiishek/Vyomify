@@ -11,7 +11,7 @@ export const subscriptionApiSlice = apiSlice.injectEndpoints({
                 url: `${SUBSCRIPTIONS_URL}/c/${channelId}`,
                 method: "POST",
             }),           
-            invalidatesTags: ['Subscription'],
+            invalidatesTags: ['Subscription', "SubscriptionCheck"],
         }), 
 
 

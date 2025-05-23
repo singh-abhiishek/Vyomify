@@ -8,7 +8,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import { PersistGate } from "redux-persist/integration/react"
 
 import {
-  Header,
+  HomePage,
   Signup,
   Login,
   AuthLayout,
@@ -36,7 +36,7 @@ import Subscription from './pages/explore/Subscription/Subscription.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
-      <Route path='' element={<Header />} />
+      <Route path='' element={<HomePage />} />
 
       <Route
         path='signup'

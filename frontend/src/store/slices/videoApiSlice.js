@@ -28,7 +28,8 @@ export const videoApiSlice = apiSlice.injectEndpoints({
             query: ({ userId, sortBy }) => ({
                 url: `${VIDEOS_URL}/published-Video/${userId}?sortBy=${sortBy}`,
                 method: "GET"
-            })
+            }),
+            invalidatesTags: ["VideoToggle"]
         }),
 
         // get video by id
@@ -79,7 +80,8 @@ export const videoApiSlice = apiSlice.injectEndpoints({
                     url: `${VIDEOS_URL}/search-video?query=${query}`,
                     method: "GET",
                 }
-            }
+            },
+            providesTags: ["SubscriptionCheck"]
         }),
 
         // toggle video publish status 
@@ -87,7 +89,8 @@ export const videoApiSlice = apiSlice.injectEndpoints({
             query: (videoId) => ({
                 url: `${VIDEOS_URL}/toggle/publish/${videoId}`,
                 method: "PATCH"
-            })
+            }),
+            providesTags: ["VideoToggle"]
         }),
 
         // update video details (title, description)
