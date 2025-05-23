@@ -150,7 +150,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         {
             $match: {
                 likedBy: new mongoose.Types.ObjectId(userId),
-                video: { $exists: true }, 
+                video: { $exists: true },
             }
         },
         {
@@ -179,7 +179,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                video: {$first: "$video"}
+                video: { $first: "$video" }
             }
         },
         {
@@ -279,6 +279,72 @@ const getTotalLikesOnComment = asyncHandler(async (req, res) => {
 
 })
 
+const getTotalLikesOnTweet = asyncHandler(async (req, res) => {
+    const { tweetId } = req.params
+
+    if (!tweetId) {
+        throw new ApiError(400, "tweetId is missing - getTotalLikesOnTweet")
+    }
+
+    if (!isValidObjectId(tweetId)) {
+        throw new ApiError(400, "Invalid tweetId - getTotalLikesOnTweet")
+    }
+
+    const totalLikesOnTweet = await Like.countDocuments(
+        {
+            tweet: tweetId
+        }
+    )
+
+    return res.status(200).json(new ApiResponse(
+        200,
+        totalLikesOnTweet,
+        "total likes on tweet fetched Successfully"
+    ))
+
+})
+
+const isAlreadyLiked = asyncHandler(async (req, res) => {
+    const { targetId } = req.params;       // ID of video/comment/tweet
+    let { type } = req.query;            // type = 'video' | 'comment' | 'tweet'
+    // console.log(req.originalUrl)
+    
+    // Normalize type
+    if (type === "videos") type = "video";
+    if (type === "comments") type = "comment";
+    if (type === "tweets") type = "tweet";
+    //   console.log(type)
+
+    if (!targetId || !type) {
+        throw new ApiError(400, "Missing targetId or type");
+    }
+
+    if (!["video", "comment", "tweet"].includes(type)) {
+        throw new ApiError(400, "Invalid type");
+    }
+
+    if (!isValidObjectId(targetId)) {
+        throw new ApiError(400, "Invalid targetId");
+    }
+
+    const userId = req.user?._id;
+
+    const query = {
+        likedBy: userId,
+        [type]: targetId,  // dynamically check the correct field
+    };
+
+    const isLiked = await Like.findOne(query);
+
+    let isAlreadyLiked = false;
+    if (isLiked) isAlreadyLiked = true;
+
+    return res.status(200).json(
+        new ApiResponse(200, isAlreadyLiked, `${type} is ${isLiked ? 'already' : 'not'} liked`)
+    );
+});
+
+
 export {
     toggleCommentLike,
     toggleTweetLike,
@@ -286,4 +352,6 @@ export {
     getLikedVideos,
     getTotalLikesOnVideo,
     getTotalLikesOnComment,
+    getTotalLikesOnTweet,
+    isAlreadyLiked,
 }

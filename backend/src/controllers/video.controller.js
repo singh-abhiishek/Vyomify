@@ -58,12 +58,10 @@ const addVideoToPlaylistUtility = asyncHandler(async (videoId, playlistId, req) 
     return { success: true, playlist: updatedPlaylist }
 })
 
-// DEBUG: may be bug in this route
 const getAllVideos = asyncHandler(async (req, res) => {
-
     const {
         sortBy = "createdAt",
-        limit = 10,
+        limit = 15,
         page = 1,
         sortType = -1,
     } = req.query;
@@ -85,7 +83,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                     {
                         $project: {
                             fullName: 1,
-                            userName: 1,
+                            username: 1,
                             avatar: 1,
                         },
                     },
@@ -133,16 +131,22 @@ const getAllVideos = asyncHandler(async (req, res) => {
 })
 
 const getVideosAndChannelBasedOnSearch = asyncHandler(async (req, res) => {
-    const { query, page = 1, limit = 10 } = req.query;
+    const { query, page = 1, limit = 15 } = req.query;
+    console.log(req.query)
+
+    if (!query || query.trim() === "") {
+        throw new ApiError(400, "query is missing")
+    }
 
     // pipeline for video (same as getAllvideo)
     const searchedVideos = await Video.aggregate([
         {
             $match: {
-                $text: {
-                    $search: query
-                }
-            }
+                $or: [
+                  { title: { $regex: query, $options: "i" } },
+                  { description: { $regex: query, $options: "i" } }
+                ]
+              }
         },
         {
             $lookup: {
@@ -154,8 +158,9 @@ const getVideosAndChannelBasedOnSearch = asyncHandler(async (req, res) => {
                     {
                         $project: {
                             fullName: 1,
-                            userName: 1,
+                            username: 1,
                             avatar: 1,
+                            _id: 1,
                         },
                     },
                 ],
@@ -188,6 +193,7 @@ const getVideosAndChannelBasedOnSearch = asyncHandler(async (req, res) => {
                 $or: [
                     { userName: { $regex: new RegExp(query, "i") } },
                     { fullName: { $regex: new RegExp(query, "i") } },
+                    { username: { $regex: new RegExp(query, "i") } },
                 ],
             },
         },
@@ -260,7 +266,7 @@ const getVideosAndChannelBasedOnSearch = asyncHandler(async (req, res) => {
                 _id: 1,
                 fullName: 1,
                 avatar: 1,
-                userName: 1,
+                username: 1,
                 videoCount: { $size: "$videos" },
                 latestVideos: { $slice: ["$videos", 10] }, // The first 10 items are returned.
                 subscriberCount: 1,
@@ -331,7 +337,7 @@ const getAllVideosPublishedByUser = asyncHandler(async (req, res) => {
                 from: "users",
                 localField: "owner",
                 foreignField: "_id",
-                as: "owner",
+                as: "ownerDetails",
                 pipeline: [
                     {
                         $project: {
@@ -345,7 +351,7 @@ const getAllVideosPublishedByUser = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                owner: { $first: "$owner" }
+                ownerDetails: { $first: "$ownerDetails" }
             }
         },
         {
@@ -453,7 +459,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     )
 })
 
-//TODO: kya user ki watchHistory m yahi se add krna hoga? (user ki watchHistory Schema alg bnane pe yha bhi change kro)
+// user ki watchHistory m yahi se add krna hoga (user ki watchHistory Schema alg bnane pe yha bhi change kro)
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
@@ -525,9 +531,13 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideoDetails = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    //update video details like title, description
+    
+    if (!videoId) {
+        throw new ApiError(400, "videoId is missing - updateVideoDetails")
+    }
+
     if (!isValidObjectId(videoId)) {
-        throw new ApiError(400, "videoId is inValid while updating video")
+        throw new ApiError(400, "InValid videoId - updateVideoDetails")
     }
 
     const { title, description } = req.body
@@ -548,13 +558,17 @@ const updateVideoDetails = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, updatedVideo, "video details updated successfully"))
+        .json(new ApiResponse(200, "video details updated successfully"))
 })
 
 const updateVideoThumbnail = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+
+    if(!videoId) {
+        throw new ApiError(400, "videoId is missing updating - updateVideoThumbnail")
+    }
     if (!isValidObjectId(videoId)) {
-        throw new ApiError(400, "videoId is inValid while updating video")
+        throw new ApiError(400, "InValid videoId - updateVideoThumbnail")
     }
 
     const newThumbnailLocalPath = req.file?.path
@@ -620,13 +634,19 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+
+    if (!videoId) {
+        throw new ApiError(400, "videoId is missing - togglePublishStatus")
+    }
+
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "inValid videoId- togglePublishStatus")
     }
 
     const video = await Video.findById(videoId);
+
     if (!video) {
-        throw new ApiError(400, "video is not found-togglePublishStatus")
+        throw new ApiError(400, "video is not found - togglePublishStatus")
     }
 
     const currStatus = video.isPublished
@@ -639,11 +659,10 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(
-            // new ApiResponse(200, "publish status toggled successfullt")
-            new ApiResponse(200, updatedStatusVideo, "publish status toggled successfullt")
+            new ApiResponse(200, "publish status toggled successfully")
+            // new ApiResponse(200, updatedStatusVideo, "publish status toggled successfullt")
         )
 })
-
 
 
 export {

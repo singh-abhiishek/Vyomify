@@ -31,7 +31,7 @@ router
 
 router
     .route("/:tweetId")
-    .patch(updateTweet)
+    .patch(upload.single("tweetFile"), updateTweet)
     .delete(deleteTweet);
 
 export default router

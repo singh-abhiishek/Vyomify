@@ -117,7 +117,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
                             _id: 1,
                             fullName: 1,
                             avatar: 1,
-                            userName: 1,
+                            username: 1,
                         },
                     },
                 ],
@@ -205,14 +205,17 @@ const getLatestVideosFromSubscribedChannels = asyncHandler(async (req, res) => {
             }
         },
         {
+            $unwind: "$channelIds" // This deconstructs an array into multiple documents — one for each item in the array.
+        },
+        {
             $lookup: {
                 from: "videos",
-                let: { channels: "$channelIds" }, // Using the subscribed channels
+                let: { channels: "$channelIds" }, // // Now this is a SINGLE channel
                 pipeline: [
                     {
                         $match: {
                             $expr: {
-                                $in: ["$owner", "$$channels"] // Filter videos whose owner is in the subscribed channels
+                                $eq: ["$owner", "$$channels"] // $eq – Use when comparing a single value to another single value
                             }
                         }
                     },
@@ -230,20 +233,20 @@ const getLatestVideosFromSubscribedChannels = asyncHandler(async (req, res) => {
                             pipeline: [
                                 {
                                     $project: {
-                                        _id: 0,
+                                        _id: 1,
                                         fullName: 1,
-                                        userName: 1,
+                                        username: 1,
                                         avatar: 1,
                                     }
                                 }
                             ],
-                            as: "owner"
+                            as: "ownerDetails"
                         }
                     },
                     {
                         $addFields: {
-                            owner: {
-                                $first: "$owner"
+                            ownerDetails: {
+                                $first: "$ownerDetails"
                             }
                         }
                     }

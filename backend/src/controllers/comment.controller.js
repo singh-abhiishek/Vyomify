@@ -166,7 +166,6 @@ const updateComment = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, updatedComment, "comment updated successfully"))
 })
 
-//DEBUG: comment delete ho chuka hai, but dekh lena iska reference kahi aur use to nhi ho rha hai
 const deleteComment = asyncHandler(async (req, res) => {
     // delete a comment
     const { commentId } = req.params
