@@ -50,7 +50,7 @@ const OpenSideBarItem = () => {
       </div>
 
       {/* line  */}
-      <div class="border-t border-gray-700 flex-grow  w-full mt-3">
+      <div className="border-t border-gray-700 flex-grow  w-full mt-3">
       </div>
 
 
@@ -71,14 +71,14 @@ const OpenSideBarItem = () => {
       </div>
 
       {/* line  */}
-      <div class="border-t border-gray-700 flex-grow  w-full mt-3">
+      <div className="border-t border-gray-700 flex-grow  w-full mt-3">
       </div>
 
       {/* subscriptions  */}
       <span className='text-sm  text-gray-400'>
         Subscriptions
       </span>
-      <div className='overflow-scroll'>
+      <div className='overflow-y-auto max-h-[280px]'>
         <SubscriptionsItemList />
       </div>
     </div>

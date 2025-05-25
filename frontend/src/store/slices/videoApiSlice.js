@@ -48,31 +48,6 @@ export const videoApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
-        getInfiniteAllVideos: builder.infiniteQuery({
-            infiniteQueryOptions: {
-                initialPageParam: 1,
-                // Optionally limit the number of cached pages
-                maxPages: 3,
-                // Must provide a `getNextPageParam` function
-                getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
-                    lastPageParam + 1,
-                // Optionally provide a `getPreviousPageParam` function
-                getPreviousPageParam: (
-                    firstPage,
-                    allPages,
-                    firstPageParam,
-                    allPageParams,
-                ) => {
-                    return firstPageParam > 0 ? firstPageParam - 1 : undefined
-                },
-            },
-
-            query: ({ limit = 10, page = 1 }) => ({
-                url: `${VIDEOS_URL}?page=${page}&limit=${limit}&sortBy=createdAt&sortType=-1`,
-                method: "GET",
-            })
-        }),
-
         // get all videos based on search query
         getAllSearchedVideos: builder.query({
             query: (query) => {
@@ -123,5 +98,4 @@ export const {
     useToggleVideoPublishStatusMutation,
     useUpdateVideoDetailsMutation,
     useUpdateVideoThumbailMutation,
-    useGetInfiniteAllVideosInfiniteQuery,
 } = videoApiSlice;

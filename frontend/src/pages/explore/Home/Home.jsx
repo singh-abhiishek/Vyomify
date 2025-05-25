@@ -15,6 +15,8 @@ const Home = () => {
     }
   }, [searchQuery]);
 
+
+
   return (
     <div className='w-full h-full text-white bg-black '>
       <div className="flex flex-wrap items-center justify-center gap-6">

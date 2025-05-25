@@ -8,7 +8,7 @@ const OpenItem = ({ icon, icon1, iconName, linkTo }) => {
     // const onSameLink = currUrl?.includes(linkTo)
     const onSameLink = window.location.pathname === linkTo;
 
-    console.log("from openitem location -", currUrl)
+    // console.log("from openitem location -", currUrl)
 
     return (
         <Link

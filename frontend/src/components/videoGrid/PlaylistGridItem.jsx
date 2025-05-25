@@ -28,7 +28,7 @@ const PlaylistGridItem = ({
   return (
     <div
       onClick={(e) => handleSeeFullPlaylist(e, _id)}
-      className="w-full sm:w-[320px] md:w-[310px] lg:w-[340px] bg-[#121212] rounded-lg overflow-hidden border border-[#2a2a2a] hover:border-[#3f3f3f] hover:shadow-lg transition-all duration-300 cursor-pointer group"
+      className="w-full sm:w-[320px] md:w-[310px] lg:w-[335px] bg-[#121212] rounded-lg overflow-hidden border border-[#2a2a2a] hover:border-[#3f3f3f] hover:shadow-lg transition-all duration-300 cursor-pointer group"
     >
       {/* Thumbnail stack */}
       <div className="relative w-full aspect-video flex items-center justify-center">

@@ -32,11 +32,15 @@ import AppProvider from './contextAPI/AppProvider.jsx';
 import WatchVideoPage from './components/WatchVideo/WatchVideoPage.jsx';
 import History from './pages/explore/History/History.jsx';
 import Subscription from './pages/explore/Subscription/Subscription.jsx';
+import PageNotFound from './pages/PageNotFound.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
       <Route path='' element={<HomePage />} />
+
+      {/* 404 route */}
+      <Route path="*" element={<PageNotFound />} />
 
       <Route
         path='signup'

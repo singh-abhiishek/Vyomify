@@ -4,7 +4,12 @@ const ExploreButton = () => (
   <Link to="/explore" className="inline-block">
     <button
       type="button"
-      className="mt-1 mr-1 px-1.5 py-1.5 md:mt-1 lg:mt-2 md:mr-1.5 lg:mr-0   bg-neutral-900 border border-neutral-700 text-white md:px-3 md:py-2 rounded-lg text-sm font-medium hover:border-red-500 hover:text-red-400 transition-colors duration-200 cursor-pointer flex items-center "
+      className="mt-1 mr-1 px-1.5 py-1.5 md:mt-1 lg:mt-2 md:mr-1.5 lg:mr-0
+        bg-neutral-900 border border-neutral-800 text-white md:px-2 md:py-1.5
+        rounded-lg text-sm font-medium flex items-center
+        hover:bg-neutral-800 hover:text-red-400 hover:border-red-500
+        active:text-red-500 active:border-red-600
+        transition-colors duration-200 cursor-pointer"
     >
       <span className="align-middle text-[12px] sm:text-sm">Explore</span>
       <svg

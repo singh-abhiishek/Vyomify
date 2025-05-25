@@ -4,7 +4,7 @@ import { useLeftSideBar } from '../../contextAPI/SideBarContext.jsx'
 
 const HamBurger = () => {
     const { toggleLeftbar } = useLeftSideBar()
-    console.log("Toggle func:", toggleLeftbar);
+    // console.log("Toggle func:", toggleLeftbar);
   return (
     <button 
     onClick={toggleLeftbar}

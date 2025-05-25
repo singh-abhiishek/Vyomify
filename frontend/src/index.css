@@ -58,3 +58,7 @@
   border-radius: 4px;
 } */
 
+/* In your global stylesheet */
+.slick-dots li.slick-active div {
+  @apply bg-orange-500 opacity-400 w-2 h-2 sm:w-2.5 sm:h-2.5;
+}

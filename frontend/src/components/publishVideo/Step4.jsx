@@ -17,7 +17,7 @@ const Step4 = () => {
   const modalRef1 = useRef()
   const modalRef2 = useRef()
   useOutsideClick(modalRef2, () => setIsOpen2(false), isOpen2);
-  useOutsideClick(modalRef1, () => setIsOpen1(false), isOpen1);
+  useOutsideClick(modalRef1, () => setIsOpen1(false), isOpen1, isOpen2);
 
   const openForm1 = (e) => {
     e.preventDefault()
