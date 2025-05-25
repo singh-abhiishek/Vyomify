@@ -3,29 +3,34 @@ import React from "react";
 
 const faqs = [
     {
-        question: "How can I upload a video to Video-Hub?",
+        question: "Can I publish posts other than videos on this website?",
         answer:
-            "You can upload a video by signing in and clicking the 'Upload' button on the dashboard. Make sure your video follows our content guidelines.",
+            "Yes! Besides uploading videos, you can create posts with text and photos. Just use the 'Create' option in the navbar to choose between uploading a video or creating a post.",
     },
     {
-        question: "What video formats are supported?",
+        question: "Can I edit my video details and personal profile after uploading?",
         answer:
-            "We support MP4, WebM, and MOV formats. Maximum file size is 1GB per upload.",
-    },
-    {
-        question: "Can I edit the video details after uploading?",
-        answer:
-            "Yes, go to your dashboard, select the video, and click on the edit icon to update the title, description, thumbnail, or visibility.",
+            "Yes, in your dashboard you can update video details like title, description, thumbnail, and visibility. You can also update your personal profile by changing your cover image and avatar.",
     },
     {
         question: "How does the 'Watch Later' feature work?",
         answer:
-            "Click the clock icon below any video to add it to your 'Watch Later' list. You can access it anytime from your profile menu.",
+            "Click the clock icon below any video to add it to your 'Watch Later' list. You can access it anytime from your watchLater list.",
     },
     {
         question: "Is there a way to save my favorite videos?",
         answer:
-            "Yes, use the 'Like' button to save videos to your Liked list. You can view all liked videos from your profile.",
+            "Yes, use the 'Like' button to save videos to your Liked list. You can view all liked videos from your sidebar.",
+    },
+    {
+        question: "How do subscriptions work on Video-Hub?",
+        answer:
+            "Your subscribed channels are listed at the bottom of the sidebar. When you click the 'Subscription' button in the sidebar, you’ll see the latest videos from those channels in a separate list.",
+    },
+    {
+        question: "How does the search functionality work?",
+        answer:
+            "You can use the search bar at the top of the navbar to search for any channel or any content like songs by typing exact keywords.",
     },
     {
         question: "Do I need an account to watch videos?",
@@ -33,9 +38,14 @@ const faqs = [
             "No account is needed for public videos, but you'll need to sign in to like, comment, or upload videos.",
     },
     {
-        question: "How do I report inappropriate content?",
+        question: "Can I create private playlists?",
         answer:
-            "Click the three-dot menu on any video and select 'Report'. Our team will review the report promptly.",
+            "Yes, you can organize videos into playlists and mark them as private or public based on your preference.",
+    },
+    {
+        question: "How do I reset my password?",
+        answer:
+            "Click on 'Forgot Password' on the login screen and follow the instructions to reset it via email.",
     },
 ];
 
@@ -47,70 +57,80 @@ const FAQ = () => {
     };
 
     return (
-        <div className="bg-black py-10 px-4">
+        <div className="bg-black py-16 px-4 md:px-10">
             <div className="mx-auto max-w-3xl text-center mb-10">
-                <h1 className="text-[26px] md:text-[50px] text-white font-dmSans font-bold tracking-wide">
+                <h1 className="text-[26px] md:text-[50px] text-white font-bold tracking-wide">
                     Frequently Asked Questions
                 </h1>
             </div>
 
-            <div className="mx-auto max-w-3xl space-y-4 px-2 md:px-8">
-                {faqs.map((faq, index) => (
-                    <div
-                        key={index}
-                        className="border-b border-zinc-700 hover:border-red-500 transition-colors duration-300 pb-3"
-                    >
-                        <button
-                            className="w-full flex justify-between items-center text-left text-lg font-medium text-white cursor-pointer"
-                            onClick={() => toggleFAQ(index)}
-                        >
-                            {faq.question}
-                            <span className="text-xl">
-                                {openIndex === index ? (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="#EF4444"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="lucide lucide-circle-minus"
-                                    >
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M8 12h8"></path>
-                                    </svg>
-                                ) : (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="#EF4444"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M8 12h8"></path>
-                                        <path d="M12 8v8"></path>
-                                    </svg>
-                                )}
-                            </span>
-                        </button>
+            <div className="mx-auto max-w-3xl">
+                {faqs.map((faq, index) => {
+                    const isOpen = openIndex === index;
+                    return (
                         <div
-                            className={`text-md mt-4 text-zinc-300 transition-all duration-300 ${openIndex === index
-                                    ? "max-h-40 opacity-100"
-                                    : "max-h-0 opacity-0 overflow-hidden"
+                            key={index}
+                            onClick={() => toggleFAQ(index)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") toggleFAQ(index);
+                            }}
+                            className={`flex flex-col border-b border-zinc-700 py-4 cursor-pointer select-none transition-colors duration-300 ${isOpen ? "border-red-500" : "hover:border-red-500"
                                 }`}
                         >
-                            {faq.answer}
+                            <div className="flex justify-between items-center">
+                                <h4
+                                    className={`text-base md:text-lg font-medium transition-colors ${isOpen ? "text-red-500" : "text-white"
+                                        }`}
+                                >
+                                    {faq.question}
+                                </h4>
+                                <span className="ml-4 flex-shrink-0">
+                                    {isOpen ? (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="#EF4444"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            className="lucide lucide-circle-minus"
+                                        >
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <path d="M8 12h8"></path>
+                                        </svg>
+                                    ) : (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="#EF4444"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <path d="M8 12h8"></path>
+                                            <path d="M12 8v8"></path>
+                                        </svg>
+                                    )}
+                                </span>
+                            </div>
+                            <div
+                                className={`text-zinc-300 text-sm md:text-base mt-3 overflow-hidden transition-all duration-300 ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                                    }`}
+                            >
+                                {faq.answer}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

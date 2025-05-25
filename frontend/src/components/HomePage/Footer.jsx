@@ -2,108 +2,126 @@ import {
   FaLinkedinIn,
   FaInstagram,
   FaYoutube,
+  FaGithub,
 } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-
+import { SiX } from "react-icons/si";
 
 export default function Footer() {
+  {/* bg-[#191b1f] bg-[#252629] bg-zinc-900*/}
   return (
-    <section className="flex flex-col items-center justify-center gap-3 font-dmSans relative dark:bg-[#18191B] py-10">
-      <footer className="mx-auto px-10 flex lg:flex-row flex-col justify-center gap-y-8 w-4/5">
-        {/* Logo and description */}
-        <div className="w-60 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-          <a href="/" className="flex items-center py-3 justify-center md:justify-start">
+    <section className="bg-[#191b1f] text-gray-400 py-12 font-dmSans select-none">
+      <footer className="mx-auto px-6 md:px-16 max-w-7xl flex flex-col lg:flex-row justify-between gap-12">
+        {/* Logo & Description */}
+        <div className="w-60 flex-shrink-0 text-center lg:text-left">
+          <a href="/" className="flex justify-center lg:justify-start py-2">
             <img
-              className="w-20 md:w-28 block dark:hidden"
-              src="/static/media/Tuf Logo B.a2ce02c035734f237b8a.png"
-              alt="TUF Logo"
-            />
-            <img
-              className="w-20 md:w-28 hidden dark:block"
-              src="/static/media/TufLogoWhite.55c3498a0dd7701d258e.png"
-              alt="TUF Logo Dark"
+              className="w-24 md:w-28"
+              src="/static/media/VideoHubLogo.png" // replace with your logo path
+              alt="Vyomify Logo"
             />
           </a>
-          <span className="text-xs mt-2 text-[#7a7a7a] block max-w-xs">
-            The best place to learn data Structures, algorithms, most asked coding interview questions. real interview experiences free of cost.
-          </span>
+          <p className="text-sm mt-2 text-gray-400">
+            Vyomify is your go-to platform to upload videos, create posts, and connect with your audience.
+          </p>
 
           {/* Social Icons */}
-          <div className="flex flex-row gap-x-3 items-center mt-4 justify-center md:justify-start">
+          <div className="flex justify-center lg:justify-start mt-5 gap-4">
             <a
+              href="https://github.com/singh-abhiishek"
+              aria-label="GitHub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full border border-gray-700 hover:border-red-600 transition-colors cursor-pointer"
+            >
+              <FaGithub className="text-gray-400 hover:text-red-600" size={18} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/abhishek-singh-05a440230/"
               aria-label="LinkedIn"
-              href="https://www.linkedin.com/company/takeuforward/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full border-2 border-[#f0f0f060] group hover:border-white transition-colors cursor-pointer"
+              className="p-2 rounded-full border border-gray-700 hover:border-red-600 transition-colors cursor-pointer"
             >
-              <FaLinkedinIn className="text-[#7a7a7a] group-hover:text-white" size={16} />
+              <FaLinkedinIn className="text-gray-400 hover:text-red-600" size={18} />
             </a>
-
-            <a
-              aria-label="X (Twitter)"
-              href="https://www.x.com/takeuforward_"
+            <div
+              aria-label="Twitter (X)"
+              className="p-2 rounded-full border border-gray-700 hover:border-red-600 transition-colors"
+            >
+              <SiX className="text-gray-400 hover:text-red-600" size={18} />
+            </div>
+            {/* <a
+              href="https://www.x.com/video_hub"
+              aria-label="Twitter (X)"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full border-2 border-[#f0f0f060] group hover:border-white transition-colors cursor-pointer"
+              className="p-2 rounded-full border border-gray-700 hover:border-red-600 transition-colors cursor-pointer"
             >
-              <FaXTwitter className="text-[#7a7a7a] group-hover:text-white" size={16} />
-            </a>
-
-            <a
+              <SiX className="text-gray-400 hover:text-red-600" size={18} />
+            </a> */}
+            <div
               aria-label="Instagram"
-              href="https://www.instagram.com/striver_79/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-full border-2 border-[#f0f0f060] group hover:border-white transition-colors cursor-pointer"
+              className="p-2 rounded-full border border-gray-700 hover:border-red-600 transition-colors "
             >
-              <FaInstagram className="text-[#7a7a7a] group-hover:text-white" size={16} />
-            </a>
-
-            <a
+              <FaInstagram className="text-gray-400 hover:text-red-600" size={18} />
+            </div>
+            <div
               aria-label="YouTube"
-              href="https://www.youtube.com/channel/UCJskGeByzRRSvmOyZOz61ig"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-full border-2 border-[#f0f0f060] group hover:border-white transition-colors cursor-pointer"
+              className="p-2 rounded-full border border-gray-700 hover:border-red-600 transition-colors"
             >
-              <FaYoutube className="text-[#7a7a7a] group-hover:text-white" size={16} />
-            </a>
+              <FaYoutube className="text-gray-400 hover:text-red-600" size={18} />
+            </div>
           </div>
         </div>
 
-        {/* Other links */}
-        <div className="col-span-1 lg:col-span-4 grid grid-cols-2 lg:grid-cols-4 gap-8 md:ml-20">
+        {/* Lists without links */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 flex-grow max-w-4xl text-sm">
           <div>
-            <h2 className="title-font font-medium tracking-widest text-base mb-3 text-left text-new_Brand">
-              Company
-            </h2>
-            <nav className="flex flex-col gap-y-3 text-sm">
-              <a href="/about-us" className="hover:underline hover:text-new_Brand dark:text-[#F0F0F0] dark:hover:text-new_Brand">
-                About Us
-              </a>
-              <a href="/contact-us" className="hover:underline hover:text-new_Brand dark:text-[#F0F0F0] dark:hover:text-new_Brand">
-                Contact Us
-              </a>
-              <a href="/plus" className="hover:underline hover:text-new_Brand dark:text-[#F0F0F0] dark:hover:text-new_Brand">
-                Pricing
-              </a>
-              <a href="/privacy-policy" className="hover:underline hover:text-new_Brand dark:text-[#F0F0F0] dark:hover:text-new_Brand">
-                Privacy Policy
-              </a>
-              <a href="/terms-and-conditions" className="hover:underline hover:text-new_Brand dark:text-[#F0F0F0] dark:hover:text-new_Brand">
-                Terms and Conditions
-              </a>
-              <a href="/cancellation-refund-policy" className="hover:underline hover:text-new_Brand dark:text-[#F0F0F0] dark:hover:text-new_Brand">
-                Cancellation / Refund Policy
-              </a>
-            </nav>
+            <h3 className="text-red-600 font-semibold mb-4">Company</h3>
+            <ul className="space-y-3 text-gray-400">
+              <li>About Us</li>
+              <li>Contact</li>
+              <li>Pricing</li>
+              <li>Privacy Policy</li>
+              <li>Terms & Conditions</li>
+            </ul>
           </div>
 
-          {/* Add other sections here similarly */}
+          <div>
+            <h3 className="text-red-600 font-semibold mb-4">Resources</h3>
+            <ul className="space-y-3 text-gray-400">
+              <li>Blog</li>
+              <li>FAQ</li>
+              <li>Support</li>
+              <li>Tutorials</li>
+            </ul>
+          </div>
 
+          <div>
+            <h3 className="text-red-600 font-semibold mb-4">Community</h3>
+            <ul className="space-y-3 text-gray-400">
+              <li>Forums</li>
+              <li>Events</li>
+              <li>Partners</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-red-600 font-semibold mb-4">More</h3>
+            <ul className="space-y-3 text-gray-400">
+              <li>Terms & Conditions</li>
+              <li>Refund Policy</li>
+              <li>Careers</li>
+            </ul>
+          </div>
         </div>
       </footer>
+
+      {/* Bottom copyright */}
+      <div className="flex flex-col mt-10 border-t border-zinc-800 pt-6 text-center text-gray-500 text-xs select-none">
+        <span>© 2025 Vyomify. All rights reserved.</span>
+        <span>Made with ❤️ and code</span>
+      </div>
     </section>
   );
 }
