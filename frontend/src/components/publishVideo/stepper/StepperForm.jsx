@@ -9,9 +9,13 @@ import Step4 from '../Step4.jsx';
 import { usePublishVideoMutation } from "../../../store/slices/videoApiSlice.js";
 import { Spinner } from "../../../utils/loadingIndicator.jsx";
 import { showToastMessage } from "../../../utils/showToaster.jsx";
-import { useNavigate } from 'react-router-dom';
-import Confetti from "react-confetti";
-import { FaUpload, FaCheckCircle, FaCog, FaSpinner } from "react-icons/fa";
+import { Link, useNavigate } from 'react-router-dom';
+import { FaCheckCircle, FaCog, FaCloudUploadAlt, FaVideo, FaClock, FaStar } from "react-icons/fa";
+import { FaUserCircle, FaHourglassHalf } from "react-icons/fa";
+import { useStepForm } from "../../../contextAPI/StepFormContext.jsx";
+import { useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
+import { RiDashboardHorizontalLine } from "react-icons/ri";
 
 
 const stepsConfig = [
@@ -117,9 +121,16 @@ const StepperForm = () => {
 
   const [publishVideo, { isLoading }] = usePublishVideoMutation()
 
+  const [uploadTimeTaken, setUploadTimeTaken] = useState(null);
+  const [fileSize, setFileSize] = useState(null);
+
+  const user = useSelector(state => state.auth?.userData?.user)
+  const { toggleStepForm } = useStepForm() // from contextApi
+
+
   // form submit
   const onSubmit = async (data) => {
-    console.log("video publish req executed")
+    // console.log("video publish req executed")
     // console.log("All form data:", data);
     const formData = new FormData();
     formData.append("title", data.title);
@@ -132,6 +143,14 @@ const StepperForm = () => {
     // for (let pair of formData.entries()) {  //NOTE: direct console.log(formData) gives empty object(don't know why)
     //   console.log(`${pair[0]}:`, pair[1]);
     // }
+
+    // Get file size
+    const file = data.videoFile[0];
+    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+    setFileSize(sizeInMB);
+
+    // Start time
+    const startTime = Date.now();
 
     setShowUploadProgressBar(true);
     try {
@@ -146,19 +165,16 @@ const StepperForm = () => {
         setIsResponseSuccess(true)
         setUploadProgressBar(100);
         showToastMessage("video published Successfully", "success");
-        // setTimeout(() => {
 
-        // }, 3000)
-        // navigate('/explore')
+        const endTime = Date.now();
+        const timeInSeconds = ((endTime - startTime) / 1000).toFixed(1);
+        setUploadTimeTaken(timeInSeconds);
       }
     } catch (error) {
       console.log(error)
       showToastMessage(error.response?.data?.message || "Request failed!", "error");
       setShowUploadProgressBar(false)
     }
-    // finally {
-    //   setShowUploadProgressBar(false)
-    // }
   };
 
 
@@ -166,106 +182,138 @@ const StepperForm = () => {
   return (
     <>
       {showUploadProgessBar ?
-        (
-          <div className="flex flex-col items-center justify-center w-full h-full max-w-5xl p-10 mx-auto space-y-8 bg-[#282828] rounded-xl relative ">
-            {/* Heading with Icon */}
-            {/* <div className="flex flex-col items-center mb-5">
-              <div className="flex items-end gap-2 text-white text-2xl font-semibold">
-                <h1 className="text-red-600 font-amaranth font-bold text-4xl leading-none">Upload in Progess</h1>
+        <div className="flex flex-col items-center justify-center w-full max-w-3xl px-4 sm:px-6 md:px-8 py-6 sm:py-8 space-y-5 rounded-2xl mx-auto">
+          {!isResponseSuccess ? (
+            <>
+              {/* Upload In Progress */}
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center gap-1 sm:gap-2 text-rose-600">
+                  <FaCloudUploadAlt className="text-2xl sm:text-4xl animate-bounce" />
+                  <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500 font-amaranth font-bold text-2xl sm:text-3xl drop-shadow whitespace-nowrap">
+                    Upload in Progress
+                  </h1>
+                </div>
+                <span className="h-1 w-24 sm:w-36 bg-gradient-to-r from-red-600 to-pink-500 rounded-full animate-pulse mt-1" />
               </div>
-              <span className="block h-0.5 w-10 bg-gradient-to-r from-red-600 to-rose-500 mt-2 rounded-full" />
-            </div> */}
 
-
-            <div className="flex flex-col items-center mb-5">
-              <div className="flex items-center gap-2 text-white text-2xl font-semibold">
-                <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500 font-amaranth font-bold text-3xl leading-none">
-                  Upload in Progress
-                </h1>
-              </div>
-              <span className="block h-1 w-16 bg-gradient-to-r from-red-600 to-rose-500 mt-2 rounded-full" />
-            </div>
-
-            {/* Video Thumbnail */}
-            {currentValues?.thumbnail?.[0] && (
-              <div className="flex justify-center w-full max-w-sm">
-                <img
-                  src={
-                    currentValues?.thumbnail?.[0] instanceof File
-                      ? URL.createObjectURL(currentValues?.thumbnail[0])
-                      : ""
-                  }
-                  alt="Video Thumbnail"
-                  className="object-cover object-center h-48 w-48 rounded-lg shadow-2xl border-4 border-gray-700 hover:scale-105 transition-transform"
+              {/* Progress Bar */}
+              <div className="relative w-full max-w-xl h-5 sm:h-6 bg-gray-900 rounded-full overflow-hidden mt-4 shadow-inner border border-gray-700 mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 animate-pulse opacity-30 rounded-full" />
+                <div
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-400 via-green-600 to-green-700 rounded-full transition-all duration-300"
+                  style={{ width: `${uploadProgressBar}%` }}
                 />
-              </div>
-            )}
-
-            {/* Video Title */}
-            {currentValues?.title && (
-              <p className="mt-6 text-lg font-semibold text-center text-gray-300 max-w-lg tracking-tight">
-                {currentValues?.title}
-              </p>
-            )}
-
-
-            {/* Progress Bar */}
-            <div className="relative w-full max-w-xl h-6 bg-gray-700 rounded-full overflow-hidden shadow-lg">
-              {/* Background of Progress Bar */}
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-gray-500 to-gray-700 rounded-full" />
-
-              {/* Animated Progress Fill */}
-              <div
-                className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-green-400 to-blue-500 shadow-xl animate-pulse"
-                style={{
-                  width: `${uploadProgressBar}%`,
-                }}
-              />
-
-              {/* Optional Text Display */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 flex items-center justify-center w-full h-full text-white font-semibold">
-                <span>{uploadProgressBar}%</span>
-              </div>
-            </div>
-
-
-            {/* Upload Percentage with Icon */}
-            {!isResponseSuccess  && <div className="flex flex-col items-center justify-center space-x-2 mt-2 text-md font-medium text-center text-gray-300">
-              <div className="flex items-center gap-1">
-                {/* <FaSpinner className="animate-spin text-gray-400" /> */}
-                <FaCog className="animate-spin" />
-                <p>{uploadProgressBar}% complete</p>
-              </div>
-              <p className="text-sm font-medium text-gray-300 animate-pulse">
-                Processing your video, please wait...
-              </p>
-            </div>}
-
-            {/* Completion Message */}
-
-            {isResponseSuccess && (
-              <div className="relative text-center transition-all duration-300 ease-in-out transform scale-100 hover:scale-105">
-                {/* Celebration Message with Pulse Animation */}
-                <div className="p-6 bg-gradient-to-r from-gray-600 to-gray-800 rounded-xl shadow-lg text-white">
-                  <div className="flex items-center justify-center mb-4">
-                    {/* Bouncing Icon with Green Color */}
-                    <FaCheckCircle className="text-4xl text-green-400 animate-bounce" />
-                  </div>
-                  {/* Pulse Animation for Text with Green Tone */}
-                  <p className="text-2xl font-semibold animate-pulse text-green-500">🎉 Upload Complete!</p>
-                  <p className="text-lg text-gray-200 mt-2">Your video has been successfully uploaded.</p>
+                <div className="absolute inset-0 flex items-center justify-center text-white text-xs sm:text-sm font-semibold tracking-wide select-none">
+                  {uploadProgressBar}%
                 </div>
               </div>
-            )}
-          </div>
 
-        )
+              {/* Status Text */}
+              <div className="flex flex-col items-center text-center text-gray-300 mt-3 space-y-2 sm:space-y-2  text-xs sm:text-sm px-2">
+                <div className="flex items-center gap-1 sm:gap-2 text-gray-400 font-medium whitespace-nowrap ">
+                  <FaCog className="animate-spin text-base sm:text-lg" />
+                  <span>{uploadProgressBar}% complete</span>
+                </div>
+
+
+                <p className="italic text-gray-500 flex items-center gap-1 whitespace-nowrap">
+                  <FaHourglassHalf className="text-orange-600" size={12} />
+                  “Good things take time. Almost there!”
+                </p>
+                <span className="text-gray-500 whitespace-nowrap">
+                  Estimated time left: ~{Math.max(5, 100 - uploadProgressBar)} seconds
+                </span>
+
+                <p className="flex flex-col items-center text-center text-red-400 animate-pulse text-sm sm:text-base bg-red-900/20 border border-red-400 px-4 py-2 rounded-lg shadow-inner space-y-1">
+                  <span className="flex items-center gap-2 justify-center">
+                    <Loader2 className="animate-spin w-5 h-5" />
+                    Your video is being processed.
+                  </span>
+                  <span>
+                    This may take a moment — <span className="italic">please stay on this page.</span>
+                  </span>
+                </p>
+              </div>
+            </>
+
+
+          ) : (
+            // Upload Success Message
+            <div className="relative p-5 sm:p-6 md:p-7 bg-gradient-to-br from-green-700 via-emerald-800 to-green-900 rounded-xl text-white shadow-2xl text-center w-full border border-green-600 overflow-hidden">
+
+              {/* Decorative Sparkles */}
+              <div className="absolute -top-2 -left-2 w-full h-full pointer-events-none animate-pulse opacity-10">
+                <div className="w-2 h-2 bg-white rounded-full absolute top-10 left-10 animate-ping" />
+                <div className="w-2 h-2 bg-white rounded-full absolute top-4 right-20 animate-ping" />
+                <div className="w-2 h-2 bg-white rounded-full absolute bottom-10 left-24 animate-ping" />
+              </div>
+
+              {/* Icons */}
+              <div className="flex justify-center mb-3 gap-2 items-center">
+                <FaCheckCircle className="text-3xl sm:text-4xl text-green-400 animate-bounce drop-shadow-lg" />
+                <FaStar className="text-yellow-400 text-lg sm:text-xl animate-ping" />
+                <FaStar className="text-yellow-300 text-sm animate-pulse" />
+              </div>
+
+              {/* Headline */}
+              <p className="text-xl sm:text-2xl font-bold text-green-300 animate-pulse tracking-wide">
+                🎉 Upload Complete!
+              </p>
+              <p className="text-sm text-gray-200 mt-1">Your video has been successfully uploaded.</p>
+              <p className="text-xs text-emerald-300 mt-2 italic">“Lights, Camera, Success!” 🌟</p>
+
+              {/* Stats */}
+              {fileSize && uploadTimeTaken && (
+                <div className="text-sm text-gray-300 space-y-1 mt-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <FaVideo /> File size: <span className="font-medium">{fileSize} MB</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <FaClock /> Time taken: <span className="font-medium">{uploadTimeTaken} s</span>
+                  </div>
+                </div>
+              )}
+
+              {/* CTA Buttons */}
+              <div className="mt-6 flex flex-col sm:flex-row sm:justify-center gap-3 w-full">
+                <Link
+                  to={`/explore/dashboard`}
+                  onClick={toggleStepForm}
+                  className="bg-green-600 hover:bg-green-500 text-white px-3 py-2 rounded-lg transition duration-200 flex items-center justify-center gap-1 w-full sm:w-auto text-sm sm:text-base whitespace-nowrap"
+                >
+                  <RiDashboardHorizontalLine
+                    className="text-base sm:text-lg"
+                    aria-hidden="true"
+                  />
+                  Go to Dashboard
+                </Link>
+
+
+                <Link
+                  to={`/explore/profile/${user?.username}`}
+                  onClick={toggleStepForm}
+                  className="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg transition duration-200 flex items-center justify-center gap-1 w-full sm:w-auto text-sm sm:text-base whitespace-nowrap"
+                >
+                  <FaUserCircle
+                    className="text-base sm:text-lg"
+                    aria-hidden="true" />
+                  Go to Profile
+                  <FaStar className="text-yellow-400 text-xs  animate-ping" />
+                </Link>
+              </div>
+
+
+
+            </div>
+          )}
+        </div>
+
         :
         (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="">
+            <div>
 
-              <div className="stepper h-[10%]">
+              <div className="stepper">
                 {stepsConfig.map((step, index) => {
                   return (
                     <div
@@ -302,16 +350,16 @@ const StepperForm = () => {
                 </div>
               </div>
 
-              <div className="h-[80%]"> <ActiveComponent /> </div>
+              <ActiveComponent />
 
-              <div className="h-[10%] flex justify-between">
+              <div className="flex justify-between">
                 <div >
                   {!isComplete && currentStep > 1 && (
                     <button
                       onClick={handlePrev}
                       type="button"
                       // disabled = {!error} // empty string give - falsy value
-                      className="text-md rounded-lg relative inline-flex items-center justify-center px-4 py-1.5 m-1 cursor-pointer
+                      className="text-sm rounded-lg relative inline-flex items-center justify-center px-2 py-1.5 sm:px-4 sm:py-1.5 mt-1 sm:mt-0 cursor-pointer
                 border border-red-500 bg-[#2c2c2c] hover:bg-[#3a3a3a] text-red-400 shadow-sm
                 active:border-red-600 active:text-red-500"
                     >
@@ -327,7 +375,7 @@ const StepperForm = () => {
                     <button
                       onClick={handleNext}
                       type="button"
-                      className="text-md rounded-lg inline-flex items-center justify-center px-4 py-1.5 m-1 cursor-pointer
+                      className="text-sm sm:text-md rounded-lg inline-flex items-center justify-center  px-2 py-1.5 sm:px-4 sm:py-1.5 mt-1 sm:mt-0 cursor-pointer
               bg-gradient-to-tr from-red-600 to-red-500 text-white border border-red-700
               hover:from-red-500 hover:to-red-600 hover:shadow-md
               transition-all duration-200 ease-in-out shadow-sm"
@@ -340,7 +388,7 @@ const StepperForm = () => {
                     <button
                       type="submit"
                       //disabled = {!error} // empty string give - falsy value
-                      className="text-md rounded-lg relative inline-flex items-center justify-center px-4 py-1.5 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white">
+                      className="text-sm rounded-lg relative inline-flex items-center justify-center px-2 py-1.5 sm:px-4 sm:py-1.5mt-1 sm:mt-0 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white">
                       {isLoading ? <Spinner name='Publishing...' /> : "Publish"}
                     </button>
                   )}
@@ -356,157 +404,3 @@ const StepperForm = () => {
 };
 
 export default StepperForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ***********************************************************************************************************************
-// import React, {useEffect, useRef, useState} from "react";
-// import "./Stepper.css"
-
-// const CheckoutStepper = ({stepsConfig = [], videoFormData = {}, setVideoFormData, errors}) => {
-//   const [currentStep, setCurrentStep] = useState(1);
-//   const [isComplete, setIsComplete] = useState(false);
-//   const [error, setError] = useState("ddd")
-//   const [margins, setMargins] = useState({
-//     marginLeft: 0,
-//     marginRight: 0,
-//   });
-
-//   const stepRef = useRef([]);
-
-//   useEffect(() => {
-//     setMargins({
-//       marginLeft: stepRef.current[0].offsetWidth / 2,
-//       marginRight: stepRef.current[stepsConfig.length - 1].offsetWidth / 2,
-//     });
-//   }, [stepRef, stepsConfig.length]);
-
-
-//   if (!stepsConfig.length) {
-//     return <></>;
-//   }
-
-//   const handlePrev = (e) => {
-//     setCurrentStep((prevStep) => {
-//       return prevStep - 1;
-//     })
-//   }
-
-//   const handleNext = (e) => {
-//     const isError = stepsConfig[currentStep - 1].validate()
-//     console.log(isError)
-//     if(!isError){
-//       setCurrentStep((prevStep) => {
-//         if (prevStep === stepsConfig.length) {
-//           setIsComplete(true);
-//           return prevStep;
-//         } else {
-//           return prevStep + 1;
-//         }
-//       });
-//     }
-//   };
-
-//   const calculateProgressBarWidth = () => {
-//     return ((currentStep - 1) / (stepsConfig.length - 1)) * 100;
-//   };
-
-//   const ActiveComponent = stepsConfig[currentStep - 1]?.Component;
-
-//   return (
-//     <div className="flex flex-col gap-2 h-full">
-//         <div className="stepper h-[10%] ">
-
-//             {stepsConfig.map((step, index) => {
-//             return (
-//                 <div
-//                 key={step.name}
-//                 ref={(el) => (stepRef.current[index] = el)}
-//                 className={`step ${
-//                     currentStep > index + 1 || isComplete ? "complete" : ""
-//                 } ${currentStep === index + 1 ? "active" : ""} `}
-//                 >
-//                     {console.log(currentStep)}
-//                     <div className="step-number">
-//                         {currentStep > index + 1 || isComplete ? (
-//                         <span>&#10003;</span>
-//                         ) : (
-//                         index + 1
-//                         )}
-//                     </div>
-//                     <div className="step-name">{step.name}</div>
-
-//                 </div>
-//             );
-//             })}
-
-//             <div
-//             className="progress-bar"
-//             style={{
-//                 width: `calc(100% - ${margins.marginLeft + margins.marginRight}px)`,
-//                 marginLeft: margins.marginLeft,
-//                 marginRight: margins.marginRight,
-//             }}
-//             >
-//             <div
-//                 className="progress"
-//                 style={{width: `${calculateProgressBarWidth()}%`}}
-//             ></div>
-//             </div>
-
-//         </div>
-
-//         <div className="h-[80%]"> <ActiveComponent videoFormData={videoFormData} setVideoFormData={setVideoFormData} errors= {errors}/> </div>
-
-//         <div className="h-[10%] ">
-//             <div className="h-fit">
-//                 {!isComplete && (
-//                     <button
-//                     type="button"
-//                     // disabled = {!error} // empty string give - falsy value
-//                     className="border cursor-pointer" onClick={handlePrev}>
-//                     {currentStep > 1 ? "Back" : ""}
-//                     </button>
-//                 )}
-//                 {!isComplete && (
-//                     <button
-//                     type="button"
-//                     disabled = {!error} // empty string give - falsy value
-//                     className="border cursor-pointer" onClick={handleNext}>
-//                     {currentStep === stepsConfig.length ? "Finish" : "Continue"}
-//                     </button>
-//                 )}
-//             </div>
-//         </div>
-//     </div>
-//   );
-// };
-
-// export default CheckoutStepper;

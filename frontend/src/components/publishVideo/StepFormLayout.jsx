@@ -2,8 +2,8 @@ import React, { useRef } from 'react'
 import { FormProvider, useForm } from "react-hook-form";
 import StepperForm from "./stepper/StepperForm.jsx";
 import { useStepForm } from '../../contextAPI/StepFormContext.jsx';
-import BookMark from '../watchVideo/leftPart/bookmark/BookMark.jsx';
 import useOutsideClick from '../../hooks/UseOutsideClick.jsx';
+import { MdClose } from "react-icons/md";
 
 const StepFormLayout = () => {
 
@@ -22,25 +22,18 @@ const StepFormLayout = () => {
   }, isStepFormOpen);
 
   return (
-
-    <div className='w-[55%] bg-[#282828] text-white rounded-2xl shadow-lg z-20 absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 p-7'>
+    // bg-[#282828]
+    <div className='w-[90%] md:w-[90%] lg:w-[75%] xl:w-[50%] bg-[#282828] text-white rounded-2xl shadow-lg z-50 absolute top-[40%] sm:top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/3 p-4 sm:p-6'>
       {/* Close Button */}
       <div className='text-4xl absolute right-0.5 top-2.5'>                   
-        <svg
-          onClick={toggleStepForm}
-          className="mr-2 cursor-pointer stroke-zinc-800 dark:stroke-zinc-400 hover:stroke-white transition-colors duration-200"
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
+         <MdClose
+      onClick={toggleStepForm}
+      className="mr-2 cursor-pointer stroke-zinc-800 dark:stroke-zinc-400 hover:stroke-white transition-colors duration-200"
+      size={18}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
       </div>
 
       {/* stepper */}

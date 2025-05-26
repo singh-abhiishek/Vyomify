@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useFormContext } from "react-hook-form";
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../store/slices/authSlice';
 import PlaylistForm2 from '../playlist/PlaylistForm2';
 import PlaylistForm1 from '../playlist/PlaylistForm1';
-import { useGetUserPlaylistsNameQuery, useLazyGetUserPlaylistsNameQuery } from '../../store/slices/playlistApiSlice';
+import { useGetUserPlaylistsNameQuery, } from '../../store/slices/playlistApiSlice';
 import useOutsideClick from '../../hooks/UseOutsideClick';
+import { Info, ChevronDown, ListMusic, Clock, ListVideo } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
+import RightSide from './RightSide';
 
 
 const Step4 = () => {
@@ -38,38 +39,58 @@ const Step4 = () => {
   const onPlaylistCreated = () => {
     refetch()
   }
-
   // console.log("from step4", userPlaylistsName)
 
+  const { watch } = useFormContext()
+  const playlistIds = watch("playlistIds") || [];
+  const noOfSelectedPlaylist = playlistIds.length;
+  console.log("from step4", noOfSelectedPlaylist)
+
   return (
-    <div className='max-w-5xl h-[410px] mx-auto text-white rounded-3xl shadow-xl  my-8'>
-      <div className='flex flex-col md:flex-row gap-6 p-2 h-full'>
+    <div className='max-w-5xl mx-auto text-white rounded-3xl  sm:my-8'>
+      <div className='flex flex-col md:flex-row gap-6 p-2 '>
+
 
         {/* Left Side - Form */}
-        <div className='relative md:w-[60%]  border border-gray-600 rounded-2xl p-6 md:p-10 flex flex-col justify-between gap-5 bg-[#282828]'>
+        <div className='relative md:w-[60%] border border-gray-600 rounded-2xl p-6 md:p-6 flex flex-col gap-1   bg-[#282828] text-white'>
 
-          <p className='text-red-600 font-amaranth font-bold text-2xl'>
+          {/* Heading */}
+          <p className='text-red-600 font-amaranth font-bold text-xl sm:text-2xl'>
             Organize Video
           </p>
 
-          <div>
-            <p className='text-[15px] text-gray-400'>
+          {/* Playlist Selection */}
+          <div className='flex flex-col gap-3'>
+            <p className='text-xs sm:text-[15px] text-gray-400'>
               Add your video to one or more playlists
             </p>
 
-            <div className="">
-              <button
-                onClick={openForm1}
-                className='border w-full h-14 rounded-[10px] flex items-center justify-between p-2 cursor-pointer'
-              >
-                <p className='text-bold text-[17px]'> Select playlists </p>
-                <p>icon</p>
-              </button>
+            <button
+              onClick={openForm1}
+              className='border border-gray-600 w-full h-14 rounded-[10px] flex items-center justify-between px-4 hover:bg-[#1f1f1f] transition cursor-pointer'
+            >
+              <span className='text-sm sm:text-[16px] font-medium'>Select Playlists</span>
+              <ChevronDown className='text-gray-400' size={20} />
+            </button>
+
+            {/* Fake selected playlists summary */}
+            <div className='flex items-center gap-3 mt-2 text-sm text-gray-300'>
+              <ListVideo size={18} className='text-red-400' />
+              <span>{noOfSelectedPlaylist} playlists selected</span>
             </div>
           </div>
 
-          <div></div>
+          {/* Divider */}
+          <div className="h-px w-full bg-gray-700 my-2" />
+
+          {/* Info Box */}
+          <div className='flex items-start gap-2 bg-[#1e1e1e] border border-gray-600 p-3 rounded-lg text-xs text-gray-400'>
+            <Info size={16} className='text-red-500 mt-0.5' />
+            <p>Group videos into playlists to help viewers watch similar content easily.</p>
+          </div>
         </div>
+
+
 
         {/* open1 playlist form */}
         {isOpen1 && <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
@@ -82,9 +103,10 @@ const Step4 = () => {
         </div>}
 
         {/* Right Side - You can design this section later */}
-        <div className='md:w-[40%] border border-gray-600 rounded-2xl flex flex-col items-center justify-center bg-[#282828] p-10 text-center'>
+        {/* <div className='md:w-[40%] border border-gray-600 rounded-2xl flex flex-col items-center justify-center bg-[#282828] p-10 text-center'>
           <p className="text-gray-400">Right section content goes here</p>
-        </div>
+        </div> */}
+         <RightSide />
       </div>
     </div>
   )

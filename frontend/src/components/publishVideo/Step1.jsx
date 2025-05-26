@@ -5,20 +5,10 @@ const Step1 = () => {
   
   return (
     <div className="mx-auto bg-[#282828] text-white rounded-3xl flex flex-col gap-2.5">
-      {/* <div className="flex items-center justify-center">
-        <p className="text-lg font-semibold">Upload Image & Video</p>
-      </div> */}
-
-      <div className="flex flex-col sm:flex-row gap-7 p-12">
+      <div className="flex flex-col sm:flex-row gap-7 p-2 sm:p-8">
         <FileUploadBox type="image" name="thumbnail" label="Thumbnail" accept="image/png,image/jpeg,image/jpg" />
         <FileUploadBox type="video" name="videoFile" label="Video File" accept="video/mp4,video/mov,video/webm" />
       </div>
-
-      {/* <p className="mt-4 text-xs text-left text-gray-400 px-6 pb-4">
-        By submitting your video to YouTube, you acknowledge that you agree to YouTube's {" "}
-        <a href="https://www.youtube.com/t/terms" target="_blank" className="text-blue-400">Terms of Service</a> and {" "}
-        <a href="https://www.youtube.com/yt/about/policies/" target="_blank" className="text-blue-400">Community Guidelines</a>.
-      </p> */}
     </div>
   );
 };
