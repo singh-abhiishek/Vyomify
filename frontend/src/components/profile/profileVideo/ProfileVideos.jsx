@@ -13,7 +13,7 @@ const ProfileVideos = ({ userPublishedVideos }) => {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-6 mt-6">
+      <div className="flex flex-wrap gap-5 mt-6">
         {userPublishedVideos?.map((video, index) => (
           <div
             className=''

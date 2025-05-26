@@ -1,23 +1,32 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Comment from './comment/Comment.jsx'
 import ViewVideoDetail2 from './ViewVideoDetail2.jsx'
 import ViewVideoDetail1 from './ViewVideoDetail1.jsx'
 import ReactPlayer from 'react-player'
 import { useGetVideoByIdQuery } from '../../../store/slices/videoApiSlice.js'
 import LeftPartWatchVideoShimmer from '../../shimmers/WatchVideoShimmer/LeftPartWatchVideoShimmer.jsx'
+import { useGetWatchHistoryQuery } from '../../../store/slices/userApiSlice.js'
 
 const LeftPartWatchVideo = ({ videoId }) => {
   // console.log(videoId)
 
-  const { data: response, isLoading } = useGetVideoByIdQuery(videoId)
+  const { refetch: refetchWatchHistory } = useGetWatchHistoryQuery();
+  const { data: response, isLoading, isSuccess } = useGetVideoByIdQuery(videoId)
   const video = response?.data
   // console.log("from viewvideo", video)
 
   const [isPlaying, setIsPlaying] = useState(true);
 
-  if(isLoading){
+  useEffect(() => {
+    if (isSuccess) {
+      refetchWatchHistory();
+    }
+  }, [isSuccess, refetchWatchHistory, videoId]);
+
+  if (isLoading) {
     return <LeftPartWatchVideoShimmer />
   }
+
 
   return (
     <>

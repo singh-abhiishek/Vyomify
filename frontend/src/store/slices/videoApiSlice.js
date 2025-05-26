@@ -33,11 +33,12 @@ export const videoApiSlice = apiSlice.injectEndpoints({
         }),
 
         // get video by id
+        // getVideoById is just a query, and queries do not invalidate tags, only mutations do.
         getVideoById: builder.query({
             query: (userId) => ({
                 url: `${VIDEOS_URL}/${userId}`,
                 method: "GET",
-            })
+            }),
         }),
 
         // get all videos published on the vyomify
@@ -45,7 +46,8 @@ export const videoApiSlice = apiSlice.injectEndpoints({
             query: ({ limit = 10, page = 1 }) => ({
                 url: `${VIDEOS_URL}?page=${page}&limit=${limit}&sortBy=createdAt&sortType=-1`,
                 method: "GET",
-            })
+            }),
+            
         }),
 
         // get all videos based on search query

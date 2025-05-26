@@ -21,7 +21,7 @@ const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName })
         // <div className='dark:bg-[#1c1c1c] p-5 py-4 w-[420px] rounded-xl relative'>
         <div className='dark:bg-[#1c1c1c] p-5 py-4 w-[420px] rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.7)] border border-white/10 backdrop-blur-sm transition-all duration-300 relative'>
             <div className='flex flex-col gap-2 '
-            ref={modalRef1}
+                ref={modalRef1}
             >
 
                 {/* close button  */}
@@ -90,7 +90,6 @@ const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName })
                             disabled={noOfSelectedPlaylist === 0}
                             className={`p-1 px-2 text-sm ${noOfSelectedPlaylist === 0 ? "" : "cursor-pointer"}`}
                         >
-                            {/* {noOfSelectedPlaylist === 0 ? "Select" : "Add"} */}
                             Add
                         </button>
                     </div>

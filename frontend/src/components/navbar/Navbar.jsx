@@ -7,6 +7,7 @@ import UploadButton from './UploadButton'
 import ThemeButton from './ThemeButton'
 import HamBurger from '../sideBar/HamBurger.jsx'
 import ExploreButton from './ExploreButton.jsx'
+import logo from "../../assets/vyomifyLogo1.png"
 
 
 const Navbar = () => {
@@ -32,18 +33,31 @@ const Navbar = () => {
                 </div>
 
                 {/* Logo  */}
-                <div>
+                {/* <div>
                     <button
                         onClick={() => navigate('/')}
                         className='p-1.5 ml-0.5 md:ml-1 text-white text-[0px]'>logo</button>
-                    {/* <Link to="/" className="flex items-center md:w-2.5">
+                    <Link to="/" className="flex items-center md:w-2.5">
                         <img
-                            src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
+                            src={logo}
                             className="mr-3 h-4"
                             alt="Logo"
                         />
-                    </Link> */}
-                </div>
+                    </Link>
+                </div> */}
+                {!location.pathname.startsWith("/explore") ? <div>
+                    <div 
+                        // to="/"
+                        className="flex justify-center ml-10">
+                        <img
+                            className="w-15 sm:w-17"
+                            src={logo}
+                            alt="Vyomify Logo"
+                        />
+                    </div>
+                </div> :
+                    <div></div>
+                }
 
                 <div>
                     {authStatus && location.pathname.startsWith("/explore") && <SearchInput />}

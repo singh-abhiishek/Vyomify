@@ -5,21 +5,25 @@ import {
   FaGithub,
 } from "react-icons/fa";
 import { SiX } from "react-icons/si";
+import { Link } from "react-router-dom";
+import logo from "../../assets/vyomifyLogo1.png"
 
 export default function Footer() {
-  {/* bg-[#191b1f] bg-[#252629] bg-zinc-900*/}
+  {/* bg-[#191b1f] bg-[#252629] bg-zinc-900*/ }
   return (
     <section className="bg-[#191b1f] text-gray-400 py-12 font-dmSans select-none">
       <footer className="mx-auto px-6 md:px-16 max-w-7xl flex flex-col lg:flex-row justify-between gap-12">
         {/* Logo & Description */}
         <div className="w-60 flex-shrink-0 text-center lg:text-left">
-          <a href="/" className="flex justify-center lg:justify-start py-2">
+          <Link
+            to="/"
+            className="flex ">
             <img
-              className="w-24 md:w-28"
-              src="/static/media/VideoHubLogo.png" // replace with your logo path
+              className="w-15"
+              src={logo}
               alt="Vyomify Logo"
             />
-          </a>
+          </Link>
           <p className="text-sm mt-2 text-gray-400">
             Vyomify is your go-to platform to upload videos, create posts, and connect with your audience.
           </p>
