@@ -1,6 +1,6 @@
 import mongoose, { isValidObjectId, mongo } from "mongoose"
 import { Playlist } from "../models/playlist.model.js"
-import { ApiError } from "../utils/ApiError.js"
+import { ApiError } from "../utils/ApiError.js/"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { addVideoToPlaylistUtility } from "./video.controller.js"
@@ -445,7 +445,7 @@ const removeFromWatchLater = asyncHandler(async (req, res) => {
 
         },
         {
-            $pull: { videos: videoId } 
+            $pull: { videos: videoId }
         },
         {
             new: true

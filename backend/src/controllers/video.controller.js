@@ -1,7 +1,7 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import { Video } from "../models/video.model.js"
 import { User } from "../models/user.model.js"
-import { ApiError } from "../utils/ApiError.js"
+import { ApiError } from "../utils/ApiError.js/"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.service.js"
@@ -143,10 +143,10 @@ const getVideosAndChannelBasedOnSearch = asyncHandler(async (req, res) => {
         {
             $match: {
                 $or: [
-                  { title: { $regex: query, $options: "i" } },
-                  { description: { $regex: query, $options: "i" } }
+                    { title: { $regex: query, $options: "i" } },
+                    { description: { $regex: query, $options: "i" } }
                 ]
-              }
+            }
         },
         {
             $lookup: {
@@ -531,7 +531,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideoDetails = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    
+
     if (!videoId) {
         throw new ApiError(400, "videoId is missing - updateVideoDetails")
     }
@@ -564,7 +564,7 @@ const updateVideoDetails = asyncHandler(async (req, res) => {
 const updateVideoThumbnail = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
-    if(!videoId) {
+    if (!videoId) {
         throw new ApiError(400, "videoId is missing updating - updateVideoThumbnail")
     }
     if (!isValidObjectId(videoId)) {

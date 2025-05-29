@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { ApiError } from "../utils/ApiError.js"
+import { ApiError } from "../utils/ApiError.js/"
 import { User } from "../models/user.model.js"
 import { TempUser } from "../models/tempUser.modal.js"
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.service.js"
@@ -299,7 +299,7 @@ const uploadProfileImages = asyncHandler(async (req, res) => {
             throw new ApiError(400, "coverImage file not uploaded")
         }
     }
-    
+
     const updatedUser = await User.findByIdAndUpdate(
         user._id,
         {
@@ -573,7 +573,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     if (!email) {
         throw new ApiError(400, "Email is required - forgotPassword")
     }
-    
+
     const user = await User.findOne({ email })
     // console.log("user", user)
     if (!user) {
@@ -583,7 +583,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     if (email && (!otp && !newPassword && !confirmPassword)) {
         const otpForPasswordReset = Math.floor(100000 + Math.random() * 900000).toString();
         // console.log(otpForPasswordReset)
-        
+
         let tempUser = await TempUser.findOne({ email })
         // console.log(tempUser)
         if (tempUser) {

@@ -1,7 +1,7 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import { User } from "../models/user.model.js"
 import { Subscription } from "../models/subscription.model.js"
-import { ApiError } from "../utils/ApiError.js"
+import { ApiError } from "../utils/ApiError.js/"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 
@@ -279,7 +279,7 @@ const getLatestVideosFromSubscribedChannels = asyncHandler(async (req, res) => {
 
 // route to check user followed a channel or not, to reflect it on subscription btn
 // getSubscribedChannels list can also check that (by using arr.some(() => ())) but i think separate end points would be better
-const getSubscriptionStatus = asyncHandler(async(req, res) => {
+const getSubscriptionStatus = asyncHandler(async (req, res) => {
     const { channelId } = req.params
 
     if (!channelId) {
@@ -303,10 +303,10 @@ const getSubscriptionStatus = asyncHandler(async(req, res) => {
     )
 
     let subscriptionStatus;
-    if(isSubscribed) subscriptionStatus = true;
+    if (isSubscribed) subscriptionStatus = true;
     else subscriptionStatus = false;
 
-    return res.status(200).json(new ApiResponse(200, subscriptionStatus , "channel subscription status fetched Successfully"))
+    return res.status(200).json(new ApiResponse(200, subscriptionStatus, "channel subscription status fetched Successfully"))
 })
 
 export {
