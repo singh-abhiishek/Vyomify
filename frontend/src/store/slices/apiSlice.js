@@ -70,7 +70,7 @@ const baseQueryWithAuthRefresh = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
     // console.log("from 65 apislice", result)
 
-    // Agar 405 error aaye to logout
+    // Agar 401 error aaye to logout, if token got expire, jwt.verify() -> invalidate the user, and as error we send 401 error logout user from frontend manually
     if (result.error && result.error.status === 401) {
         console.error("Unauthorized! Logging out...");
         api.dispatch(storeLogout("Session expired, please login again"));

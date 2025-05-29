@@ -29,7 +29,7 @@ import {
 
 import ExploreLayout from './ExploreLayout.jsx';
 import AppProvider from './contextAPI/AppProvider.jsx';
-import WatchVideoPage from './components/WatchVideo/WatchVideoPage.jsx';
+import WatchVideoPage from './components/watchVideo/WatchVideoPage.jsx';
 import History from './pages/explore/History/History.jsx';
 import Subscription from './pages/explore/Subscription/Subscription.jsx';
 import PageNotFound from './pages/PageNotFound.jsx';
