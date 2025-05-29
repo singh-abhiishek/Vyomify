@@ -2,12 +2,12 @@ import React from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { SearchInput } from "../index"
-import ProfilePopUpButton from './ProfilePopUpButton'
-import UploadButton from './UploadButton'
-import ThemeButton from './ThemeButton'
+import ProfilePopUpButton from './ProfilePopUpButton.jsx'
+import UploadButton from './UploadButton.jsx'
+import ThemeButton from './ThemeButton.jsx'
 import HamBurger from '../sideBar/HamBurger.jsx'
 import ExploreButton from './ExploreButton.jsx'
-import logo from "../../assets/vyomifyLogo1.png"
+import vyomifyLogo1 from "../../assets/vyomifyLogo1.png"
 
 
 const Navbar = () => {
@@ -51,8 +51,8 @@ const Navbar = () => {
                         className="flex justify-center ml-10">
                         <img
                             className="w-15 sm:w-17"
-                            src={logo}
-                            alt="Vyomify Logo"
+                            src={vyomifyLogo1}
+                            alt="Vyomify Logo" 
                         />
                     </div>
                 </div> :

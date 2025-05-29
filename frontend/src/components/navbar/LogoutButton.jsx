@@ -2,7 +2,7 @@ import React from 'react'
 import {useDispatch} from 'react-redux'
 import {logout as storeLogout} from '../../store/slices/authSlice.js'
 import axios from 'axios'
-import Button from '../ui/button.jsx'
+import Button from '../ui/Button.jsx'
 
 function LogoutButton() {
     
