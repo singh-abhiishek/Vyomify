@@ -57,7 +57,7 @@ const Login = () => {
                         Welcome back to
                     </h1>
                     <h2 className="text-4xl sm:text-5xl font-bold text-red-600 font-amaranth">
-                        Video-Hub
+                        Vyomify
                     </h2>
                 </div>
 

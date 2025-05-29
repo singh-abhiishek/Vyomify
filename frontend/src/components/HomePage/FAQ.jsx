@@ -23,7 +23,7 @@ const faqs = [
             "Yes, use the 'Like' button to save videos to your Liked list. You can view all liked videos from your sidebar.",
     },
     {
-        question: "How do subscriptions work on Video-Hub?",
+        question: "How do subscriptions work on Vyomify?",
         answer:
             "Your subscribed channels are listed at the bottom of the sidebar. When you click the 'Subscription' button in the sidebar, you’ll see the latest videos from those channels in a separate list.",
     },
@@ -35,7 +35,7 @@ const faqs = [
     {
         question: "Do I need an account to watch videos?",
         answer:
-            "No account is needed for public videos, but you'll need to sign in to like, comment, or upload videos.",
+            "Yes, you need an account to watch videos on our platform. Signing in also lets you like, comment, and upload videos.",
     },
     {
         question: "Can I create private playlists?",

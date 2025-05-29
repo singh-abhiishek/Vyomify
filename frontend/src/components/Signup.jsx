@@ -60,7 +60,7 @@ const Signup = () => {
                             Ready to Begin Your Journey with
                         </h1>
                         <h1 className="text-red-600 font-amaranth font-bold text-5xl mt-2">
-                            Video-Hub
+                            Vyomify
                         </h1>
                     </div>
                     <div className="flex items-center my-4">
