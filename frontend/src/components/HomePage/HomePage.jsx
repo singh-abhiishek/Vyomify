@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import FAQ from "./FAQ.jsx";
 import Footer from "./Footer.jsx";
-import JoinCommunitySection from "./JoinCommunitySection,jsx";
+import JoinCommunitySection from "./JoinCommunitySection.jsx";
 import HeroSection from "./HeroSection.jsx";
 import StatsSection from "./StatsSection.jsx";
 import ScreensCarousel from "./ScreensCarousel.jsx";
