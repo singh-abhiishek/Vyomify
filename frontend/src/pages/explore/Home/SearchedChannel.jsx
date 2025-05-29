@@ -15,10 +15,13 @@ const SearchedChannel = ({
     latestVideos
 }) => {
 
-    console.log("from serached channel", username)
+    // console.log("from serached channel", username)
     const ownerDetails = {
         username
     }
+
+
+    const latestPublicVideos = latestVideos.filter(video => video?.isPublished)
 
     return (
         <div className='flex flex-col items-center justify-center w-[100%]'>
@@ -73,7 +76,7 @@ const SearchedChannel = ({
 
             {/* show channel latest Videos  */}
             <div className='flex flex-wrap gap-2 mt-2 w-full'>
-                {latestVideos?.map((video) => (
+                {latestPublicVideos?.map((video) => (
                     <VideoGridItem1 
                     key={video?.title}
                     {...video} 

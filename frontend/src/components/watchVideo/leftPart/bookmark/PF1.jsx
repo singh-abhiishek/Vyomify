@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { usePlaylistModal } from '../../../../contextAPI/PlaylistModalContext ';
 import { ClipLoader } from 'react-spinners';
-import { X } from "lucide-react";
+import { ListVideo, X } from "lucide-react";
 import useOutsideClick from '../../../../hooks/UseOutsideClick';
 
 const PF1 = ({ videoId }) => {
@@ -38,7 +38,7 @@ const PF1 = ({ videoId }) => {
 
     return (
         <div
-        ref={modalRef}
+            ref={modalRef}
             className='dark:bg-[#1c1c1c] p-4 py-2 sm:py-3 w-[250px] sm:w-[300px] rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.7)] border border-white/10 backdrop-blur-sm transition-all duration-300 absolute z-40 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2'>
             <div className='flex flex-col gap-2 '>
 
@@ -60,21 +60,23 @@ const PF1 = ({ videoId }) => {
                 {/* playlist options */}
                 <div className='mt-2 '>
                     <div>
-                        <h2 className='font-semibold text-sm sm:font-bold font-amaranth '>
-                            Select Playlists
-                        </h2>
+                        <div className='flex items-center gap-1 mt-1 text-md text-gray-300 mb-1'>
+                            <ListVideo size={18} className='text-red-400' />
+                            <span className='text-red-400'>Select playlists</span>
+                        </div>
 
                         {userPlaylistsName?.map((playlist, index) => (
-                            <label key={index} className="block">
+                            <label
+                                key={index}
+                                className="flex items-center gap-2 cursor-pointer hover:text-red-400 transition-colors duration-200"
+                            >
                                 <input
                                     type="checkbox"
                                     value={playlist._id}
-                                    className='cursor-pointer'
+                                    className='w-3 h-3 accent-red-500 cursor-pointer'
                                     onChange={handleCheckboxChange}
                                 />
-                                <span className="ml-2 text-[14px]">
-                                    {playlist.name}
-                                </span>
+                                <span className="text-sm text-gray-200 hover:text-red-400">{playlist.name}</span>
                             </label>
                         ))}
                     </div>
@@ -116,7 +118,6 @@ const PF1 = ({ videoId }) => {
                                     className="flex items-center gap-2"
                                 >
                                     <ClipLoader size={18} color="#fff" />
-                                    {/* <span>creating...</span> */}
                                 </div>
                             ) : ("")}
                         </button>

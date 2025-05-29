@@ -22,7 +22,7 @@ const MenuItem1 = ({ playlistOwnerId, videoId, playlistId, setIsMenu1Open, playl
     const handleSaveToWatchLater = async (e) => {
         e.preventDefault()
         const response = await addVideoToWatchLater(videoId).unwrap()
-        console.log("response video add to watch later from menu item", response)
+        // console.log("response video add to watch later from menu item", response)
         refetch()
         setIsMenu1Open(false)
     }
@@ -34,7 +34,7 @@ const MenuItem1 = ({ playlistOwnerId, videoId, playlistId, setIsMenu1Open, playl
         const response = await removeVideoFromWatchLater(videoId).unwrap()
         refetch()
         setIsMenu1Open(false)
-        console.log("response video remove from watch later from menu item", response)
+        // console.log("response video remove from watch later from menu item", response)
     }
 
     // remove video from playlist
@@ -44,13 +44,13 @@ const MenuItem1 = ({ playlistOwnerId, videoId, playlistId, setIsMenu1Open, playl
         const response = await removeVideoFromPlaylist({ videoId, playlistId }).unwrap()
         setIsMenu1Open(false)
         refetchPlaylistById()
-        console.log("response, remove video from playlist, from menu item", response)
+        // console.log("response, remove video from playlist, from menu item", response)
     }
     
     return (
         <div
             ref={modalRef}
-            className={`absolute right-8 bottom-8 z-50 ${!isAlready ? "w-50" : "w-56"} rounded-xl bg-[#212121] shadow-lg border border-neutral-700`}>
+            className={`absolute right-8 bottom-5 z-50 ${!isAlready ? "w-50" : "w-56"} rounded-xl bg-[#212121] shadow-lg border border-neutral-700`}>
             {/* Save to Watch Later */}
 
             {!isAlready ?

@@ -36,7 +36,7 @@ const ProfilePage = () => {
   const channelId = userChannel?._id
   const { data } = useGetChannelSubscribersQuery({ channelId })
   const subscribersCount = data?.data
-  console.log("from profilepage subscibers count", subscribersCount)
+  // console.log("from profilepage subscibers count", subscribersCount)
 
   const ActiveComponent = components[activeTab].component;
 

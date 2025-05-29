@@ -121,11 +121,16 @@ export default function Footer() {
         </div>
       </footer>
 
-      {/* Bottom copyright */}
-      <div className="flex flex-col mt-10 border-t border-zinc-800 pt-6 text-center text-gray-500 text-xs select-none">
+      {/* disclaimer + copyright */}
+      <div className="flex flex-col mt-10 border-t border-zinc-800 pt-6 text-center text-gray-500 text-xs select-none space-y-2">
+        <p className="text-gray-500 px-4 md:px-0">
+          <strong>Disclaimer:</strong> Vyomify features demo profiles using names and videos of popular creators.
+          These are unofficial and created solely for showcasing the project.
+        </p>
         <span>© 2025 Vyomify. All rights reserved.</span>
         <span>Made with ❤️ and code</span>
       </div>
+
     </section>
   );
 }

@@ -30,7 +30,7 @@ const UpdateCoverImage = () => {
 
     // handlel coverImage change
     const handleCoverImageChange = (e) => {
-        console.log("coverImage change", e.target.files[0])
+        // console.log("coverImage change", e.target.files[0])
         const file = e.target.files[0];
         if (file && file.type.startsWith("image/")) {
             setCoverImageFile(file); // for backend

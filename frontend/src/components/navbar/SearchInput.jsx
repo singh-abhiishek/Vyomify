@@ -8,7 +8,7 @@ const SearchInput = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log(searchQuery)
+    // console.log(searchQuery)
 
     if (!searchQuery.trim()) return; // Clean empty search
     navigate(`/explore?query=${searchQuery}`);

@@ -3,7 +3,7 @@ import CommentItem from './CommentItem.jsx';
 
 const AllComments = ({ comments, onCommentDeleted, onCommentEdited }) => {
 
-    console.log("all comments", comments)
+    // console.log("all comments", comments)
     // const { totalComments } = comments
 
 

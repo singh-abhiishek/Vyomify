@@ -8,7 +8,7 @@ const DashBoardLower = () => {
   // fetch user channel videos for ananlytics
   const { data: response, refetch: refetchChannelVideos, isLoading } = useGetChannelVideosQuery()
   const channelVideos = response?.data
-  console.log("response from DashBoardLower", channelVideos)
+  // console.log("response from DashBoardLower", channelVideos)
 
   if(isLoading){
     return <LowerDashBoardShimmer />

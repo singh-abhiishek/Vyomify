@@ -22,7 +22,7 @@ export const PlaylistModalProvider = ({ children }) => {
     const userPlaylistsName = userPlaylists.filter((playlist) => 
         playlist?.name !== "Watch Later"
     )
-    console.log("from PlaylistModalProvider", userPlaylistsName)
+    // console.log("from PlaylistModalProvider", userPlaylistsName)
 
     const openPF1Modal = () => setIsPF1Open(true);
     const closePF1Modal = () => setIsPF1Open(false);
@@ -39,7 +39,7 @@ export const PlaylistModalProvider = ({ children }) => {
     const [addVideoToPlaylists, isLoading] = useAddVideoToPlaylistsMutation()
     const handleAddToPlaylists = async (videoId) => {
         if (selectedPlaylists.length === 0) {
-            console.log("handleAddToPlaylists from PlaylistModalProvider - please select playlist")
+            // console.log("handleAddToPlaylists from PlaylistModalProvider - please select playlist")
             return;
         }
 
@@ -49,7 +49,7 @@ export const PlaylistModalProvider = ({ children }) => {
             if (response) {
                 // Handle successful response (e.g., show success message)
                 closePF1Modal()
-                console.log("handleAddToPlaylists from PlaylistModalProvider response", response)
+                // console.log("handleAddToPlaylists from PlaylistModalProvider response", response)
                 showToastMessage("video added to playlist", "success")
             }
         } catch (error) {

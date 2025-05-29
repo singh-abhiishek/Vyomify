@@ -20,7 +20,7 @@ const PF2 = () => {
     const handleSubmit = async (e) => {
         //api call
         e.preventDefault();
-        console.log("create playlist start from pf2")
+        // console.log("create playlist start from pf2")
         try {
             const response = await createPlaylist({
                 name,
@@ -28,7 +28,7 @@ const PF2 = () => {
                 isPrivate
             }).unwrap()
 
-            console.log("response after creating playlist", response)
+            // console.log("response after creating playlist", response)
             if (response.success) {
                 refetch()
                 closePF2Modal()
@@ -48,9 +48,9 @@ const PF2 = () => {
 
     return (
         <form >
-            <div 
-            ref={modalRef}
-            className='dark:bg-[#1d1d1d] p-2 sm:p-4 py-2 sm:py-4 w-[250px] sm:w-[300px] shadow-[0_2px_20px_rgba(0,0,0,0.6)] border border-white/10 transition-all duration-300 rounded-lg absolute z-50 left-1/2 sm:left-2/3 top-2/3 sm:top-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+            <div
+                ref={modalRef}
+                className='dark:bg-[#1d1d1d] p-2 sm:p-4 py-2 sm:py-4 w-[250px] sm:w-[300px] shadow-[0_2px_20px_rgba(0,0,0,0.6)] border border-white/10 transition-all duration-300 rounded-lg absolute z-50 left-1/2 sm:left-2/3 top-2/3 sm:top-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                 <div className=''>
                     {/* name  */}
                     <div className='mb-0.5'>
@@ -62,7 +62,7 @@ const PF2 = () => {
                         />
                     </div>
 
-                    {/* Description  */}
+                    {/* Description   */}
                     <div className='mb-0'>
                         <textarea
                             placeholder="Description"
@@ -74,27 +74,30 @@ const PF2 = () => {
 
 
                     {/* private or public  */}
-                    <div className='flex gap-2 mt-0.5 text-[13px] sm:text-sm'>
-                        <label className="flex items-center gap-1">
+                    <div className="flex gap-4 mt-1 text-[13px] sm:text-sm">
+                        <label className="flex items-center gap-1 cursor-pointer hover:text-red-400 transition-colors duration-200">
                             <input
                                 type="radio"
                                 value="false"
                                 checked={!isPrivate}
                                 onChange={() => setIsPrivate(false)}
+                                className="accent-red-500 cursor-pointer"
                             />
-                            Public
+                            <span className="text-gray-200 hover:text-red-400">Public</span>
                         </label>
 
-                        <label className="flex items-center gap-1">
+                        <label className="flex items-center gap-1 cursor-pointer hover:text-red-400 transition-colors duration-200">
                             <input
                                 type="radio"
                                 value="true"
                                 checked={isPrivate}
                                 onChange={() => setIsPrivate(true)}
+                                className="accent-red-500 cursor-pointer"
                             />
-                            Private
+                            <span className="text-gray-200 hover:text-red-400">Private</span>
                         </label>
                     </div>
+
 
                     {/* line  */}
                     <div class="border-t border-gray-700 flex-grow  w-full mt-1 mb-2">
@@ -103,9 +106,9 @@ const PF2 = () => {
                     {/* cancel and create button  */}
                     <div className='flex justify-between gap-2'>
                         <div
-                            className="rounded-lg bg-[#2b2b2b] text-gray-200 px-1 sm:px-2 py-0.5 
-                            border border-[#3d3d3d] hover:bg-[#3a3a3a] 
-                            hover:text-white transition-all duration-200 ease-in-out shadow-[inset_0_0_0_1px_#3d3d3d]">
+                            className="rounded-lg bg-[#2b2b2b] text-gray-200 px-2 py-0.5 
+                    border border-[#3d3d3d] hover:bg-[#3a3a3a] 
+                    hover:text-white transition-all duration-200 ease-in-out shadow-[inset_0_0_0_1px_#3d3d3d]">
                             <button
                                 type="button"
                                 onClick={closePF2Modal}
@@ -114,14 +117,14 @@ const PF2 = () => {
                             </button>
                         </div>
 
-                        <div 
-                        className={`rounded-lg px-1 sm:px-2 py-0.5 
+                        <div
+                            className={`rounded-lg px-2 py-0.5 
                                 border border-[#3d3d3d] ${(!name || !description) ? "bg-[#363636] text-gray-500" : "bg-[#2b2b2b] text-gray-200 hover:bg-[#3a3a3a] hover:text-white transition-all duration-200 ease-in-out shadow-[inset_0_0_0_1px_#3d3d3d] "}`}>
                             <button
                                 type="button"
                                 onClick={handleSubmit}
                                 disabled={(!name || !description)}
-                                className={`p-1.5 text-[13px] sm:text-sm ${(!name || !description) ? "" : "cursor-pointer"}`}
+                                className={`p-1.5 text-[13px] sm:text-sm ${(!name || !description) ? "cursor-not-allowed" : "cursor-pointer"}`}
                             >
                                 {/* Create */}
                                 {isLoading ? (
@@ -129,7 +132,6 @@ const PF2 = () => {
                                         className="flex items-center gap-2"
                                     >
                                         <ClipLoader size={18} color="#fff" />
-                                        {/* <span>creating...</span> */}
                                     </div>
                                 ) : ("Create")}
                             </button>

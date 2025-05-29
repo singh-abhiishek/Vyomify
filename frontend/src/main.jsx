@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import store, { persistor } from './store/store.js'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import { PersistGate } from "redux-persist/integration/react"
+import { HelmetProvider } from 'react-helmet-async';
 
 import {
   HomePage,
@@ -29,10 +30,14 @@ import {
 
 import ExploreLayout from './ExploreLayout.jsx';
 import AppProvider from './contextAPI/AppProvider.jsx';
-import WatchVideoPage from './components/WatchVideo/WatchVideoPage.jsx';
+// import WatchVideoPage from './components/WatchVideo/WatchVideoPage.jsx';
 import History from './pages/explore/History/History.jsx';
 import Subscription from './pages/explore/Subscription/Subscription.jsx';
 import PageNotFound from './pages/PageNotFound.jsx';
+import { lazy } from 'react';
+
+// lazy loading
+const WatchVideoPage = lazy(() => import('./components/WatchVideo/WatchVideoPage.jsx'))
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,8 +66,6 @@ const router = createBrowserRouter(
       <Route path='explore' element={<AuthLayout isAuthenticationRequired> <ExploreLayout /> </AuthLayout>}>
 
         <Route index element={<Home />} />
-        {/* <Route path='' element={<Home/>}/> */}
-
 
         <Route path='dashboard' element={<DashBoard />} />
         <Route path='likedVideos' element={<LikedVideos />} />
@@ -82,13 +85,15 @@ const router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <AppProvider>
-        <PersistGate loading={null} persistor={persistor}>
-          <RouterProvider router={router} />
-        </PersistGate>
-      </AppProvider>
-    </Provider>
-  </React.StrictMode>,
+  <HelmetProvider>
+    <React.StrictMode>
+      <Provider store={store}>
+        <AppProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <RouterProvider router={router} />
+          </PersistGate>
+        </AppProvider>
+      </Provider>
+    </React.StrictMode>,
+  </HelmetProvider>
 )

@@ -18,7 +18,7 @@ const DashBoardUpper = () => {
   // get user channel stats
   const {data: response, isLoading} = useGetChannelStatsQuery()
   const stats = response?.data
-  console.log("user channel stats response", stats)
+  // console.log("user channel stats response", stats)
 
   if(isLoading){
     return <UpperDashBoardShimmer />

@@ -27,7 +27,7 @@ const AddComment = ({ videoId, onCommentAdded }) => {
             }
         } catch (error) {
             showToastMessage("Comment not added", "error")
-            // console.log(error)
+            console.log(error)
         }
     }
 

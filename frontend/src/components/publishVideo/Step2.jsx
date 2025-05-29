@@ -9,7 +9,7 @@ const Step2 = () => {
   const currentValues = getValues()
   const thumbnail = currentValues?.thumbnail[0]
   const videoFile = currentValues?.videoFile[0]
-  console.log("from step-2", videoFile)
+  // console.log("from step-2", videoFile)
 
   const titleValue = watch("title") || "";
   const descriptionValue = watch("description") || "";
@@ -26,13 +26,13 @@ const Step2 = () => {
           <div className='relative'>
             <textarea
               placeholder="Title"
-              maxLength={150}
+              maxLength={120}
               className="text-gray-300 pl-7 pr-4 py-2.5 h-23 rounded-lg w-full border border-gray-700 bg-transparent focus:border-blue-500 hover:border-gray-500 outline-none transition-all duration-200 resize-none text-sm"
               {...register("title", { required: "Title is required" })}
             />
             <FileText className=" absolute left-2 top-3  w-4 h-4 text-red-400" />
             <p className="text-gray-400 text-[11px]  text-right">
-              {titleValue.length}/150
+              {titleValue.length}/120
             </p>
 
             {errors.title && <p class="text-red-600 text-sm italic">

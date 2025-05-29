@@ -1,6 +1,5 @@
 import React from 'react'
 import { useClearWatchHistoryMutation, useGetWatchHistoryQuery } from '../../../store/slices/userApiSlice'
-import { Spinner } from '../../../utils/loadingIndicator';
 import VideoGridItem1 from '../../../components/videoGrid/VideoGridItem1';
 import { showToastMessage } from '../../../utils/showToaster';
 import VideoGridShimmer1 from '../../../components/shimmers/VideoGridShimmer/VideoGridShimmer1';
@@ -31,13 +30,6 @@ const History = () => {
         }
     }
 
-
-    // if (isLoading) {
-    //     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-    //         <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-    //     </div>
-    // }
-
     if (isLoading) {
         return  <VideoGridShimmer1 isWatchHistoryBtn={true} />
     }
@@ -51,8 +43,8 @@ const History = () => {
     )
 
     return (
-        <div className='bg-black text-white w-full '>
 
+        <div className='bg-black text-white w-full '>
             {/* heading  */}
             <div className="flex flex-col items-center mt-1">
                 <div className="flex items-end gap-2 text-white text-2xl font-semibold">

@@ -12,7 +12,7 @@ const UpdatePlaylist = ({
     playlistOwnerId,
     loginUserId,
 }) => {
-    console.log(loginUserId, playlistOwnerId)
+    // console.log(loginUserId, playlistOwnerId)
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -44,7 +44,7 @@ const UpdatePlaylist = ({
             }).unwrap()
 
             refetchPlaylistById()
-            console.log("response while updating playlist", response)
+            // console.log("response while updating playlist", response)
             showToastMessage("Playlist Updated", "success")
         } catch (error) {
             console.log("error while updating playlist", error)
@@ -109,8 +109,9 @@ const UpdatePlaylist = ({
                                     value="false"
                                     checked={!isPrivate}
                                     onChange={() => setIsPrivate(false)}
+                                    className="accent-red-500 cursor-pointer"
                                 />
-                                Public
+                                <span className="text-gray-200 hover:text-red-400 cursor-pointer">Public</span>
                             </label>
 
                             <label className="flex items-center gap-2 ">
@@ -119,8 +120,9 @@ const UpdatePlaylist = ({
                                     value="true"
                                     checked={isPrivate}
                                     onChange={() => setIsPrivate(true)}
+                                    className="accent-red-500 cursor-pointer"
                                 />
-                                Private
+                                <span className="text-gray-200 hover:text-red-400 cursor-pointer">Private</span>
                             </label>
                         </div>
 

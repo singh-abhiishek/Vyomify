@@ -50,7 +50,7 @@ const baseQueryWithAuthRefresh = async (args, api, extraOptions) => {
         if (refreshResult.data) {   // TODO: update user 
             console.info("Token refreshed successfully");
 
-            console.log("refreshResult from apislice", refreshResult?.data?.data)
+            // console.log("refreshResult from apislice", refreshResult?.data?.data)
             const responseData = refreshResult.data;
             api.dispatch(storeLogin(responseData?.data));
         }
@@ -68,7 +68,7 @@ const baseQueryWithAuthRefresh = async (args, api, extraOptions) => {
 
     // Original API call
     let result = await baseQuery(args, api, extraOptions);
-    console.log("from 65 apislice", result)
+    // console.log("from 65 apislice", result)
 
     // Agar 405 error aaye to logout
     if (result.error && result.error.status === 401) {
@@ -89,7 +89,7 @@ export const fetchBaseQueryWithProgress = () => {
         const source = axios.CancelToken.source();
 
 
-        console.log("from fetchBaseQueryWithProgress", onProgress)
+        // console.log("from fetchBaseQueryWithProgress", onProgress)
 
         try {
             const response = await axios({
@@ -102,12 +102,12 @@ export const fetchBaseQueryWithProgress = () => {
                 },
                 cancelToken: source.token,
                 onUploadProgress: (progressEvent) => {
-                    console.log("Upload Progress:", progressEvent.loaded, progressEvent.total);
+                    // console.log("Upload Progress:", progressEvent.loaded, progressEvent.total);
                     if (onProgress && progressEvent.total) {
                         const progressPercent = Math.round(
                             (progressEvent.loaded * 100) / (progressEvent.total)
                         );
-                        console.log("Progress %", progressPercent);
+                        // console.log("Progress %", progressPercent);
                         onProgress(progressPercent);
                     }
                 },
@@ -126,7 +126,7 @@ export const fetchBaseQueryWithProgress = () => {
 
 // dynamic base query function
 const dynamicBaseQuery = async (args, api, extraOptions) => {
-    console.log("dynamicBaseQuery:-", "i reach here")
+    // console.log("dynamicBaseQuery:-", "i reach here")
     const {
         url,
         method = "GET", // Default to 'GET'

@@ -95,8 +95,8 @@ const Navbar = () => {
                         {!authStatus ? <button
                             onClick={() => navigate("/login")}
                             type="button"
-                            className="text-md rounded-lg relative inline-flex items-center justify-center px-4 py-2.5 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white" >
-                            <span class="relative">Login</span>
+                            className="text-md rounded-lg relative inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 md:py-2.5 m-1 cursor-pointer border-b-2 border-l-2 border-r-2  active:border-red-700 active:shadow-none shadow-lg bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-500 hover:to-red-500  border-red-700 text-white" >
+                            <span className="relative">Login</span>
                         </button> :
 
                             // Profile Pop up button 

@@ -22,7 +22,7 @@ const MenuItem = ({ modalRef, videoId, setIsMenuOpen }) => {
     const handleSaveToWatchLater = async (e) => {
         e.preventDefault()
         const response = await addVideoToWatchLater(videoId).unwrap()
-        console.log("response video add to watch later from menu item", response)
+        // console.log("response video add to watch later from menu item", response)
         refetch()
     }
 

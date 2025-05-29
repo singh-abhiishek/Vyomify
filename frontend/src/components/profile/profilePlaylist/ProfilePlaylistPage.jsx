@@ -9,7 +9,7 @@ const ProfilePlaylistPage = ({ userId }) => {
   // show playlists of user on which profile we are
   const { data: response, isLoading } = useGetUserPlaylistsQuery(userId)
   const profilePlaylists = response?.data
-  console.log("playlists from ProfilePlaylistPage", profilePlaylists)
+  // console.log("playlists from ProfilePlaylistPage", profilePlaylists)
 
   if (isLoading) {
     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>

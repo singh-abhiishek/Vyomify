@@ -8,7 +8,7 @@ const ProfilePostPage = ({ userId }) => {
 
   const { data: response } = useGetAllTweetsQuery(userId)
   const tweets = response?.data
-  console.log("response from profilePost Page", tweets)
+  // console.log("response from profilePost Page", tweets)
 
   // user = current logged-in user
   const user = useSelector((state) => state?.auth?.userData?.user?.username)
@@ -23,7 +23,7 @@ const ProfilePostPage = ({ userId }) => {
 
   const visiblePosts = isOwner
     ? tweets // owner sees all
-    : tweets?.filter(post => post?.isPublished === false); // others see only public
+    : tweets?.filter(post => post?.isPublished); // others see only public
 
 
   if (visiblePosts?.length === 0) {

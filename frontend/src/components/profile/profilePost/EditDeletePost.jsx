@@ -35,7 +35,7 @@ const EditDeletePost = ({
     const handleTweetDelete = async () => {
         try {
             const data = await deleteTweet(tweetId).unwrap(); //unwrap ensures errors are catchable
-            console.log(data)
+            // console.log(data)
             showToastMessage("post deleted successfully")
         } catch (error) {
             showToastMessage("error post not deleted", "error")

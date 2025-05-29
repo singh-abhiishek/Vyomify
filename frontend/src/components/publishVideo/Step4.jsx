@@ -44,7 +44,7 @@ const Step4 = () => {
   const { watch } = useFormContext()
   const playlistIds = watch("playlistIds") || [];
   const noOfSelectedPlaylist = playlistIds.length;
-  console.log("from step4", noOfSelectedPlaylist)
+  // console.log("from step4", noOfSelectedPlaylist)
 
   return (
     <div className='max-w-5xl mx-auto text-white rounded-3xl  sm:my-8'>
@@ -93,19 +93,16 @@ const Step4 = () => {
 
 
         {/* open1 playlist form */}
-        {isOpen1 && <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+        {isOpen1 && <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30'>
           <PlaylistForm1 modalRef1={modalRef1} setIsOpen1={setIsOpen1} setIsOpen2={setIsOpen2} userPlaylistsName={userPlaylistsName} />
         </div>}
 
         {/* open2 playlist form */}
-        {isOpen2 && <div className='absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2'>
+        {isOpen2 && <div className='absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2 z-40'>
           <PlaylistForm2 modalRef2={modalRef2} setIsOpen2={setIsOpen2} onPlaylistCreated={onPlaylistCreated} />
         </div>}
 
         {/* Right Side - You can design this section later */}
-        {/* <div className='md:w-[40%] border border-gray-600 rounded-2xl flex flex-col items-center justify-center bg-[#282828] p-10 text-center'>
-          <p className="text-gray-400">Right section content goes here</p>
-        </div> */}
          <RightSide />
       </div>
     </div>

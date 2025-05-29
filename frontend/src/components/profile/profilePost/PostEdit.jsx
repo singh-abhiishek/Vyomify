@@ -47,9 +47,9 @@ const PostEdit = ({
         formData.append("visibility", visibility);
         if (imageFile) formData.append("tweetFile", imageFile);
 
-        for (let pair of formData.entries()) {  //NOTE: direct console.log(formData) gives empty object(don't know why)
-            console.log(`${pair[0]}:`, pair[1]);
-        }
+        // for (let pair of formData.entries()) {  //NOTE: direct console.log(formData) gives empty object(don't know why)
+        //     console.log(`${pair[0]}:`, pair[1]);
+        // }
 
         try {
             const response = await editTweet({
@@ -64,8 +64,8 @@ const PostEdit = ({
             console.log("error while editing post", error)
             showToastMessage("Error while editing post", "error")
         }
-        finally{
-          setIsPostEditFormOpen(false)
+        finally {
+            setIsPostEditFormOpen(false)
         }
     };
 
@@ -117,9 +117,9 @@ const PostEdit = ({
                         value="true"
                         checked={visibility === true}
                         onChange={(e) => setVisibility(e.target.value === "true")}
-                        className="accent-blue-500"
+                        className="accent-red-500 cursor-pointer"
                     />
-                    Public
+                    <span className="text-gray-200 hover:text-red-400 cursor-pointer">Public</span>
                 </label>
                 <label className="inline-flex items-center gap-1 text-sm">
                     <input
@@ -127,9 +127,9 @@ const PostEdit = ({
                         value="false"
                         checked={visibility === false}
                         onChange={(e) => setVisibility(e.target.value === "true")}
-                        className="accent-blue-500"
+                        className="accent-red-500 cursor-pointer"
                     />
-                    Private
+                    <span className="text-gray-200 hover:text-red-400 cursor-pointer">Private</span>
                 </label>
             </div>
 

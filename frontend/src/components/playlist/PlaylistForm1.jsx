@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName }) => {
 
-    console.log("from playlistForm1", userPlaylistsName)
+    // console.log("from playlistForm1", userPlaylistsName)
 
     const { watch } = useFormContext()
     const playlistIds = watch("playlistIds") || [];
@@ -19,30 +19,10 @@ const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName })
 
     return (
         // <div className='dark:bg-[#1c1c1c] p-5 py-4 w-[420px] rounded-xl relative'>
-        <div className='dark:bg-[#1c1c1c] p-5 py-4 w-[420px] rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.7)] border border-white/10 backdrop-blur-sm transition-all duration-300 relative'>
+        <div className='dark:bg-[#1c1c1c] p-5 py-4 w-[290px] sm:w-[300px] rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.7)] border border-white/10 backdrop-blur-sm transition-all duration-300 relative'>
             <div className='flex flex-col gap-2 '
                 ref={modalRef1}
             >
-
-                {/* close button  */}
-                {/* <div className='text-4xl absolute right-0.5 top-1'>
-                    <svg
-                        onClick={() => setIsOpen1(false)}
-                        className="mr-2 cursor-pointer stroke-zinc-800 dark:stroke-zinc-400 hover:stroke-white transition-colors duration-200"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
-                </div> */}
-
                 {/* searchbar */}
                 <div className='border mt-2'>
                     <input
@@ -65,7 +45,7 @@ const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName })
                 </div>
 
                 {/* buttons :- new playlist , add  */}
-                <div className='flex justify-between items-center p-0'>
+                <div className='flex justify-between items-center '>
 
                     <div className="rounded-lg bg-[#2b2b2b] text-gray-200 px-2 py-0.5 
                 border border-[#3d3d3d] hover:bg-[#3a3a3a] 
@@ -76,7 +56,7 @@ const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName })
                                 e.preventDefault()
                                 setIsOpen2(true)
                             }}
-                            className='p-1 text-sm cursor-pointer'>
+                            className='p-1 px-1 text-sm cursor-pointer'>
                             New playlist
                         </button>
                     </div>
@@ -88,7 +68,7 @@ const PlaylistForm1 = ({ modalRef1, setIsOpen1, setIsOpen2, userPlaylistsName })
                         <button
                             onClick={handleAddToPlaylists}
                             disabled={noOfSelectedPlaylist === 0}
-                            className={`p-1 px-2 text-sm ${noOfSelectedPlaylist === 0 ? "" : "cursor-pointer"}`}
+                            className={`p-1 px-2 text-sm ${noOfSelectedPlaylist === 0 ? "cursor-not-allowed" : "cursor-pointer"}`}
                         >
                             Add
                         </button>

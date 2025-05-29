@@ -11,7 +11,7 @@ const Comment = ({ videoId }) => {
   const commentsDetails = response?.data
   const comments = commentsDetails?.docs
   const totalComment = comments?.length
-  console.log("commentsDetails", commentsDetails)
+  // console.log("commentsDetails", commentsDetails)
 
   const onCommentAdded = () => {
     refetch()

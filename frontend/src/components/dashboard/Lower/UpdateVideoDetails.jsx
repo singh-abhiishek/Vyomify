@@ -43,7 +43,7 @@ const UpdateVideoDetails = ({
             }).unwrap()
 
             if (response.success) {
-                console.log("response after updating video details", response);
+                // console.log("response after updating video details", response);
                 showToastMessage("Details Updated", "success")
             }
         } catch (error) {

@@ -7,7 +7,7 @@ const RightSide = () => {
     const currentValues = getValues()
     const thumbnail = currentValues?.thumbnail[0]
     const videoFile = currentValues?.videoFile[0]
-    console.log("from step-2", videoFile)
+    // console.log("from step-2", videoFile)
 
     
 

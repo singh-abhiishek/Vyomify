@@ -14,7 +14,7 @@ const Input = React.forwardRef(function Input(
     return(
         <div className="">
             { label && <label
-                htmlFor="{id}"
+                htmlFor={id}
             >
                 {label}
                 </label>

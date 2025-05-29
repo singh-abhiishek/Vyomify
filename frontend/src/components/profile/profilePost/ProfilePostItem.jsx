@@ -19,7 +19,7 @@ const ProfilePostItem = ({
 
   const tweetId = _id
   // console.log("tweetId from profilePostItem", tweetId)
-  console.log(getTimeAgo(createdAt), getTimeAgo(updatedAt))
+  // console.log(getTimeAgo(createdAt), getTimeAgo(updatedAt))
 
   // is tweet already liked
   const { data: response, refetch } = useIsAlreadyLikedQuery({
@@ -120,7 +120,7 @@ const ProfilePostItem = ({
                   <img
                     src={tweetFile}
                     alt="Tweet Media"
-                    className="w-full max-h-100 object-cover"
+                    className="w-full object-cover"
                   />
                 </div>
               </div>

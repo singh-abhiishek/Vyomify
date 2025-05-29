@@ -23,7 +23,7 @@ const DeletePlaylist = ({
         try {
             const response = await deletePlaylist(playlistId).unwrap()
 
-            console.log("response from delete playlist", response)
+            // console.log("response from delete playlist", response)
             if (response.success) {
                 showToastMessage("Playlist Deleted", "success")
                 navigate('/explore/playlists')

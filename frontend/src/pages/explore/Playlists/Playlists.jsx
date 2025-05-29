@@ -27,16 +27,14 @@ const Playlists = () => {
 
     const length = playlistsList?.length
     if (isLoading) {
-        return <PlaylistGridShimmer  length={length}/>
+        return <PlaylistGridShimmer length={length} />
     }
 
     if (playlistsList?.length < 2) {
         return (
-            <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-3 py-12 text-center">
-                <h2 className="text-xl font-semibold text-gray-300">No Playlists Found</h2>
-                <p className="text-sm text-gray-500 max-w-md">
-                    You haven’t created any playlists yet. Start building your collection!
-                </p>
+            <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
+                <h2 className="text-2xl font-semibold text-white">No Playlists Found</h2>
+                <p className="text-sm text-gray-400"> You haven’t created any playlists yet. Start building your collection!</p>
             </div>
         );
     }

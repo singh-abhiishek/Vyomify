@@ -8,7 +8,7 @@ import { RiDashboardHorizontalLine } from "react-icons/ri";
 const ProfilePopUp = ({ modalRef, setIsOpen }) => {
 
   const user = useSelector(state => state.auth?.userData?.user)
-  console.log("User changed inside popup", useSelector(state => state.auth?.userData));
+  // console.log("User changed inside popup", useSelector(state => state.auth?.userData));
 
   return (
     <div className="relative "

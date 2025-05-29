@@ -23,6 +23,14 @@ const LeftPartWatchVideo = ({ videoId }) => {
     }
   }, [isSuccess, refetchWatchHistory, videoId]);
 
+
+  // useEffect(() => {
+  //   return () => {
+  //     setIsPlaying(false); // stop playing on unmount
+  //   };
+  // }, []);
+
+
   if (isLoading) {
     return <LeftPartWatchVideoShimmer />
   }
@@ -34,6 +42,7 @@ const LeftPartWatchVideo = ({ videoId }) => {
       {/* video part  */}
       <div className='w-full h-[150px] sm:h-[200px] md:h-[300px] lg:h-[550px]'>
         <ReactPlayer
+          key={videoId} // forces re-render when videoId changes
           url={video?.videoFile}
           width="100%"
           height="100%"

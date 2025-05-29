@@ -13,18 +13,18 @@ const Subscription = () => {
 
     const { data: response, isLoading } = useGetLatestVideosOfSubscribedChannelsQuery(subscriberId)
     const latestVideosList = response?.data
-    console.log("latestVideosList from Subscription", response)
-
-
-    // if (isLoading) {
-    //     return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-    //         <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-    //     </div>
-    // }
+    // console.log("latestVideosList from Subscription", response)
 
     if (isLoading) {
-        return <VideoGridShimmer isHeading={true}/>
+        return <VideoGridShimmer isHeading={true} />
     }
+
+    if (latestVideosList?.length === 0) return (
+        <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
+            <h2 className="text-2xl font-semibold text-white">You're not subscribed to any channels yet</h2>
+            <p className="text-sm text-gray-400">Discover and support your favorite creators</p>
+        </div>
+    )
 
 
     return (
@@ -41,8 +41,8 @@ const Subscription = () => {
             {/* Video Grid */}
             <div className="flex flex-wrap gap-4 mt-0.5">
                 {latestVideosList?.map((latestVideo, index) => (
-                        <VideoGridItem {...latestVideo} key={latestVideo?._id}/>
-                    
+                    <VideoGridItem {...latestVideo} key={latestVideo?._id} />
+
                 ))}
             </div>
 

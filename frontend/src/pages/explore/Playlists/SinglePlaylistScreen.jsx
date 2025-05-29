@@ -58,8 +58,8 @@ const SinglePlaylistScreen = () => {
         <div className="flex flex-col justify-between flex-1 gap-1 md:gap-2" >
           {/* Playlist Info */}
           <div>
-            <h1 className="text-red-500 font-amaranth font-bold text-xl md:text-2xl truncate">{playlist?.name}</h1>
-            <p className="text-sm text-gray-400 line-clamp-1">{playlist?.description}</p>
+            <h1 className="text-red-500 font-amaranth font-bold text-xl md:text-2xl">{playlist?.name}</h1>
+            <p className="text-sm text-gray-400 line-clamp-3 sm:line-clamp-none">{playlist?.description}</p>
           </div>
 
           {/* Owner Info */}

@@ -19,7 +19,7 @@ const Like = ({ video }) => {
         type: "videos"
     })
     const isVideoAlreadyLiked = response?.data
-    console.log("is video already liked from Like", isVideoAlreadyLiked)
+    // console.log("is video already liked from Like", isVideoAlreadyLiked)
 
     // toggle video like status on hitting like button
     const [toggleVideoLikeStatus] = useToggleVideoLikeStatusMutation()

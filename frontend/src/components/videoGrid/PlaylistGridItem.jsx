@@ -58,7 +58,7 @@ const PlaylistGridItem = ({
       {/* Playlist Info */}
       <div className="p-4 text-white space-y-1">
         <h3 className="text-base font-semibold truncate text-gray-100">{name}</h3>
-        <p className="text-xs text-gray-400 flex">
+        <p className="text-xs text-gray-400 flex items-center gap-0.5">
           {isPrivate ? 'Private' : 'Public'}
           {isPrivate && <HiLockClosed size={13} />}
           · Updated {getTimeAgo(updatedAt)}
@@ -66,7 +66,7 @@ const PlaylistGridItem = ({
         <p className="text-sm text-gray-500 line-clamp-2">{description}</p>
 
         <div className="pt-2">
-          <button className="group inline-flex items-center text-sm font-medium text-red-500 hover:text-red-600 transition-colors duration-200">
+          <button className="group inline-flex items-center text-sm font-medium text-red-500 hover:text-red-600 transition-colors duration-200 cursor-pointer">
             View full playlist
             <svg
               className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200"

@@ -3,23 +3,42 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import HomeImg from "../../assets/screens/Home.png"
-const imgLink =
-    "https://images.unsplash.com/photo-1533167649158-6d508895b680?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3BsYXNofGVufDB8fDB8fHww";
+import HomeExplore from "../../assets/screens/HomeExplore.png"
+import searchedChannel from "../../assets/screens/searchedChannel.png"
+import watchVideo from "../../assets/screens/watchVideo.png"
+import profile from "../../assets/screens/profile.png"
+import dashboard from "../../assets/screens/dashboard.png"
+import singlePlaylist from "../../assets/screens/singlePlaylist.png"
+import stepperForm from "../../assets/screens/stepperForm.png"
+import post from "../../assets/screens/post.png"
+import watchHistory from "../../assets/screens/watchHistory.png"
+import likedVideos from "../../assets/screens/likedVideos.png"
+import watchLater from "../../assets/screens/watchLater.png"
+import subscriptions from "../../assets/screens/subscriptions.png"
+import playlists from "../../assets/screens/playlists.png"
+import profilePlaylist from "../../assets/screens/profilePlaylist.png"
+import comment from "../../assets/screens/comment.png"
+import searchedItem from "../../assets/screens/searchedItem.png"
+import postForm from "../../assets/screens/postForm.png"
 
 const screens = [
-    { title: "HomePage", img: HomeImg },
-    { title: "SearchedItem", img: HomeImg },
-    { title: "ProfilePage", img: HomeImg },
-    { title: "ProfilePost", img: HomeImg },
-    { title: "Dashboard", img: imgLink },
-    { title: "WatchVideo", img: HomeImg },
-    { title: "PlaylistPage", img: imgLink },
-    { title: "UploadVideo", img: imgLink },
-    { title: "SavedVideos", img: imgLink },
-    { title: "CreatePlaylist", img: imgLink },
-    { title: "WatchHistory", img: imgLink },
-    { title: "Comment", img: imgLink },
+    { title: "HomePage", img: HomeExplore },
+    { title: "SearchedChannel", img: searchedChannel },
+    { title: "searchedItem", img: searchedItem },
+    { title: "WatchVideo", img: watchVideo },
+    { title: "Comment", img: comment },
+    { title: "Dashboard", img: dashboard },
+    { title: "PlaylistPage", img: singlePlaylist },
+    { title: "UploadVideo", img: stepperForm },
+    { title: "WatchHistory", img: watchHistory },
+    { title: "LikedVideos", img: likedVideos },
+    { title: "watchLater", img: watchLater },
+    { title: "subscriptions", img: subscriptions },
+    { title: "AllPlaylists", img: playlists },
+    { title: "ProfilePage", img: profile },
+    { title: "ProfilePost", img: post },
+    { title: "profilePlaylist", img: profilePlaylist },
+    { title: "createPost", img: postForm },
 ];
 
 const settings = {
@@ -48,9 +67,8 @@ export default function ScreensCarousel() {
     return (
         <section className="max-w-6xl mx-auto mt-9 px-4 sm:px-0.5 md:px-16 lg:px-0.5">
             <h2 className="text-2xl md:text-3xl lg:text-5xl font-extrabold text-white md:mt-20 lg:mt-30 mb-3 lg:mb-8 text-center">
-                <span className="text-red-500">Experience </span>
-                <span>the </span>
-                <span>Screens in Action...</span>
+                <span>See Vyomify in Action </span>
+                {/* <span className="text-red-500">Vyomify </span> */}
             </h2>
 
             {/* bg-[#191b1f] bg-[#252629]*/}
@@ -64,12 +82,8 @@ export default function ScreensCarousel() {
                     >
                         "Get a sneak peek at the different sections of our website — from your profile and dashboard to uploading and managing videos with ease."
                     </p>
-                    {/* <p className="text-gray-400 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-lg sm:hidden"
-                    >
-                        "A glimpse into your creator journey — from uploads to insights."
-                    </p> */}
 
-                    <div className="bg-black/50 p-5 rounded-lg font-mono text-sm shadow-inner whitespace-pre-wrap border border-gray-800 overflow-x-auto">
+                    <div className="bg-black/20 p-5 rounded-lg font-mono text-sm shadow-inner whitespace-pre-wrap border border-gray-800 overflow-x-auto">
                         <pre className="text-red-400">
                             <code>
                                 import <span className="text-white">React</span> from <span className="text-green-400">"react"</span>;
@@ -99,9 +113,9 @@ export default function ScreensCarousel() {
                 </div>
 
                 {/* bg-black/40 bg-black/30 */}
-                <div className="lg:w-2/3 w-full rounded-lg p-4 sm:p-6.5 shadow-lg bg-black/50 backdrop-blur-sm border border-gray-800 flex flex-col">
+                <div className="lg:w-2/3 w-full rounded-lg p-4 sm:p-6.5 shadow-lg bg-black/20 backdrop-blur-sm border border-gray-800 flex flex-col">
                     {/* Code heading*/}
-                    <pre className="font-mono text-xs sm:text-sm text-red-400 mb-3 select-none truncate">
+                    <pre className="font-mono text-xs sm:text-sm text-red-400 sm:mb-3 select-none truncate">
                         {`const renderScreens = () => {`}
                     </pre>
 
@@ -109,7 +123,7 @@ export default function ScreensCarousel() {
                     <Slider {...settings}>
                         {screens.map(({ title, img }) => (
                             <div key={title} className="text-center rounded-lg px-2">
-                                <h3 className="font-mono text-base sm:text-lg text-white mb-2 sm:mb-2.5 tracking-wide truncate">
+                                <h3 className="font-mono text-base sm:text-lg text-white sm:mb-1 tracking-wide truncate">
                                     <span className="text-orange-400">&lt;</span>
                                     <span className="text-orange-400">{title}</span>
                                     <span className="text-orange-400">/&gt;</span>
@@ -119,6 +133,7 @@ export default function ScreensCarousel() {
                                     alt={title}
                                     className="mx-auto rounded-lg w-full max-h-[200px] sm:max-h-[350px] object-contain shadow-xl border border-gray-800"
                                     style={{ filter: "brightness(98%)" }}
+
                                 />
                             </div>
                         ))}

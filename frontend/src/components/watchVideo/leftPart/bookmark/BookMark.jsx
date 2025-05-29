@@ -6,7 +6,7 @@ import PF2 from './PF2';
 const BookMark = ({ video }) => {
 
     const videoId = video?._id
-    console.log(videoId)
+    // console.log(videoId)
     const { openPF1Modal,  isPF1Open, isPF2Open } = usePlaylistModal()
 
     return (

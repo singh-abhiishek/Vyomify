@@ -32,7 +32,7 @@ const DashBoardLowerItem = ({
         try {
             const response = await toggleVideoPublishStatus(videoId).unwrap()
             if(response.success){
-                console.log("status toggled successfully", "status")
+                // console.log("status toggled successfully", "status")
                 showToastMessage("status toggled successfully", "success")
                 refetchChannelVideos()
             }

@@ -11,15 +11,16 @@ const LikedVideos = () => {
   const likedVideosList = response?.data
   // console.log(likedVideosList)
 
-  // if (isLoading) {
-  //   return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-  //     <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-  //   </div>
-  // }
-
   if (isLoading) {
     return <VideoGridShimmer1 />
   }
+
+  if (likedVideosList?.length === 0) return (
+    <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
+      <h2 className="text-2xl font-semibold text-white">You haven't liked any videos yet</h2>
+      <p className="text-sm text-gray-400">Discover and support your favorite creators</p>
+    </div>
+  )
 
   return (
     <div className='bg-black text-white w-full'>
@@ -34,9 +35,7 @@ const LikedVideos = () => {
       </div>
 
       <div className="flex flex-wrap gap-2 mt-4">
-        {likedVideosList?.map((likedVideo, index) => (
-          // <VideoGridItem {...likedVideo?.video} {...likedVideo} />
-
+        {likedVideosList?.map((likedVideo) => (
           <VideoGridItem1
             key={likedVideo?._id}
             {...likedVideo?.video}

@@ -30,7 +30,7 @@ const UpdateAvatar = () => {
 
     // handlel thumnail change
     const handleAvatarChange = (e) => {
-        console.log("avatar change", e.target.files[0])
+        // console.log("avatar change", e.target.files[0])
         const file = e.target.files[0];
         if (file && file.type.startsWith("image/")) {
             setAvatarFile(file); // for backend

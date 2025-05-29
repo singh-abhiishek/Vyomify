@@ -14,7 +14,7 @@ const ProfileVideoPage = ({ userId }) => {
 
   const userPublishedVideos = response?.data
 
-  console.log("response from profilevideopage", userPublishedVideos)
+  // console.log("response from profilevideopage", userPublishedVideos)
   return (
     <div className='mt-2'>
 

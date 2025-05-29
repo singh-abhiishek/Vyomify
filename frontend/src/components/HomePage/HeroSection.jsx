@@ -88,7 +88,7 @@ export default function HeroSection({ isLoggedIn }) {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="bg-black/30 rounded-xl p-5 sm:p-6 text-sm text-red-400 font-mono shadow-lg border border-zinc-800 w-full md:w-[50%] max-h-[400px] overflow-auto"
+          className="bg-black/30 rounded-xl p-5 sm:p-6 text-sm text-red-400 font-mono shadow-lg border border-zinc-800 w-full md:w-[50%] sm:max-h-[445px] lg:max-h-[400px] overflow-auto"
         >
           <p className="text-gray-400 text-xs mb-2">// Publish your video</p>
           <pre className="whitespace-pre-wrap">

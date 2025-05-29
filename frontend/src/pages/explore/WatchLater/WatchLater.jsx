@@ -8,19 +8,22 @@ const WatchLater = () => {
 
   const { data: response, isLoading } = useGetAllWatchLaterVideosQuery()
   const watchLaterVideosList = response?.data[0]?.video
-  console.log("all watch later video from watch later", watchLaterVideosList)
-
-  // if (isLoading) {
-  //   return <div className='bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center'>
-  //     <Spinner /> <p className="text-3xl text-gray-400">Loading</p>
-  //   </div>
-  // }
+  // console.log("all watch later video from watch later", watchLaterVideosList)
 
   if (isLoading) {
     return (
       <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
         <VideoGridShimmer1 />
         <p className="text-3xl text-gray-400 mt-4">Loading</p>
+      </div>
+    );
+  }
+
+  if (watchLaterVideosList?.length < 2) {
+    return (
+      <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
+        <h2 className="text-2xl font-semibold text-white">No videos saved for Watch Later</h2>
+        <p className="text-sm text-gray-400">You haven’t added any videos yet. Start building your watchlist!</p>
       </div>
     );
   }

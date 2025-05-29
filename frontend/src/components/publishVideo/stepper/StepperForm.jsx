@@ -84,7 +84,7 @@ const StepperForm = () => {
     }
   }
 
-  // for next button
+  // for next button, ensure validation also
   const handleNext = async (e) => {
     if (ActiveStep.optional || ActiveStep.fields.length === 0) {
       setStep()
@@ -112,7 +112,7 @@ const StepperForm = () => {
   // upload progess bar
   const { getValues } = useFormContext();
   const currentValues = getValues(); // Get all current values of stepper form
-  console.log("from stepper form checking curr values", currentValues)
+  // console.log("from stepper form checking curr values", currentValues)
 
   const navigate = useNavigate()
   const [uploadProgressBar, setUploadProgressBar] = useState(0);
@@ -159,8 +159,8 @@ const StepperForm = () => {
         onProgress: (progressPercent) => setUploadProgressBar(progressPercent),  // come from the fetchBaseQueryWithProgress (from apislice)
       }).unwrap();
 
-      console.log("response from stepper form", response)
-      console.log("response data from stepper form", response.data)
+      // console.log("response from stepper form", response)
+      // console.log("response data from stepper form", response.data)
       if (response.success) {
         setIsResponseSuccess(true)
         setUploadProgressBar(100);
@@ -322,7 +322,6 @@ const StepperForm = () => {
                       className={` step ${currentStep > index + 1 || isComplete ? "complete" : ""
                         } ${currentStep === index + 1 ? "active" : ""} `}
                     >
-                      {console.log(currentStep)}
                       <div className="step-number">
                         {currentStep > index + 1 || isComplete ? (
                           <span>&#10003;</span>

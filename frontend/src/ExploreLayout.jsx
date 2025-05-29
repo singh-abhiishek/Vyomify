@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { LeftSidebar } from "../src/components/index.js";
 import { Outlet, } from "react-router-dom";
 import { useStepForm } from "./contextAPI/StepFormContext.jsx";
@@ -10,11 +10,11 @@ import ScrollToTop from "./utils/scrollToTop.jsx";
 
 const ExploreLayout = () => {
 
-
     const { isStepFormOpen } = useStepForm()
     const { isTweetFormOpen } = useTweetForm()
 
     const { isLeftBarOpen } = useLeftSideBar()
+    const scrollableRef = useRef(null);
     return (
         // bg-[#0F0F0F]
         <div className="flex h-full bg-black text-white">
@@ -29,12 +29,14 @@ const ExploreLayout = () => {
             {/* Main content wrapper */}
             {isStepFormOpen && <StepFormLayout />}
             {isTweetFormOpen && <TweetForm />}
-            
+
             <div className="ml-[63px] flex-1 flex flex-col overflow-hidden h-[calc(100vh-4rem)] ">
                 {/* Scrollable content area */}
-                <div className="scrollable-content flex-1 overflow-y-auto w-full p-2 ">
+                <div 
+                 ref={scrollableRef}
+                className="scrollable-content flex-1 overflow-y-auto w-full p-2 ">
                     <ScrollToTop />
-                    <Outlet />
+                    <Outlet context={{ scrollableRef }}/>
                 </div>
             </div>
         </div>

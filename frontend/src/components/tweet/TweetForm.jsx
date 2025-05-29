@@ -53,9 +53,9 @@ const TweetForm = () => {
     formData.append("visibility", visibility);
     if (imageFile) formData.append("tweetFile", imageFile);
 
-    for (let pair of formData.entries()) {  //NOTE: direct console.log(formData) gives empty object(don't know why)
-      console.log(`${pair[0]}:`, pair[1]);
-    }
+    // for (let pair of formData.entries()) {  //NOTE: direct console.log(formData) gives empty object(don't know why)
+    //   console.log(`${pair[0]}:`, pair[1]);
+    // }
 
     try {
       const response = await createTweet(formData).unwrap()
@@ -85,7 +85,7 @@ const TweetForm = () => {
       <div className="flex items-center gap-2 justify-center mb-4">
         <FiSend className="text-red-600 text-3xl" />
         <h1 className="text-red-600 font-amaranth font-bold text-3xl leading-none">
-          Post Tweet
+          Create Post
         </h1>
       </div>
 

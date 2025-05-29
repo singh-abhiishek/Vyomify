@@ -33,7 +33,7 @@ const Step3 = () => {
                 type="radio"
                 value="public"
                 {...register("isPublished")}
-                className="form-radio text-red-500 focus:ring-0"
+                className="form-radio accent-red-500 cursor-pointer"
               />
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
@@ -50,7 +50,7 @@ const Step3 = () => {
                 type="radio"
                 value="private"
                 {...register("isPublished")}
-                className="form-radio text-red-500 focus:ring-0"
+                className="form-radio accent-red-500 cursor-pointer"
               />
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
