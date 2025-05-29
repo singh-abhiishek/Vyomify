@@ -1,7 +1,7 @@
 import "./StepperForm.css"
 import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import Button from "../../ui/button.jsx";
+import Button from "../../ui/Button.jsx";
 import Step1 from "../Step1.jsx";
 import Step2 from '../Step2.jsx';
 import Step3 from '../Step3.jsx';
