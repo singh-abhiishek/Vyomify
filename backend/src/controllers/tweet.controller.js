@@ -44,7 +44,7 @@ const createTweet = asyncHandler(async (req, res) => {
     const createdtweet = await Tweet.create({
         content: tweet,
         owner: userId,
-        tweetFile: tweet_File?.url,
+        tweetFile: tweet_File?.secure_url,
         isPublished,
     })
 
@@ -138,7 +138,7 @@ const updateTweet = asyncHandler(async (req, res) => {
     if (tweetFileLocalPath) {
         const newTweetFile = await uploadOnCloudinary(tweetFileLocalPath)
 
-        if (!newTweetFile.url) {
+        if (!newTweetFile.secure_url) {
             throw new ApiError(400, "Error while updating tweetFile")
         }
 
@@ -154,7 +154,7 @@ const updateTweet = asyncHandler(async (req, res) => {
             const oldTweetFilePublicId = oldTweetFileUrl?.split('/upload/')[1].split('/')[1].split('.')[0];
             await deleteFromCloudinary(oldTweetFilePublicId) // delete old tweet file from cloudinary
         }
-        tweet.tweetFile = newTweetFile.url // update old url with new one
+        tweet.tweetFile = newTweetFile.secure_url // update old url with new one
         await tweet.save({ validateBeforeSave: false })
     }
 

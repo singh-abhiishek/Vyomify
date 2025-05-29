@@ -417,8 +417,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const isPublic = (isPublished === "public") ? true : false;
     const video = await Video.create(
         {
-            videoFile: videoFile.url, // cloudinary
-            thumbnail: thumbnail.url, // cloudinary
+            videoFile: videoFile.secure_url, // cloudinary
+            thumbnail: thumbnail.secure_url, // cloudinary
             title,
             description,
             views: 0,
@@ -577,7 +577,7 @@ const updateVideoThumbnail = asyncHandler(async (req, res) => {
     }
 
     const newThumbnail = await uploadOnCloudinary(newThumbnailLocalPath)
-    if (!newThumbnail.url) {
+    if (!newThumbnail.secure_url) {
         throw new ApiError(400, "newThumbnail url is missing while updating thumbnail")
     }
 
@@ -593,7 +593,7 @@ const updateVideoThumbnail = asyncHandler(async (req, res) => {
     const oldThumbnailPublicId = oldThumbnailUrl?.split("/upload/")[1].split("/")[1].split(".")[0]
     await deleteFromCloudinary(oldThumbnailPublicId)
 
-    video.thumbnail = newThumbnail?.url
+    video.thumbnail = newThumbnail?.secure_url
     const updatedVideo = await video.save({ validateBeforeSave: false })
 
     return res

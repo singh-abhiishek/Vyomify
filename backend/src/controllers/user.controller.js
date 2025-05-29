@@ -48,7 +48,7 @@ const generateTemporaryToken = async (tempUserId) => {
         if (!tempUser) {
             throw new ApiError(401, "temp user is not found - generateTemporaryToken")
         }
-        const tempToken = tempUser.generateTemporaryToken()
+        const tempToken = tempUser.generateTemporaryToken() // called from models/tempUser.modal.js
         tempUser.tempToken = tempToken
         await tempUser.save({ validateBeforeSave: false })
         return tempToken;
@@ -303,8 +303,8 @@ const uploadProfileImages = asyncHandler(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
         user._id,
         {
-            avatar: avatar?.url || "",
-            coverImage: coverImage?.url || ""
+            avatar: avatar?.secure_url || "",
+            coverImage: coverImage?.secure_url || ""
         },
         { new: true } // Returns the updated document
     ).select("-password -refreshToken");
@@ -404,8 +404,8 @@ const registerUser = asyncHandler(async (req, res) => {
     //********** create user object- create entry in db **********//
     const user = await User.create({
         fullName,
-        avatar: avatar.url,
-        coverImage: coverImage?.url || "", // may be coverImage is not avaiable(above we only check for avatar as it is required field, optional chaining here for coverImage)
+        avatar: avatar.secure_url,
+        coverImage: coverImage?.secure_url || "", // may be coverImage is not avaiable(above we only check for avatar as it is required field, optional chaining here for coverImage)
         email,
         password,
         username: username.toLowerCase()
@@ -722,7 +722,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     }
 
     const newAvatar = await uploadOnCloudinary(newAvatarLocalPath)
-    if (!newAvatar.url) {
+    if (!newAvatar.secure_url) {
         throw new ApiError(400, "Error while updating user avatar")
     }
 
@@ -739,7 +739,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const oldAvatarPublicId = oldAvatarUrl?.split('/upload/')[1].split('/')[1].split('.')[0];
     await deleteFromCloudinary(oldAvatarPublicId) // delete old Avatar from cloudinary
 
-    user.avatar = newAvatar.url // update old url with new one
+    user.avatar = newAvatar.secure_url // update old url with new one
     await user.save({ validateBeforeSave: false })
     const updatedUser = await User.findById(user?._id).select("-password -refreshToken");
 
@@ -769,7 +769,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
     const newCoverImage = await uploadOnCloudinary(coverImageLocalPath)
 
-    if (!newCoverImage.url) {
+    if (!newCoverImage.secure_url) {
         throw new ApiError(400, "Error while updating user CoverImage")
     }
 
@@ -785,7 +785,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         await deleteFromCloudinary(oldCoverImagePublicId) // delete old Avatar from cloudinary
     }
 
-    user.coverImage = newCoverImage.url // update old url with new one
+    user.coverImage = newCoverImage.secure_url // update old url with new one
     await user.save({ validateBeforeSave: false })
     const updatedUser = await User.findById(user?._id).select("-password -refreshToken");
 
