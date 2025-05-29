@@ -10,7 +10,7 @@ import { Playlist } from "../models/playlist.model.js"
 
 
 export const authorizedOwner = (userId, req) => {
-    console.log({ userId });
+    // console.log({ userId });
 
     return userId.toString() === req.user._id.toString();
 };
@@ -132,7 +132,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const getVideosAndChannelBasedOnSearch = asyncHandler(async (req, res) => {
     const { query, page = 1, limit = 15 } = req.query;
-    console.log(req.query)
+    // console.log(req.query)
 
     if (!query || query.trim() === "") {
         throw new ApiError(400, "query is missing")

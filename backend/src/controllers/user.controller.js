@@ -569,19 +569,23 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 //reset password
 const forgotPassword = asyncHandler(async (req, res) => {
     const { email, otp = "", newPassword = "", confirmPassword = "" } = req.body
+    // console.log(email)
     if (!email) {
         throw new ApiError(400, "Email is required - forgotPassword")
     }
-
+    
     const user = await User.findOne({ email })
+    // console.log("user", user)
     if (!user) {
         throw new ApiError(401, "user does not registered - forgotPassword")
     }
 
     if (email && (!otp && !newPassword && !confirmPassword)) {
         const otpForPasswordReset = Math.floor(100000 + Math.random() * 900000).toString();
-
+        // console.log(otpForPasswordReset)
+        
         let tempUser = await TempUser.findOne({ email })
+        // console.log(tempUser)
         if (tempUser) {
             tempUser.otp = otpForPasswordReset
             await tempUser.save();
@@ -603,7 +607,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
             otpForPasswordReset
         )
         if (!response) {
-            await tempUser.findByIdAndDelete(tempUser._id)
+            await TempUser.findByIdAndDelete(tempUser._id)
             throw new ApiError(500, "otp not send to email - error")
         }
 

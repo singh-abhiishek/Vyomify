@@ -349,7 +349,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
 const getUserPlaylistsName = asyncHandler(async (req, res) => {
     const { userId } = req.params
-    console.log(userId)
+    // console.log(userId)
     if (!isValidObjectId(userId)) {
         throw new ApiError(400, "Invalid userId - getUserPlaylists")
     }

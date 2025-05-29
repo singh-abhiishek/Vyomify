@@ -77,6 +77,9 @@ const getChannelVideos = asyncHandler(async (req, res) => {
             }
         },
         {
+            $sort: {createdAt: -1}
+        },
+        {
             $project: {
                 owner: 0,
                 ownerUsername: 0,

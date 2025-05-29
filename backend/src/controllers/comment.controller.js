@@ -141,7 +141,7 @@ const updateComment = asyncHandler(async (req, res) => {
     }
 
     const { updatedContent } = req.body
-    console.log("here at back update comment", updatedContent)
+    // console.log("here at back update comment", updatedContent)
 
 
     if (!updatedContent) {
