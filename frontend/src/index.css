@@ -49,16 +49,8 @@
   scrollbar-color: #4b5563 transparent;
 }
 
-/* Optional: in global CSS or Tailwind config */
-/* ::-webkit-scrollbar {
-  height: 6px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.4);
-  border-radius: 4px;
-} */
-
 /* In your global stylesheet */
 .slick-dots li.slick-active div {
-  @apply bg-orange-500 opacity-400 w-2 h-2 sm:w-2.5 sm:h-2.5;
+  @apply bg-orange-500 opacity-40 w-2 h-2 sm:w-2.5 sm:h-2.5;
 }
+
