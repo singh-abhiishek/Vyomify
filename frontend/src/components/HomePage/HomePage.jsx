@@ -1,11 +1,11 @@
 import React from "react";
 import { useSelector } from 'react-redux';
-import FAQ from "./Faq";
-import Footer from "./Footer";
-import JoinCommunitySection from "./JoinCommunitySection";
-import HeroSection from "./HeroSection";
-import StatsSection from "./StatsSection";
-import ScreensCarousel from "./ScreensCarousel ";
+import FAQ from "./FAQ.jsx";
+import Footer from "./Footer.jsx";
+import JoinCommunitySection from "./JoinCommunitySection,jsx";
+import HeroSection from "./HeroSection.jsx";
+import StatsSection from "./StatsSection.jsx";
+import ScreensCarousel from "./ScreensCarousel.jsx";
 
 export default function Homepage() {
 
