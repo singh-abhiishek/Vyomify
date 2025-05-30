@@ -5,22 +5,29 @@ import cookieParser from "cookie-parser"
 const app = express()
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN, // e.g., https://your-frontend.netlify.app
     credentials: true,
-    maxAge: 1000 * 60 * 10 ,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 600, // 10 minutes
+}));
 
-    // If maxAge is not set, the cookie will expire when the browser session ends (i.e., when the user closes the tab or browser).
-    // This ensures that the user remains authenticated for at least 10 minutes without needing to log in again.
+// app.use(cors({
+//     origin: process.env.CORS_ORIGIN,
+//     credentials: true,
+//     maxAge: 1000 * 60 * 10,
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
 
-    // NOTE: credentials: true in CORS?????:-
-    // Allows the server to accept cookies, HTTP authentication headers, or SSL certificates from the frontend.
-    // Needed for handling sessions, JWT tokens, or secure logins.
-    // Without this, the browser blocks credentials in cross-origin requests.
-    // Must pair with Access-Control-Allow-Credentials: true on the server response.
-    // Example: Login system where the backend sets a cookie for authentication.
-}))
+//     // If maxAge is not set, the cookie will expire when the browser session ends (i.e., when the user closes the tab or browser).
+//     // This ensures that the user remains authenticated for at least 10 minutes without needing to log in again.
+
+//     // NOTE: credentials: true in CORS?????:-
+//     // Allows the server to accept cookies, HTTP authentication headers, or SSL certificates from the frontend.
+//     // Needed for handling sessions, JWT tokens, or secure logins.
+//     // Without this, the browser blocks credentials in cross-origin requests.
+//     // Must pair with Access-Control-Allow-Credentials: true on the server response.
+//     // Example: Login system where the backend sets a cookie for authentication.
+// }))
 
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))
