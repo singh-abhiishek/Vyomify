@@ -17,6 +17,7 @@ const options = {
     secure: isProduction, // Production pe true rakhein
     sameSite: isProduction ? "None" : "Lax", // Cross-site requests allow
     path: "/",
+    domain: isProduction ? process.env.CORS_ORIGIN.replace(/^https?:\/\//, '') : undefined, // Set frontend domain in production
     maxAge: 24 * 60 * 60 * 1000, // 1 day
 }
 
