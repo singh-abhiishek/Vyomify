@@ -86,7 +86,7 @@ const ProfilePage = () => {
       </div>
 
       {/* button for videos, post, playlist  */}
-      <div className='flex mt-4 gap-12 px-4'>
+      <div className='flex mt-4 gap-10 sm:gap-12 px-4'>
         {
           components.map((item, index) => (
             <button

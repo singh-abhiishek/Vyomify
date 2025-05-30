@@ -34,7 +34,7 @@ const authSlice = createSlice({
 export const { login, logout, showVerifyEmailPage, showUploadProfileImagePage } = authSlice.actions;
 export default authSlice.reducer;
 
-export const selectCurrentUser = (state) => state.auth.userData
+export const selectCurrentUser = (state) => state?.auth?.userData
 
 
 

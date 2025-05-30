@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <ToastContainer position="top-center" />
+      <ToastContainer />
       <Navbar /> {/* fixed navbar */}
 
       <div className="pt-13">

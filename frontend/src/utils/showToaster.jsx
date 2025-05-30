@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 
-export const showToastMessage = (message, type = "success", theme = "colored") => {
+export const showToastMessage = (message, type = "success", theme = "dark") => {
 
   toast[type](message, {
-    position: "top-center",
+    position: "top-left",
     bodyClassName: "toastBody",
     autoClose: 3000, // Auto close after 2 seconds
     hideProgressBar: false,

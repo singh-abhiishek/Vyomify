@@ -19,14 +19,14 @@ const ProfileVideoPage = ({ userId }) => {
     <div className='mt-2'>
 
       {/* show button of latest, popular, oldest, */}
-      <div className='flex gap-2 '>
+      <div className='flex gap-2'>
         {
           ["Latest", "Popular", "Oldest"].map((item, index) => (
             <button
               key={index}
               onClick={() => setSortBy(item)}
               className={`
-                px-4 py-1.5 mx-1 rounded-md text-sm font-medium
+                px-3 sm:px-4 py-1.5 mx-1 rounded-md text-sm font-medium
                 transition-all duration-200
                 ${sortBy === item
                   ? "bg-white text-black"

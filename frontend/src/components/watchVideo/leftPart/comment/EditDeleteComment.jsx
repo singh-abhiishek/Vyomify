@@ -6,12 +6,11 @@ import { MdOutlineEdit } from "react-icons/md";
 import { useDeleteCommentMutation } from '../../../../store/slices/commentApiSlice';
 import { showToastMessage } from '../../../../utils/showToaster';
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../../../store/slices/authSlice';
 import useOutsideClick from '../../../../hooks/UseOutsideClick';
 
 const EditDeleteComment = ({ comment, onCommentDeleted, setCommentId }) => {
 
-    const { user } = useSelector(selectCurrentUser)
+    const user  = useSelector(state => state?.auth?.userData?.user)
     // console.log(user)
 
     const [isOpen, setIsOpen] = useState(false)

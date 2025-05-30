@@ -7,9 +7,9 @@
 }
 
 /* Adjust width of the toast when screen is smaller */
-@media (max-width: 600px) {
+@media (max-width: 400px) {
   .toast-container .Toastify__toast {
-    width: 250px ;
+    width: 150px ;
   }
 }
 
