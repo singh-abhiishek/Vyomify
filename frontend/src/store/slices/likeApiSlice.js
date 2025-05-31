@@ -50,40 +50,40 @@ export const likeApiSlice = apiSlice.injectEndpoints({
             //     }
             // }
 
-            async onQueryStarted(videoId, { dispatch, getState, queryFulfilled }) {
-                // Get current like status cache
-                const isLikedCache = likeApiSlice.endpoints.isAlreadyLiked.select({ targetId: videoId, type: 'videos' })(getState());
-                console.log('isLikedCache', isLikedCache)
-                const isLiked = isLikedCache?.data?.data ?? false;
-                console.log('isLiked', isLiked)
+            // async onQueryStarted(videoId, { dispatch, getState, queryFulfilled }) {
+            //     // Get current like status cache
+            //     const isLikedCache = likeApiSlice.endpoints.isAlreadyLiked.select({ targetId: videoId, type: 'videos' })(getState());
+            //     console.log('isLikedCache', isLikedCache)
+            //     const isLiked = isLikedCache?.data?.data ?? false;
+            //     console.log('isLiked', isLiked)
 
-                // Update totalLikes cache optimistically
-                const patchLikes = dispatch(
-                    likeApiSlice.util.updateQueryData('totalLikesOnVideo', videoId, (draft) => {
-                        if (draft?.data?.data !== undefined) {
-                            draft.data.data += isLiked ? -1 : 1;
-                        }
-                    })
-                );
+            //     // Update totalLikes cache optimistically
+            //     const patchLikes = dispatch(
+            //         likeApiSlice.util.updateQueryData('totalLikesOnVideo', videoId, (draft) => {
+            //             if (draft?.data?.data !== undefined) {
+            //                 draft.data.data += isLiked ? -1 : 1;
+            //             }
+            //         })
+            //     );
 
-                // Update isAlreadyLiked cache optimistically (toggle)
-                const patchIsLiked = dispatch(
-                    likeApiSlice.util.updateQueryData('isAlreadyLiked', { targetId: videoId, type: 'videos' }, (draft) => {
-                        console.log('draft.data', draft)
-                        if (draft?.data?.data !== undefined) {
-                            draft.data.data = !draft.data.data;
-                        }
-                    })
-                );
+            //     // Update isAlreadyLiked cache optimistically (toggle)
+            //     const patchIsLiked = dispatch(
+            //         likeApiSlice.util.updateQueryData('isAlreadyLiked', { targetId: videoId, type: 'videos' }, (draft) => {
+            //             console.log('draft.data', draft)
+            //             if (draft?.data?.data !== undefined) {
+            //                 draft.data.data = !draft.data.data;
+            //             }
+            //         })
+            //     );
 
-                try {
-                    await queryFulfilled;
-                } catch (error) {
-                    // Undo optimistic update if mutation fails
-                    patchLikes.undo();
-                    patchIsLiked.undo();
-                }
-            },
+            //     try {
+            //         await queryFulfilled;
+            //     } catch (error) {
+            //         // Undo optimistic update if mutation fails
+            //         patchLikes.undo();
+            //         patchIsLiked.undo();
+            //     }
+            // },
 
         }),
 

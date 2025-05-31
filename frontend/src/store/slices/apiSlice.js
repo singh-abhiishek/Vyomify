@@ -68,9 +68,9 @@ const baseQueryWithAuthRefresh = async (args, api, extraOptions) => {
 
     // Original API call
     let result = await baseQuery(args, api, extraOptions);
-    console.log("from 71 apislice", result)
+    // console.log("from 71 apislice", result)
     // console.log("from 72 apislice", result.data)
-    // console.log("from 73 apislice", result.meta)
+    // console.log("from 73 apislice", result.meta) 
 
     // Agar 401 error aaye to logout, if token got expire, jwt.verify() -> invalidate the user, and as error we send 401 error logout user from frontend manually
     if (result.error && result.error.status === 401) {
@@ -128,7 +128,7 @@ export const fetchBaseQueryWithProgress = () => {
 
 // dynamic base query function
 const dynamicBaseQuery = async (args, api, extraOptions) => {
-    console.log("dynamicBaseQuery:-", "i reach here")
+    // console.log("dynamicBaseQuery:-", "i reach here")
     const {
         url,
         method = "GET", // Default to 'GET'
