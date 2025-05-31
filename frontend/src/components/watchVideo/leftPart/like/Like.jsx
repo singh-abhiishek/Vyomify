@@ -8,25 +8,25 @@ const Like = ({ video }) => {
     const videoId = video?._id
     // console.log("videoId", videoId)
 
-    // get total like on a video
-    const { data } = useTotalLikesOnVideoQuery(videoId)
-    const totalLikesOnVideo = data?.data
-    // console.log("from like front", totalLikesOnVideo)
-
     // is video already liked
-    const  {data: response, refetch}  = useIsAlreadyLikedQuery({
+    const { data: response, refetch } = useIsAlreadyLikedQuery({
         targetId: videoId,
         type: "videos"
     })
     const isVideoAlreadyLiked = response?.data
     // console.log("is video already liked from Like", isVideoAlreadyLiked)
 
+    // get total like on a video
+    const { data } = useTotalLikesOnVideoQuery(videoId)
+    // console.log(data)
+    const totalLikesOnVideo = data?.data
+    // console.log("from like front", totalLikesOnVideo)
+
     // toggle video like status on hitting like button
     const [toggleVideoLikeStatus] = useToggleVideoLikeStatusMutation()
 
     const handleVideoLikeToggle = async (e) => {
         e.preventDefault();
-
         try {
             const reponse = await toggleVideoLikeStatus(videoId).unwrap()
             refetch()

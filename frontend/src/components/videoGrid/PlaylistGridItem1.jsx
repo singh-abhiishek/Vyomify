@@ -53,7 +53,7 @@ const PlaylistGridItem1 = ({
       {/* Thumbnail */}
       <div
         onClick={(e) => navigateToWatchVideoPage(e, _id)}
-        className="relative aspect-video w-[58%] sm:w-[35%] lg:w-[25%] xl:w-[24%] xl:p-2 rounded-md overflow-hidden group cursor-pointer shrink-0"
+        className="relative h-23 sm:h-auto aspect-video w-[58%] sm:w-[35%] lg:w-[25%] xl:w-[24%] xl:p-2 rounded-md overflow-hidden group cursor-pointer shrink-0"
       >
         <img
           src={thumbnail}

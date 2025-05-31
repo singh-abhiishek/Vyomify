@@ -11,7 +11,80 @@ export const likeApiSlice = apiSlice.injectEndpoints({
                 url: `${LIKES_URL}/toggle/v/${videoId}`,
                 method: "POST",
             }),
-             invalidatesTags: ['VideoLike'],
+            invalidatesTags: ['VideoLike'], 
+
+            // optimistic update logic:-
+
+            // async onQueryStarted(arg, { dispatch, getState, queryFulfilled, requestId, extra, getCacheEntry }) {
+            // api.util.updateQueryData(endpointName, args, updateFunction)
+            // endpointName: the name of your query endpoint, e.g., 'getVideos' or 'getVideo'.
+            // args: the argument(s) that were passed to that query when it was used.
+            // updateFunction: a function that lets you modify the cached result optimistically.
+
+            // async onQueryStarted(videoId, { dispatch, getState, queryFulfilled }) {
+            //     // Read current isLiked cache data
+            //     const isLikedCache = likeApiSlice.endpoints.isAlreadyLiked.select({ targetId: videoId, type: 'video' })(getState())
+            //     console.log('isLikedCache:', isLikedCache);
+            //     const isLiked = isLikedCache?.data.data
+            //     console.log('isLiked:', isLiked);
+
+            //     // Patch totalLikes query
+            //     const patchResult1 = dispatch(
+            //         likeApiSlice.util.updateQueryData('totalLikesOnVideo', videoId, (draft) => { // draft can be named as totalLike for a video or anything
+            //             draft.data.data += isLiked ? -1 : 1; // decrease if liked, else increase
+            //         })
+            //     )
+
+            //     // Patch isAlreadyLiked query
+            //     const patchResult2 = dispatch(
+            //         likeApiSlice.util.updateQueryData('isAlreadyLiked', { targetId: videoId, type: 'video' }, (draft) => {
+            //             draft.data.data = !draft.data.data; // toggle like status
+            //         })
+            //     )
+
+            //     try {
+            //         await queryFulfilled;
+            //     } catch {
+            //         patchResult1.undo();
+            //         patchResult2.undo();
+            //     }
+            // }
+
+            async onQueryStarted(videoId, { dispatch, getState, queryFulfilled }) {
+                // Get current like status cache
+                const isLikedCache = likeApiSlice.endpoints.isAlreadyLiked.select({ targetId: videoId, type: 'videos' })(getState());
+                console.log('isLikedCache', isLikedCache)
+                const isLiked = isLikedCache?.data?.data ?? false;
+                console.log('isLiked', isLiked)
+
+                // Update totalLikes cache optimistically
+                const patchLikes = dispatch(
+                    likeApiSlice.util.updateQueryData('totalLikesOnVideo', videoId, (draft) => {
+                        if (draft?.data?.data !== undefined) {
+                            draft.data.data += isLiked ? -1 : 1;
+                        }
+                    })
+                );
+
+                // Update isAlreadyLiked cache optimistically (toggle)
+                const patchIsLiked = dispatch(
+                    likeApiSlice.util.updateQueryData('isAlreadyLiked', { targetId: videoId, type: 'videos' }, (draft) => {
+                        console.log('draft.data', draft)
+                        if (draft?.data?.data !== undefined) {
+                            draft.data.data = !draft.data.data;
+                        }
+                    })
+                );
+
+                try {
+                    await queryFulfilled;
+                } catch (error) {
+                    // Undo optimistic update if mutation fails
+                    patchLikes.undo();
+                    patchIsLiked.undo();
+                }
+            },
+
         }),
 
         // get total like on a video
@@ -23,7 +96,6 @@ export const likeApiSlice = apiSlice.injectEndpoints({
             providesTags: ['VideoLike'],
         }),
 
-        
         // get total liked videos
         getTotalLikedVideos: builder.query({
             query: () => ({
@@ -71,7 +143,7 @@ export const likeApiSlice = apiSlice.injectEndpoints({
         }),
 
         isAlreadyLiked: builder.query({
-            query: ({targetId, type}) => ({
+            query: ({ targetId, type }) => ({
                 url: `${LIKES_URL}/${targetId}?type=${type}`,
                 method: "GET",
             })

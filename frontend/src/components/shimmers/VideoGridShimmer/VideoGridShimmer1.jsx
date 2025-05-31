@@ -18,7 +18,7 @@ const VideoGridShimmer1 = ({isWatchHistoryBtn = false}) => {
       </div>
 
       <div className="p-3 flex flex-col gap-4 w-full bg-black">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <div
             key={i}
             className="flex gap-4 w-full rounded-md overflow-hidden cursor-pointer"
