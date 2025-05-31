@@ -32,7 +32,7 @@ const Subscription = () => {
             {/* Heading */}
             <div className="flex flex-col items-center mb-2">
                 <div className="flex items-end gap-0 sm:gap-2 text-white text-xl sm:text-2xl font-semibold">
-                    <h1 className="text-red-600 font-amaranth font-bold text-2xl sm:text-4xl leading-none">Latest Videos</h1>
+                    <h1 className="text-red-600 font-amaranth font-bold text-3xl sm:text-4xl leading-none">Latest Videos</h1>
                     <p className="text-zinc-300 font-medium">from your Subscriptions</p>
                 </div>
                 <span className="block h-0.5 w-10 bg-gradient-to-r from-red-600 to-rose-500 mt-2 rounded-full" />
@@ -42,7 +42,6 @@ const Subscription = () => {
             <div className="flex flex-wrap gap-4 mt-0.5">
                 {latestVideosList?.map((latestVideo, index) => (
                     <VideoGridItem {...latestVideo} key={latestVideo?._id} />
-
                 ))}
             </div>
 

@@ -20,7 +20,7 @@ const Step2 = () => {
       <div className='flex flex-col justify-center items-center md:flex-row gap-2 sm:gap-8 p-6'>
 
         {/* Left Side - Form */}
-        <div className='md:w-[60%] flex flex-col gap-3'>
+        <div className='md:w-[60%] flex flex-col gap-3 border border-gray-700 rounded-xl p-5 lg:border-none'>
 
           {/* Title */}
           <div className='relative'>

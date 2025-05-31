@@ -94,7 +94,7 @@ const VideoGridItem = ({
 
     return (
         <div
-            className="flex flex-col gap-1 w-[244px] sm:w-[250px] md:w-[330px] lg:w-[300px] xl:w-[345px]"
+            className="flex flex-col gap-1 w-[293px] sm:w-[250px] md:w-[330px] lg:w-[300px] xl:w-[345px]"
             onMouseEnter={() => setIsVideoPlaying(true)}
             onMouseLeave={() => setIsVideoPlaying(false)}
         >

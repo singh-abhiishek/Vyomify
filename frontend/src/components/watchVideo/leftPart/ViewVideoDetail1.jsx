@@ -57,7 +57,7 @@ const ViewVideoDetail1 = ({ video }) => {
             <div className='flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center'>
                 <div className='flex gap-1.5 sm:gap-1 items-center'>
                     {/* channel avatar */}
-                    <div className='h-[35px] w-[35px] md:h-[40px] md:w-[40px] rounded-full overflow-hidden'>
+                    <div className='h-[40px] w-[40px] md:h-[40px] md:w-[40px] rounded-full overflow-hidden'>
                         <Link
                             to={`/explore/profile/${video?.ownerUsername}`}
                         >
@@ -75,7 +75,7 @@ const ViewVideoDetail1 = ({ video }) => {
                             className='text-sm'
                         >{video?.ownerUsername || "username"}</span>
                         
-                        <span className='text-[8px] md:text-sm text-gray-400'>
+                        <span className='text-[10px] md:text-sm text-gray-400'>
                             {subscribersCount} {subscribersCount > 1 ? "Subscribers" : "Subscriber"}
                         </span>
                     </div>

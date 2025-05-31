@@ -15,7 +15,7 @@ const ProfilePopUp = ({ modalRef, setIsOpen }) => {
     ref={modalRef}
     >
       {/* Dropdown */}
-      <div className="origin-top-right z-8 rounded-[12px] absolute top-full min-w-40 bg-[#191919] text-white dark:bg-dark_50 dark:border-zinc-800 border border-gray-200 py-1 shadow-lg overflow-hidden mt-0.5 right-0 md:min-w-48 md:z-10  lg:z-12">
+      <div className="origin-top-right z-8 rounded-[12px] absolute top-full min-w-40 bg-[#191919] text-white dark:bg-dark_50 dark:border-zinc-800 border border-gray-200 py-1 shadow-lg overflow-hidden mt-0.5 right-3 md:min-w-48 md:z-10  lg:z-12">
 
         {/* User Avatar & Greeting */}
         <div className="flex justify-center items-center flex-col mt-1">

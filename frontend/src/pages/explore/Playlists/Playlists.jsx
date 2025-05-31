@@ -41,7 +41,7 @@ const Playlists = () => {
 
     return (
         // <div className="bg-neutral-950 text-white w-full px-6 ">
-        <div className="bg-black text-white w-full px-6 ">
+        <div className="bg-black text-white w-full  sm:px-6 ">
             {/* Heading */}
             {!location.pathname.includes('explore/profile') &&
                 <div className="flex flex-col items-center mb-4">

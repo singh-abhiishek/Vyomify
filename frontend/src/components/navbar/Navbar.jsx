@@ -63,7 +63,7 @@ const Navbar = () => {
                     {authStatus && location.pathname.startsWith("/explore") && <SearchInput />}
                 </div>
 
-                <div className='flex lg:gap-5'>
+                <div className='flex gap-2 lg:gap-5'>
                     {/* <div
                         className="md:flex lg:w-auto"
                     >

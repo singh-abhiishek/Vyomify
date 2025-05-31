@@ -88,12 +88,12 @@ const VideoGridItem2 = ({
     }
     return (
         <div
-            className="flex flex-row items-start gap-3 p-3 w-full rounded-xl hover:bg-white/5 transition-colors duration-200"
+            className="flex flex-row items-start gap-2 p-3 w-full rounded-xl hover:bg-white/5 transition-colors duration-200"
             onMouseEnter={() => setIsVideoPlaying(true)}
             onMouseLeave={() => setIsVideoPlaying(false)}
         >
             {/* Thumbnail + Video */}
-            <div className="relative w-[55%] h-[70px] lg:h-auto lg:w-[40%] aspect-[16/9] rounded-lg overflow-hidden group cursor-pointer shrink-0">
+            <div className="relative w-[55%] h-[80px] lg:h-auto lg:w-[40%] aspect-[16/9] rounded-lg overflow-hidden group cursor-pointer shrink-0">
                 <div
                     onClick={(e) => navigateToWatchVideoPage(e, _id)}
                     className="relative w-full h-full"

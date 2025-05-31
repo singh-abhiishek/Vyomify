@@ -31,7 +31,7 @@ const ProfilePlaylistPage = ({ userId }) => {
   }
 
   return (
-    <div className="w-full px-6 py-4 flex flex-wrap gap-2 sm:gap-3">
+    <div className="w-full py-4 flex flex-wrap gap-2.5 sm:gap-3">
       {/* Video Grid */}
       
         {fileredPlaylists?.map((playlist, index) => (

@@ -18,7 +18,7 @@ const VideoGridShimmer = ({isHeading = false}) => {
         {Array.from({ length: 12 }).map((_, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-1 w-[244px] sm:w-[250px] md:w-[330px] lg:w-[300px] xl:w-[345px]">
+            className="flex flex-col gap-1 w-[293px] sm:w-[250px] md:w-[330px] lg:w-[300px] xl:w-[345px]">
             <div className="w-full aspect-video bg-gray-800 rounded-xl shimmer"></div>
 
             <div className="flex gap-2 mt-1 sm:mt-2">

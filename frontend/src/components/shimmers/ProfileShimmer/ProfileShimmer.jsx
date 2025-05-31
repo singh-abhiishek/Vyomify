@@ -35,7 +35,7 @@ const ProfileShimmer = () => {
       <div className="border-t border-gray-700 my-5 w-full" />
 
       {/* Active Component Shimmer */}
-      <div className="px-4 sm:px-6 flex flex-wrap w-full gap-4">
+      <div className=" sm:px-6 flex flex-wrap w-full gap-4">
         {[...Array(4)].map((_, idx) => (
           <div
             key={idx}
