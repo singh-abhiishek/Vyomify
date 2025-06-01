@@ -19,7 +19,7 @@ const WatchLater = () => {
     );
   }
 
-  if (watchLaterVideosList?.length < 2) {
+  if (watchLaterVideosList?.length === 0) {
     return (
       <div className="bg-black text-white w-full flex flex-col items-center justify-center gap-2 py-10 text-center">
         <h2 className="text-2xl font-semibold text-white">No videos saved for Watch Later</h2>
