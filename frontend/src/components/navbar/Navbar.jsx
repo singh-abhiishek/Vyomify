@@ -89,7 +89,7 @@ const Navbar = () => {
                     {authStatus && location.pathname === "/" && <ExploreButton />}
 
                     {!authStatus && 
-                        <div className='mb-15px'>
+                        <div className='mb-3.5 md:mb-5'>
                             <TryGuestAsLogin /> 
                         </div>
                     }
