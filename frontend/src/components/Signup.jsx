@@ -46,7 +46,7 @@ const Signup = () => {
                 navigate('/verify-Email')
             }
         } catch (error) {
-            showToastMessage(error.response?.data?.message || "Request failed!", "error");
+            showToastMessage(error.response?.data?.message || error.data?.message || "Request failed!", "error");
         }
     }
     // console.log("from signup", useSelector(state => state.auth))

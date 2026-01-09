@@ -8,6 +8,7 @@ import ThemeButton from './ThemeButton.jsx'
 import HamBurger from '../sideBar/HamBurger.jsx'
 import ExploreButton from './ExploreButton.jsx'
 import vyomifyLogo1 from "../../assets/vyomifyLogo1.png"
+import TryGuestAsLogin from '../tryGuestAsLogin.jsx'
 
 
 const Navbar = () => {
@@ -46,15 +47,15 @@ const Navbar = () => {
                     </Link>
                 </div> */}
                 {!location.pathname.startsWith("/explore") ? <div>
-                    <div 
-                        // to="/"
+                    <Link 
+                        to="/"
                         className="flex justify-center ml-10">
                         <img
                             className="w-15 sm:w-17"
                             src={vyomifyLogo1}
                             alt="Vyomify Logo" 
                         />
-                    </div>
+                    </Link>
                 </div> :
                     <div></div>
                 }
@@ -86,6 +87,12 @@ const Navbar = () => {
 
                     </div> */}
                     {authStatus && location.pathname === "/" && <ExploreButton />}
+
+                    {!authStatus && 
+                        <div className='mb-15px'>
+                            <TryGuestAsLogin /> 
+                        </div>
+                    }
 
                     <div className="flex items-center gap-1 md:gap-1.5 lg:gap-2.5 ">
 

@@ -9,6 +9,7 @@ import { login as storeLogin } from '../store/slices/authSlice.js'
 import { Spinner } from '../utils/loadingIndicator.jsx'
 import { useLoginMutation } from '../store/slices/userApiSlice.js'
 import { Eye, EyeOff } from "lucide-react";
+import TryGuestAsLogin from './tryGuestAsLogin.jsx'
 
 
 const Login = () => {
@@ -152,6 +153,19 @@ const Login = () => {
                         Sign up
                     </Link>
                 </p>
+
+                
+
+                {/* Divider */}
+                <div className="flex items-center mt-3">
+                    <div className="flex-grow border-t border-dotted border-gray-700"></div>
+                    <span className="mx-4 text-gray-600 text-sm">OR</span>
+                    <div className="flex-grow border-t border-dotted border-gray-700"></div>
+                </div>
+
+                {/* Try guest login  */}
+                <TryGuestAsLogin />
+
             </div>
         </div>
 
