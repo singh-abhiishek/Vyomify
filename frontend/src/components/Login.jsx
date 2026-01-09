@@ -9,7 +9,7 @@ import { login as storeLogin } from '../store/slices/authSlice.js'
 import { Spinner } from '../utils/loadingIndicator.jsx'
 import { useLoginMutation } from '../store/slices/userApiSlice.js'
 import { Eye, EyeOff } from "lucide-react";
-import TryGuestAsLogin from './tryGuestAsLogin.jsx'
+import TryGuestAsLogin from './TryGuestAsLogin.jsx'
 
 
 const Login = () => {

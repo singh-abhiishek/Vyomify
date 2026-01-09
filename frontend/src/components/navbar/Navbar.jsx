@@ -8,7 +8,7 @@ import ThemeButton from './ThemeButton.jsx'
 import HamBurger from '../sideBar/HamBurger.jsx'
 import ExploreButton from './ExploreButton.jsx'
 import vyomifyLogo1 from "../../assets/vyomifyLogo1.png"
-import TryGuestAsLogin from '../tryGuestAsLogin.jsx'
+import TryGuestAsLogin from '../TryGuestAsLogin.jsx'
 
 
 const Navbar = () => {
